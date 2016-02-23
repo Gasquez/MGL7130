@@ -1,5 +1,30 @@
 var angularApp = angular.module('MenuNav', ['ionic']);
 var angularScope;
+//Objet evenemnt pour tester les descriptifs :
+var evenement = new Object();
+ evenement.titre ="Old help cause for student";
+ evenement.ID = "236554";
+ evenement.latlng = "45.514887, -73.559727";
+ evenement.organisme ="UQAM";
+ evenement.siege ="adresse du siege";
+ evenement.webSite="uqam.ca";
+ evenement.emplacement = "at the place";
+ evenement.date ="23/02/2016";
+ evenement.heure ="10h00";
+ evenement.langue ="france";
+ evenement.causes = "Old Help";
+ evenement.activity= "aide et accueil";
+ evenement.avantages = "contact avec les gens";
+ evenement.periode ="one time";
+ evenement.periodicity = "mensuel";
+ evenement.contact = "contact@UQAM.ca";
+ evenement.acces = "Metro place des arts";
+ evenement.descriptif ="Un evenement pour aider les personnes agee a faire les papiers ainsi que leurs courses bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla";
+ evenement.accessibleToDisabled = true;
+ evenement.inscred = false;
+ evenement.favored = false;
+
+
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -10,14 +35,13 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 
 	.state('filter', {
 		url: '/filter',
-		templateUrl: 'filter.html',
-		controller: 'AppCtrl'
+		templateUrl: 'filter.html'
 	});
 
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicHistory){
+angularApp.controller("AppCtrl", function($scope){
 	angularScope = $scope;
 
 	angularScope.navigation = {
@@ -26,29 +50,23 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 			direction: "/home"
 		},
 		pageHeaderRight: {
+			title: 'Filter',
 			direction: "filter"
 		}
 	};
 
-	angularScope.goBack = function(){
-		$ionicHistory.goBack();
-	}
-
 	function initialize() {
 		var mapOptions = {
 			zoom: 10,
-			center: new google.maps.LatLng(-33.89, 151.27),
+			center: new google.maps.LatLng(45.514887, -73.559727),
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 		var markers = [
-			['Bondi Beach, 01/30/16 2:00 PM', -33.890542, 151.274856, 4],
-			['Coogee Beach, 01/30/16 2:00 PM', -33.923036, 151.259052, 5],
-			['Cronulla Beach, 01/30/16 2:00 PM', -34.028249, 151.157507, 3],
-			['Manly Beach, 01/30/16 2:00 PM', -33.80010128657071, 151.28747820854187, 2],
-			['Maroubra Beach, 01/30/16 2:00 PM', -33.950198, 151.259302, 1]
+			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4],
+			['Other Event, 00/00/00 00:00 PM', 45.52243499999999, -73.60211099999998],
 		];
 
 		// Info windows displayed above each markers
@@ -71,18 +89,28 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 			      eventInfoContent = markers[i][1] + " - " + markers[i][2];
 			      angularScope.$apply(function() {
 			      	angularScope.eventSelected = { 
-			      		name: markers[i][0],
-			      		desc: eventInfoContent + 
+			      		name: evenement.titre,
+						afterName: ', ' + evenement.date + ', ' + evenement.heure,
+			      		desc: '<b> Descriptif : </b>' + evenement.descriptif + 
 			      		'<br />' + 
-			      		eventInfoContent + 
-			      		'<br />' + 
-			      		eventInfoContent
+			      		'<b>Activités : </b>'+ evenement.activity
 			      	};
 			      });
 				}
 			})(marker, i));
 		}
-	}
+
+		if (navigator.geolocation)
+		  var watchId = navigator.geolocation.watchPosition(function(position){
+		  	//Move map to position
+		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+//For test :var marker = new google.maps.Marker({
+//			    position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
+//			    map: map
+//		 	}); 
+		  }, null, {enableHighAccuracy:true});
+	};
+
 	google.maps.event.addDomListener(window, "load", initialize);
 });
 
