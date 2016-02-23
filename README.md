@@ -10,8 +10,6 @@ A la question de la création d'un compte ionic.io répondez non. Vous pouvez le
 
 $ cd Simplyk
 
-$ cd www
-
 $ git init .
 
 $ git remote add -t \\* -f origin https://github.com/Warlot-PQ/MGL7130.git
