@@ -35,14 +35,13 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 
 	.state('filter', {
 		url: '/filter',
-		templateUrl: 'filter.html',
-		controller: 'AppCtrl'
+		templateUrl: 'filter.html'
 	});
 
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicHistory){
+angularApp.controller("AppCtrl", function($scope){
 	angularScope = $scope;
 
 	angularScope.navigation = {
@@ -51,13 +50,10 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 			direction: "/home"
 		},
 		pageHeaderRight: {
+			title: 'Filter',
 			direction: "filter"
 		}
 	};
-
-	angularScope.goBack = function(){
-		$ionicHistory.goBack();
-	}
 
 	function initialize() {
 		var mapOptions = {
