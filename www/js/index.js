@@ -60,6 +60,22 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	}
 	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYX'
 	var labelIndex = 0;
+
+	function jsonController($scope, $http){
+    	$scope.showLignes = function(){
+        	$http.get('data.json')
+           		.success(function(response){  
+           			$scope.lignes = response; 
+           			console.log(response); 
+           		})
+            	.error(function(response){ 
+            		alert('Erreur...'); 
+            		console.log(response);
+            	});
+    	}
+    	$scope.showLignes();
+	}
+
 	function initialize() {
 		var mapOptions = {
 			zoom: 10,
@@ -69,7 +85,8 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-		var markers = [
+		var image = 'http://'
+		var benevolats = [
 			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4],
 			['Other Event, 21/02/16 15:00 PM', 45.522434, -73.602112],
 			['Old help, 25/02/16 09:00 PM', 45.623736, -73.769054],
@@ -82,10 +99,11 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 		var infowindow = new google.maps.InfoWindow();
 
 		// Loop through the array of markers and place each one on the map 
-		for(i = 0; i < markers.length; i += 1) {
+		for(i = 0; i < benevolats.length; i += 1) {
+			var benevolat = benevolats[i];
 			marker = new google.maps.Marker({
 				//icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
-				position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+				position: new google.maps.LatLng(benevolat[1], benevolat[2]),
 				label: labels[labelIndex++ % labels.length],
 				map: map,
 			});
@@ -93,11 +111,11 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 			  	return function() {
-			  		infowindow.setContent(markers[i][0]);
+			  		infowindow.setContent(benevolat[0]);
 			  		infowindow.open(map, marker);
 
 			      // Display event informations
-			      eventInfoContent = markers[i][1] + " - " + markers[i][2];
+			      eventInfoContent = benevolat[1] + " - " + benevolat[2];
 			      angularScope.$apply(function() {
 			      	angularScope.eventSelected = { 
 			      		name: evenement.titre,
