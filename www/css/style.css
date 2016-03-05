@@ -1,1 +1,45 @@
 /* Empty. Add your own CSS if you like */
+#wrapper {
+	box-shadow: 0px 1px 0px #b4b4b4;
+}
+
+#map_canvas {
+	height: 100%;
+	width: 100%;
+}
+
+#map_content {
+	height: 70%;
+	width: 100%;
+	overflow: hidden;
+
+}
+.scroll {
+	height: 100%;
+}
+
+#description_event_content{
+	height: 30%;
+	width: 100%;
+}
+
+#description_event_wrapper{
+	height: 30%;
+	width: 100%;
+	text-align: center;
+	font-size: 1.2em;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+#button_favoris{
+	text-align: center;
+	padding-left: 2px;
+}
+#description_event_name{
+	text-align: center;
+	padding-left: 2px;
+
+}
+#button_details{
+	text-align: center;
+}

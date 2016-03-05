@@ -1,5 +1,30 @@
 var angularApp = angular.module('MenuNav', ['ionic']);
 var angularScope;
+//Objet evenemnt pour tester les descriptifs :
+var evenement = new Object();
+ evenement.titre ="Old help cause for student";
+ evenement.ID = "236554";
+ evenement.latlng = "45.514887, -73.559727";
+ evenement.organisme ="UQAM";
+ evenement.siege ="adresse du siege";
+ evenement.webSite="uqam.ca";
+ evenement.emplacement = "at the place";
+ evenement.date ="23/02/2016";
+ evenement.heure ="10h00";
+ evenement.langue ="france";
+ evenement.causes = "Old Help";
+ evenement.activity= "aide et accueil";
+ evenement.avantages = "contact avec les gens";
+ evenement.periode ="one time";
+ evenement.periodicity = "mensuel";
+ evenement.contact = "contact@UQAM.ca";
+ evenement.acces = "Metro place des arts";
+ evenement.descriptif ="Un evenement pour aider les personnes agee a faire les papiers ainsi que leurs courses bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla";
+ evenement.accessibleToDisabled = true;
+ evenement.inscred = false;
+ evenement.favored = false;
+
+
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -33,56 +58,88 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	}
+	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYX'
+	var labelIndex = 0;
+
+	function jsonController($scope, $http){
+    	$scope.showLignes = function(){
+        	$http.get('data.json')
+           		.success(function(response){  
+           			$scope.lignes = response; 
+           			console.log(response); 
+           		})
+            	.error(function(response){ 
+            		alert('Erreur...'); 
+            		console.log(response);
+            	});
+    	}
+    	$scope.showLignes();
+	}
 
 	function initialize() {
 		var mapOptions = {
 			zoom: 10,
-			center: new google.maps.LatLng(-33.89, 151.27),
+			center: new google.maps.LatLng(45.514887, -73.559727),
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-		var markers = [
-			['Bondi Beach, 01/30/16 2:00 PM', -33.890542, 151.274856, 4],
-			['Coogee Beach, 01/30/16 2:00 PM', -33.923036, 151.259052, 5],
-			['Cronulla Beach, 01/30/16 2:00 PM', -34.028249, 151.157507, 3],
-			['Manly Beach, 01/30/16 2:00 PM', -33.80010128657071, 151.28747820854187, 2],
-			['Maroubra Beach, 01/30/16 2:00 PM', -33.950198, 151.259302, 1]
+		var image = 'http://'
+		var benevolats = [
+			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4],
+			['Other Event, 21/02/16 15:00 PM', 45.522434, -73.602112],
+			['Old help, 25/02/16 09:00 PM', 45.623736, -73.769054],
+			['New Event, 27/02/16 11:00 PM', 45.536887, -73.559727],
+			['Old help, 29/02/16 14:00 PM', 45.568887, -73.559727],
+			['New help, 05/03/16 08:00 PM', 45.557678, -73.864627]
 		];
 
 		// Info windows displayed above each markers
 		var infowindow = new google.maps.InfoWindow();
 
 		// Loop through the array of markers and place each one on the map 
-		for(i = 0; i < markers.length; i += 1) {
+		for(i = 0; i < benevolats.length; i += 1) {
+			var benevolat = benevolats[i];
 			marker = new google.maps.Marker({
-				position: new google.maps.LatLng(markers[i][1], markers[i][2]),
-				map: map
+				//icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+				position: new google.maps.LatLng(benevolat[1], benevolat[2]),
+				label: labels[labelIndex++ % labels.length],
+				map: map,
 			});
 
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 			  	return function() {
-			  		infowindow.setContent(markers[i][0]);
+			  		infowindow.setContent(benevolat[0]);
 			  		infowindow.open(map, marker);
 
 			      // Display event informations
-			      eventInfoContent = markers[i][1] + " - " + markers[i][2];
+			      eventInfoContent = benevolat[1] + " - " + benevolat[2];
 			      angularScope.$apply(function() {
 			      	angularScope.eventSelected = { 
-			      		name: markers[i][0],
-			      		desc: eventInfoContent + 
+			      		name: evenement.titre,
+						afterName: ', ' + evenement.date + ', ' + evenement.heure,
+			      		desc: '<b> Descriptif : </b>' + evenement.descriptif + 
 			      		'<br />' + 
-			      		eventInfoContent + 
-			      		'<br />' + 
-			      		eventInfoContent
+			      		'<b>Activités : </b>'+ evenement.activity
 			      	};
 			      });
 				}
 			})(marker, i));
 		}
-	}
+
+		if (navigator.geolocation)
+		  var watchId = navigator.geolocation.watchPosition(function(position){
+		  	//Move map to position
+		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+//For test :var marker = new google.maps.Marker({
+//			    position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
+//			    map: map
+//		 	}); 
+		  }, null, {enableHighAccuracy:true});
+	};
+
 	google.maps.event.addDomListener(window, "load", initialize);
 });
 
