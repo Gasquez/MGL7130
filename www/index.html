@@ -61,16 +61,16 @@
           <div ng-if="eventSelected.name" id="description_event_wrapper" class="padding">
             <!-- header of description-->
             <div class ="row" id="wrapper">
-              <div class= "col-15" id="button_favoris">
+              <div class= "col-25" id="button_favoris">
                 <button class="button button-assertive button-small" ng-click="addtoFavoris()">
                   Favoris  <i class="icon ion-ios-heart-outline"></i>
                 </button>
               </div>
-              <div class ="col-70" id="description_event_name">
+              <div class ="col-50" id="description_event_name">
                 <b> {{eventSelected.name}} </b>
                 {{eventSelected.afterName}}
               </div>
-              <div class="col-15" id="button_details">
+              <div class="col-25" id="button_details">
                 <button class="button button-assertive button-small" ng-click="openDetails()">
                   Détails  <i class="icon ion-arrow-right-a"></i>
                 </button>
