@@ -1,3 +1,5 @@
+angular.module('starter', ['ionic', 'ngCordova']);
+
 var angularApp = angular.module('MenuNav', ['ionic']);
 var angularScope;
 //Objet evenemnt pour tester les descriptifs :
@@ -19,12 +21,10 @@ var evenement = new Object();
  evenement.periodicity = "mensuel";
  evenement.contact = "contact@UQAM.ca";
  evenement.acces = "Metro place des arts";
- evenement.descriptif ="Un evenement pour aider les personnes agee a faire les papiers ainsi que leurs courses bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla";
+ evenement.descriptif ="Un evenement pour aider les personnes agées à faire les papiers ainsi que leurs courses blabla blabla";
  evenement.accessibleToDisabled = true;
  evenement.inscred = false;
  evenement.favored = false;
-
-
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -47,7 +47,7 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 
 	angularScope.navigation = {
 		page1: {
-			title: 'Volunteer Seeker Map',
+			title: 'Symplik Map',
 			direction: "/home"
 		},
 		pageHeaderRight: {
@@ -57,24 +57,7 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
-	}
-	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYX'
-	var labelIndex = 0;
-
-	function jsonController($scope, $http){
-    	$scope.showLignes = function(){
-        	$http.get('data.json')
-           		.success(function(response){  
-           			$scope.lignes = response; 
-           			console.log(response); 
-           		})
-            	.error(function(response){ 
-            		alert('Erreur...'); 
-            		console.log(response);
-            	});
-    	}
-    	$scope.showLignes();
-	}
+	};
 
 	function initialize() {
 		var mapOptions = {
@@ -84,9 +67,7 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
-		var image = 'http://'
-		var benevolats = [
+		var markers = [
 			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4],
 			['Other Event, 21/02/16 15:00 PM', 45.522434, -73.602112],
 			['Old help, 25/02/16 09:00 PM', 45.623736, -73.769054],
@@ -99,23 +80,33 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 		var infowindow = new google.maps.InfoWindow();
 
 		// Loop through the array of markers and place each one on the map 
-		for(i = 0; i < benevolats.length; i += 1) {
-			var benevolat = benevolats[i];
-			marker = new google.maps.Marker({
-				//icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
-				position: new google.maps.LatLng(benevolat[1], benevolat[2]),
-				label: labels[labelIndex++ % labels.length],
-				map: map,
+		for(i = 0; i < markers.length; i += 1) {
+		
+			var marker = new MarkerWithLabel({
+					position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+					map: map,
+					labelContent: "21-02",
+					labelAnchor: new google.maps.Point(13, 10),
+				    labelClass: "labels", // the CSS class for the label
+				    labelInBackground: false,
+					icon: {
+	                	path: google.maps.SymbolPath.CIRCLE,
+				        scale: 16,
+				        fillColor: "#FF0000",
+				        fillOpacity: 1,
+				        strokeWeight: 0.8
+				    },					
 			});
+		
 
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 			  	return function() {
-			  		infowindow.setContent(benevolat[0]);
+			  		infowindow.setContent(markers[i][0]);
 			  		infowindow.open(map, marker);
 
 			      // Display event informations
-			      eventInfoContent = benevolat[1] + " - " + benevolat[2];
+			      eventInfoContent = markers[i][1] + " - " + markers[i][2];
 			      angularScope.$apply(function() {
 			      	angularScope.eventSelected = { 
 			      		name: evenement.titre,
