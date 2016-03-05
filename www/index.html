@@ -16,17 +16,18 @@
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
     <script src="cordova.js"></script>
 
+    <!-- Google JavaScript API -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
+    
     <!-- your app's js -->
     <script src="js/app.js"></script>
 
     <script src="js/index.js"></script>
 
-    <script src="data.json"></script>
-
-    <!-- Google JavaScript API -->
-    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
   </head>
   <body ng-app="MenuNav">
 
@@ -69,7 +70,7 @@
                 </button>
               </div>
               <div class ="col-70" id="description_event_name">
-                <b> {{eventSelected.name}} </b>
+              <b> {{eventSelected.name}} </b>
                 {{eventSelected.afterName}}
               </div>
               <div class="col-15" id="button_details">
@@ -81,22 +82,17 @@
             <!-- description details-->
             <p ng-bind-html="eventSelected.desc"></p>
           </div>
-
         </ion-content>
       </ion-view>
     </script>
 
     <script type="text/ng-template" id="filter.html">
       <ion-view title="{{navigation.page1.title}}">
-
-
         <ion-nav-buttons side="left">
-           <button class="button button-icon" ng-click="goBack()">back</button>
+          <button class="button button-icon" ng-click="goBack()">back</button>
         </ion-nav-buttons>
-
         <ion-content scroll="false" data-tap-disabled="true"></ion-content>
-
-        </ion-view>
+      </ion-view>
     </script>
   </body>
 </html>

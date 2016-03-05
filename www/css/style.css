@@ -43,3 +43,12 @@
 #button_details{
 	text-align: center;
 }
+.labels {
+  color: blue;
+  background-color: red;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 9px;
+  text-align: center;
+  width: 25px;
+  white-space: nowrap;
+}
