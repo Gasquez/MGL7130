@@ -1,5 +1,39 @@
 var angularApp = angular.module('MenuNav', ['ionic']);
-var angularScope;
+
+angularApp.factory('BookMarkFactory', function() {
+  return {
+    all: function() {
+		var projectString = window.sessionStorage['BookMark'];
+		if(projectString) {
+			return angular.fromJson(projectString);
+		}
+		/* Hard-codé pour utilisation sans la fonctionnalité d'ajout de favori */
+		//return [];
+		return [
+			{
+				nom: "Test 1",
+				desc: "Information sur test 1"
+			},
+			{
+				nom: "Test 2",
+				desc: "Information sur test 2"
+			}
+		];
+    },
+    add: function(bookMark) {
+    	var bookMarkArray = this.all();
+    	bookMarkArray.push(bookMark);
+    	window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
+	},
+	/* delete non testé */
+	delete: function(index) {
+		var bookMarkArray = this.all();
+		var newBookMarkArray = bookMarkArray.splice(index, 1);
+		window.sessionStorage['BookMark'] = angular.toJson(newBookMarkArray);
+		return newBookMarkArray;
+    }
+  }
+});
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -12,27 +46,54 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 		url: '/filter',
 		templateUrl: 'filter.html',
 		controller: 'AppCtrl'
+	})
+	.state('list', {
+		url: '/list',
+		templateUrl: 'list.html',
+		controller: 'AppCtrl'
+	})
+
+	.state('favorite', {
+		url: '/favorite',
+		templateUrl: 'favorite.html',
+		controller: 'AppCtrl'
 	});
 
 	$urlRouterProvider.otherwise('/home');
 })
 
 angularApp.controller("AppCtrl", function($scope, $ionicHistory){
-	angularScope = $scope;
+	var angularScope = $scope;
 
 	angularScope.navigation = {
-		page1: {
-			title: 'Volunteer Seeker Map',
-			direction: "/home"
+		pageHeaderLeft1: {
+			icon: "button button-icon icon ion-android-globe",
+			title: 'Carte de recherche de volontariat',
+			directionState: "home"
+		},
+		pageHeaderLeft2: {
+			icon: "button button-icon icon ion-ios-list-outline",
+			title: 'Liste de recherche de volontariat',
+			directionState: "list"
+		},
+		pageHeaderLeft3: {
+			icon: "button button-icon icon ion-ios-heart-outline",
+			title: 'Mes favoris',
+			directionState: "favorite"
 		},
 		pageHeaderRight: {
-			direction: "filter"
+			icon: "button button-icon icon ion-android-options",
+			directionState: "filter"
 		}
 	};
 
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	}
+});
+
+angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
+	var angularScope = $scope;
 
 	function initialize() {
 		var mapOptions = {
@@ -86,6 +147,19 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	google.maps.event.addDomListener(window, "load", initialize);
 });
 
+angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
+	var angularScope = $scope;
+	
+	angularScope.items = BookMarkFactory.all();
+
+	angularScope.masterToDetailMode = function() {
+		$('#view').addClass('mode-detail');
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#view').removeClass('mode-detail');
+	};
+});
 
 var app = {
 	initialize: function() {

@@ -22,6 +22,68 @@
       .scroll {
         height: 100%;
       }
+
+      #master {
+        width: 20%;
+        height: 100%;
+        border-right: 1px solid black;
+      }
+
+      .master-item {
+        border-right: 1px solid black;
+      }
+
+      #detail {
+        width: 80%;
+      }
+
+      #detail-backButton {
+        visibility: hidden;
+      }
+
+      .master-title {
+        width: 80%;
+      }
+
+      .master-button {
+        float: right;
+        text-align: right;
+        width: 20%;
+      }
+
+      .master-desc {
+        text-align: justify;
+      }
+
+      @media screen and (max-width: 768px) { 
+        #master {
+          width: 100%;
+          border-right: none;
+        }
+
+        .master-item {
+          border-right: none;
+        }
+
+        #detail {
+          width: 100%;
+          display: none;
+        }
+
+        #detail-backButton {
+          visibility: visible;
+        }
+
+        #view.mode-detail #master { 
+          /* En mode détail, on cache le maitre pour montrer le détail */
+          display: none;         
+        }
+
+        #view.mode-detail #detail {
+          display: block;
+        }
+      }
+
     </style>
 
   </head>
@@ -35,21 +97,21 @@
     <!-- Page 1 -->
 
     <script type="text/ng-template" id="home.html">
-      <ion-view title="{{navigation.page1.title}}">
+      <ion-view>
 
         <!-- Navigation button -->
         <ion-nav-buttons side="left">
-          <button class="button button-icon icon ion-android-globe"></button>
-          <button class="button button-icon icon ion-ios-list-outline"></button>
-          <button class="button button-icon icon ion-ios-heart-outline"></button>
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
         </ion-nav-buttons>
 
         <ion-nav-buttons side="right">
           <!--  button-icon icon icon-right ion-arrow-right-c -->
-          <button class="button button-icon icon ion-android-options" ui-sref="{{navigation.pageHeaderRight.direction}}"></button>
+          <button class="{{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
         </ion-nav-buttons>
 
-        <ion-content scroll="false" data-tap-disabled="true">
+        <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true">
 
           <!-- Google Map -->
           <div id="map_wrapper" style="box-shadow: 0px 1px 0px #b4b4b4;">
@@ -78,8 +140,7 @@
     </script>
 
     <script type="text/ng-template" id="filter.html">
-      <ion-view title="{{navigation.page1.title}}">
-
+      <ion-view>
 
         <ion-nav-buttons side="left">
            <button class="button button-icon" ng-click="goBack()">back</button>
@@ -90,8 +151,45 @@
         </ion-view>
     </script>
 
+    <script type="text/ng-template" id="favorite.html">
+      <ion-view>
+        <ion-nav-buttons side="left">
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        </ion-nav-buttons>
+
+        <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">
+          
+          <div id="master">
+            <ion-list>
+
+              <ion-item class="master-item item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode()">
+
+                <div class="master-button icon ion-chevron-right"></div>
+                <div class="master-title">{{item.nom}}</div>
+                <div class="master-desc">{{item.desc}}</div>
+
+              </ion-item>
+
+            </ion-list>
+          </div>
+
+          <div id="detail">
+            <div id="detail-backButton" ng-click="detailModeToMaster()">Retour</div>
+          </div>
+
+        </ion-content>
+
+      </ion-view>
+    </script>
+
+    <script type="text/ng-template" id="list.html">
+
+    </script>
+
     <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>>
+    <script src="lib/ionic/js/ionic.bundle.js"></script>&gt;
 
     <script src="lib/jquery/jquery-2.2.1.min.js"></script>
 
