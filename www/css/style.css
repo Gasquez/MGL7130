@@ -21,8 +21,8 @@
 #description_event_content{
 	height: 30%;
 	width: 100%;
-}
 
+}
 #description_event_wrapper{
 	height: 30%;
 	width: 100%;
@@ -43,4 +43,45 @@
 
 #button_details{
 	text-align: center;
+}
+
+
+#description_event{
+	float:left;
+	width: 30%;
+	height: 100%;
+}
+
+/* Portrait  */
+@media (max-width: 640px){
+	.portrait{
+		visibility: visible;
+		display: block;
+	}
+	.paysage{
+		visibility: hidden;
+		display: none;
+	}
+}
+
+/* Paysage */ 
+@media (min-width: 640px){
+	.paysage{
+		visibility: visible;
+		display: block;
+	}
+	.portrait{
+		visibility: hidden;
+		display: none;
+	}
+
+
+	#map_content{
+		height: 100%;
+		width: 70%
+	}
+
+	#description_event_wrapper{
+		height: 100%;
+	}
 }

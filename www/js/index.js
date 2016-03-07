@@ -63,7 +63,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope){
+angularApp.controller("AppCtrl", function($scope,  $ionicNavBarDelegate){
 	angularScope = $scope;
 
 	angularScope.navigation = {
@@ -132,8 +132,29 @@ angularApp.controller("AppCtrl", function($scope){
 //			    map: map
 //		 	}); 
 		  }, null, {enableHighAccuracy:true});
+		WidthChange(window.matchMedia("(min-width: 640px)"));
+
 	};
 
+	// media query event handler
+	if (matchMedia) {
+	  var mq = window.matchMedia("(min-width: 640px)");
+	  mq.addListener(WidthChange);
+	  WidthChange(mq);
+	}
+
+	// change in fonction of width
+	function WidthChange(mq) {
+
+	  if (mq.matches) {
+	  	// if screen >= 640px, hidde nav bar
+	  	 $ionicNavBarDelegate.showBar(false);
+	  } else {
+	  	// if screen < 640px, show nav bar
+	  	$ionicNavBarDelegate.showBar(true);
+	  }
+
+	};
 	google.maps.event.addDomListener(window, "load", initialize);
 });
 
