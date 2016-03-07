@@ -1,29 +1,51 @@
 var angularApp = angular.module('MenuNav', ['ionic']);
 var angularScope;
 //Objet evenemnt pour tester les descriptifs :
-var evenement = new Object();
- evenement.titre ="Old help cause for student";
- evenement.ID = "236554";
- evenement.latlng = "45.514887, -73.559727";
- evenement.organisme ="UQAM";
- evenement.siege ="adresse du siege";
- evenement.webSite="uqam.ca";
- evenement.emplacement = "at the place";
- evenement.date ="23/02/2016";
- evenement.heure ="10h00";
- evenement.langue ="france";
- evenement.causes = "Old Help";
- evenement.activity= "aide et accueil";
- evenement.avantages = "contact avec les gens";
- evenement.periode ="one time";
- evenement.periodicity = "mensuel";
- evenement.contact = "contact@UQAM.ca";
- evenement.acces = "Metro place des arts";
- evenement.descriptif ="Un evenement pour aider les personnes agee a faire les papiers ainsi que leurs courses bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla";
- evenement.accessibleToDisabled = true;
- evenement.inscred = false;
- evenement.favored = false;
+var evenement1 = new Object();
+ evenement1.titre ="Old help cause for student";
+ evenement1.ID = "236554";
+ evenement1.latlng = "45.514887, -73.559727";
+ evenement1.organisme ="UQAM";
+ evenement1.siege ="adresse du siege";
+ evenement1.webSite="uqam.ca";
+ evenement1.emplacement = "at the place";
+ evenement1.date ="23/02/2016";
+ evenement1.heure ="10h00";
+ evenement1.langue ="france";
+ evenement1.causes = "Old Help";
+ evenement1.activity= "aide et accueil";
+ evenement1.avantages = "contact avec les gens";
+ evenement1.periode ="one time";
+ evenement1.periodicity = "mensuel";
+ evenement1.contact = "contact@UQAM.ca";
+ evenement1.acces = "Metro place des arts";
+ evenement1.descriptif ="Un evenement1 pour aider les personnes agee a faire les papiers ainsi que leurs courses bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla bla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla";
+ evenement1.accessibleToDisabled = true;
+ evenement1.inscred = false;
+ evenement1.favored = false;
 
+var evenement2 = new Object();
+ evenement2.titre ="Other event";
+ evenement2.ID = "236554";
+ evenement2.latlng = "45.514887, -73.559727";
+ evenement2.organisme ="UQAM";
+ evenement2.siege ="adresse du siege";
+ evenement2.webSite="uqam.ca";
+ evenement2.emplacement = "at the place";
+ evenement2.date ="23/02/2016";
+ evenement2.heure ="10h00";
+ evenement2.langue ="france";
+ evenement2.causes = "Old Help";
+ evenement2.activity= "aide et accueil";
+ evenement2.avantages = "contact avec les gens";
+ evenement2.periode ="one time";
+ evenement2.periodicity = "mensuel";
+ evenement2.contact = "contact@UQAM.ca";
+ evenement2.acces = "Metro place des arts";
+ evenement2.descriptif ="other event descp";
+ evenement2.accessibleToDisabled = true;
+ evenement2.inscred = false;
+ evenement2.favored = false;
 
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
@@ -65,8 +87,8 @@ angularApp.controller("AppCtrl", function($scope){
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 		var markers = [
-			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4],
-			['Other Event, 00/00/00 00:00 PM', 45.52243499999999, -73.60211099999998],
+			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4, evenement1],
+			['Other Event, 00/00/00 00:00 PM', 45.52243499999999, -73.60211099999998,4,evenement2],
 		];
 
 		// Info windows displayed above each markers
@@ -88,12 +110,13 @@ angularApp.controller("AppCtrl", function($scope){
 			      // Display event informations
 			      eventInfoContent = markers[i][1] + " - " + markers[i][2];
 			      angularScope.$apply(function() {
+			      	currentEvenement = markers[i][4];
 			      	angularScope.eventSelected = { 
-			      		name: evenement.titre,
-						afterName: ', ' + evenement.date + ', ' + evenement.heure,
-			      		desc: '<b> Descriptif : </b>' + evenement.descriptif + 
+			      		name: currentEvenement.titre,
+						afterName: ', ' + currentEvenement.date + ', ' + currentEvenement.heure,
+			      		desc: '<b> Descriptif : </b>' + currentEvenement.descriptif + 
 			      		'<br />' + 
-			      		'<b>Activités : </b>'+ evenement.activity
+			      		'<b>Activités : </b>'+ currentEvenement.activity
 			      	};
 			      });
 				}
