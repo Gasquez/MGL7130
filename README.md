@@ -18,6 +18,10 @@ $ git remote add -t \\* -f origin https://github.com/Warlot-PQ/MGL7130.git
 
 $ git checkout master
 
+Une erreur s'affiche, supprimer les fichiers qui créeront des doublons.
+
+$ git checkout master
+
 L'environnement ionic est prêt et le lien avec GitHub est établi.
 
 ## Configuration du live reload
@@ -62,6 +66,8 @@ Utilisez l'application mobile Ionic View pour visualier l'application Ionic.
 ## Déploiement sur téléphone par PhoneGap
 
 Identifiez-vous sur https://build.phonegap.com/ avec votre Adobe ID.
+
+Avant de zipper, déplacer les dossiers .git (si vous utilisez un outil de diff, par exemple winmerge) et node_modules de la racine du projet hors du dossier de projet. 
 
 Faites un zip du projet au complet et envoyez le sur le site phonegap. Lancez la compilation, scanner le QR code et c'est prêt.
 
