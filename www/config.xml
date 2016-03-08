@@ -4,8 +4,10 @@
   <description>
         An Ionic Framework and Cordova project.
     </description>
-  <author email="you@example.com" href="http://example.com.com/">
-      Your Name Here
+  <author email="" href="">
+	Thomas Gasquez
+	Boniface KAMKO WOUNDEU
+	Pierre-Quentin Warlot
   </author>
   <content src="index.html"/>
   <access origin="*"/>
@@ -20,6 +22,14 @@
   <preference name="SplashShowOnlyFirstTime" value="true" />	
   <preference name="permissions" value="none"/>
 
+  <!-- ANDROID -->
+  <icon src="res/drawable-ldpi/icon_36x36_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+  <icon src="res/drawable-mdpi/icon_48x48_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+  <icon src="res/drawable-hdpi/icon_72x72_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+  <icon src="res/drawable-xhdpi/icon_96x96_xhpdi.png" gap:platform="android" gap:qualifier="xhdpi" />
+  <icon src="res/drawable-xxhdpi/icon_144x144_xxhpdi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+  <icon src="res/drawable-xxxhdpi/icon_192x192_xxxhpdi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+
   <gap:splash gap:platform="android" gap:qualifier="port-ldpi" src="res/drawable-port-ldpi/screen.png" />
   <gap:splash gap:platform="android" gap:qualifier="port-mdpi" src="res/drawable-port-mdpi/screen.png" />
   <gap:splash gap:platform="android" gap:qualifier="port-hdpi" src="res/drawable-port-hdpi/screen.png" />
@@ -33,6 +43,23 @@
   <gap:splash gap:platform="android" gap:qualifier="land-xhdpi" src="res/drawable-land-xhdpi/screen.png" />
   <gap:splash gap:platform="android" gap:qualifier="land-xxhdpi" src="res/drawable-land-xxhdpi/screen.png" />
   <gap:splash gap:platform="android" gap:qualifier="land-xxxhdpi" src="res/drawable-land-xxxhdpi/screen.png" />
+
+  <!-- iOS -->
+  <icon src="res/ios/icon_29x29.png" gap:platform="ios" width="29" height="29" />
+  <icon src="res/ios/icon_40x40.png" gap:platform="ios" width="40" height="40" />
+  <icon src="res/ios/icon_50x50.png" gap:platform="ios" width="50" height="50" />
+  <icon src="res/ios/icon_57x57.png" gap:platform="ios" width="57" height="57" />
+  <icon src="res/ios/icon_58x58.png" gap:platform="ios" width="58" height="58" />
+  <icon src="res/ios/icon_60x60.png" gap:platform="ios" width="60" height="60" />
+  <icon src="res/ios/icon_72x72.png" gap:platform="ios" width="72" height="72" />
+  <icon src="res/ios/icon_76x76.png" gap:platform="ios" width="76" height="76" />
+  <icon src="res/ios/icon_80x80.png" gap:platform="ios" width="80" height="80" />
+  <icon src="res/ios/icon_100x100.png" gap:platform="ios" width="100" height="100" />
+  <icon src="res/ios/icon_114x114.png" gap:platform="ios" width="114" height="114" />
+  <icon src="res/ios/icon_120x120.png" gap:platform="ios" width="120" height="120" />
+  <icon src="res/ios/icon_144x144.png" gap:platform="ios" width="144" height="144" />
+  <icon src="res/ios/icon_152x152.png" gap:platform="ios" width="152" height="152" />
+  <icon src="res/ios/icon_180x180.png" gap:platform="ios" width="180" height="180" />
 
   <!-- iPhone 4 and iPod touch -->
   <gap:splash src="res/ios/iphone4/Default.png" gap:platform="ios" width="320" height="480" />
