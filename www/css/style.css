@@ -44,9 +44,10 @@
 	text-align: center;
 }
 .labels {
-  color: blue;
+  color: white;
   background-color: red;
   font-family: "Lucida Grande", "Arial", sans-serif;
+  font-weight : bold;
   font-size: 9px;
   text-align: center;
   width: 25px;
