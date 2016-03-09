@@ -118,6 +118,8 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 });
 
 angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
+	var angularScope = $scope;;
+
 	function initialize() {
 		var mapOptions = {
 			zoom: 10,
@@ -215,10 +217,7 @@ var app = {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
 	onDeviceReady: function() {
-		// L'API Cordova est prête		
-		angularScope.$apply(function() {
-			// angularScope.version = device.version;
-		});
+		// L'API Cordova est prête
 	}
 };
 app.initialize();
