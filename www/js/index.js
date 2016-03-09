@@ -47,6 +47,8 @@ var evenement2 = new Object();
  evenement2.inscred = false;
  evenement2.favored = false;
 
+var evenements= new array[evenement1,evenement2];
+
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -81,7 +83,9 @@ angularApp.controller("AppCtrl", function($scope,  $ionicNavBarDelegate){
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+				disableDefaultUI: true
+
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
