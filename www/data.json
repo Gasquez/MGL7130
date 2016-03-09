@@ -1,0 +1,6 @@
+var data = { "count": 10785236,
+ "Benevolats": [{"id": 0001, "title": "Enseignant", "organisation": "Panoramio", "url": "http://www.panoramio.com", "date affichage": "21 février 2016","duree": "23 fevrier au 31 mars 2016", "horaire": "9h-12", "periodicité": "chaque mardi", "lieu": "Californie", "longitude": -64.404945, "latitude": -32.202924,}
+,
+{"id": 0002, "title": "Aide rangeur", "organisation": "JCT", "url": "http://www.jct.com", "date affichage": "22 février 2016","duree": "1 au 31 mars 2016", "horaire": "14h-16", "periodicité": "chaque jeudi", "lieu": "Montréal", "longitude": 17.470493, "latitude": 47.867077,}
+]}
+

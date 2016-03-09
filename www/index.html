@@ -2,89 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height">
     <title>Welcome</title>
 
 
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
 
-    <style>
-      #map_wrapper {
-        height: 400px;
-      }
-
-      #map_canvas {
-          width: 100%;
-          height: 100%;
-      }
-
-      .scroll {
-        height: 100%;
-      }
-
-      #master {
-        width: 20%;
-        height: 100%;
-        border-right: 1px solid black;
-      }
-
-      .master-item {
-        border-right: 1px solid black;
-      }
-
-      #detail {
-        width: 80%;
-      }
-
-      #detail-backButton {
-        visibility: hidden;
-      }
-
-      .master-title {
-        width: 80%;
-      }
-
-      .master-button {
-        float: right;
-        text-align: right;
-        width: 20%;
-      }
-
-      .master-desc {
-        text-align: justify;
-      }
-
-      @media screen and (max-width: 768px) { 
-        #master {
-          width: 100%;
-          border-right: none;
-        }
-
-        .master-item {
-          border-right: none;
-        }
-
-        #detail {
-          width: 100%;
-          display: none;
-        }
-
-        #detail-backButton {
-          visibility: visible;
-        }
-
-        #view.mode-detail #master { 
-          /* En mode détail, on cache le maitre pour montrer le détail */
-          display: none;         
-        }
-
-        #view.mode-detail #detail {
-          display: block;
-        }
-      }
-
-    </style>
+    <!-- include Style -->
+    <link href="css/style.css" rel="stylesheet">
 
   </head>
   <body ng-app="MenuNav">
@@ -111,44 +37,46 @@
           <button class="{{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
         </ion-nav-buttons>
 
-        <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true">
+        <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
 
           <!-- Google Map -->
-          <div id="map_wrapper" style="box-shadow: 0px 1px 0px #b4b4b4;">
+          <div id="map_content">
             <div id="map_canvas"></div>
           </div>
 
           <!-- Event information -->
-          <div ng-if="eventSelected.name" 
-            class="padding" 
-            style="text-align: center; font-size: 1.2em">
-            <p style="box-shadow: 0px 1px 0px #b4b4b4;">
-              <i class="icon ion-home"></i>
-              {{eventSelected.name}}
-            </p>
-
+          <div ng-if="eventSelected.name" id="description_event_wrapper" class="padding">
+            <!-- header of description-->
+            <div class ="row" id="wrapper">
+              <div class= "col-15" id="button_favoris">
+                <button class="button button-assertive button-small" ng-click="addtoFavoris()">
+                  Favoris  <i class="icon ion-ios-heart-outline"></i>
+                </button>
+              </div>
+              <div class ="col-70" id="description_event_name">
+              <b> {{eventSelected.name}} </b>
+                {{eventSelected.afterName}}
+              </div>
+              <div class="col-15" id="button_details">
+                <button class="button button-assertive button-small" ng-click="openDetails()">
+                  Détails  <i class="icon ion-arrow-right-a"></i>
+                </button>
+              </div>
+            </div>
+            <!-- description details-->
             <p ng-bind-html="eventSelected.desc"></p>
-
-            <button class="button button-block button-positive">
-              Join the party
-            </button>
           </div>
-
         </ion-content>
-
       </ion-view>
     </script>
 
     <script type="text/ng-template" id="filter.html">
       <ion-view>
-
         <ion-nav-buttons side="left">
-           <button class="button button-icon" ng-click="goBack()">back</button>
+          <button class="button button-icon" ng-click="goBack()">back</button>
         </ion-nav-buttons>
-
         <ion-content scroll="false" data-tap-disabled="true"></ion-content>
-
-        </ion-view>
+      </ion-view>
     </script>
 
     <script type="text/ng-template" id="favorite.html">
@@ -203,6 +131,6 @@
 
     <!-- Google JavaScript API -->
     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-
+    <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
   </body>
 </html>

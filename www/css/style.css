@@ -1,1 +1,115 @@
 /* Empty. Add your own CSS if you like */
+#wrapper {
+	box-shadow: 0px 1px 0px #b4b4b4;
+}
+
+#map_canvas {
+	height: 100%;
+	width: 100%;
+}
+
+#map_content {
+	height: 70%;
+	width: 100%;
+	overflow: hidden;
+
+}
+.scroll {
+	height: 100%;
+}
+
+#master {
+	width: 20%;
+	height: 100%;
+	border-right: 1px solid black;
+}
+      
+.master-item {
+	border-right: 1px solid black;
+}
+
+#detail {
+	width: 80%;
+}
+
+#detail-backButton {
+	visibility: hidden;
+}
+
+.master-title {
+	width: 80%;
+}
+
+.master-button {
+	float: right;
+	text-align: right;
+	width: 20%;
+}
+
+.master-desc {
+	text-align: justify;
+}
+
+@media screen and (max-width: 768px) { 
+	#master {
+	  width: 100%;
+	  border-right: none;
+	}
+
+	.master-item {
+	  border-right: none;
+	}
+
+	#detail {
+	  width: 100%;
+	  display: none;
+	}
+
+	#detail-backButton {
+	  visibility: visible;
+	}
+
+	#view.mode-detail #master { 
+	  /* En mode détail, on cache le maitre pour montrer le détail */
+	  display: none;         
+	}
+
+	#view.mode-detail #detail {
+	  display: block;
+}
+}
+
+#description_event_content{
+	height: 30%;
+	width: 100%;
+}
+
+#description_event_wrapper{
+	height: 30%;
+	width: 100%;
+	text-align: center;
+	font-size: 1.2em;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+#button_favoris{
+	text-align: center;
+	padding-left: 2px;
+}
+#description_event_name{
+	text-align: center;
+	padding-left: 2px;
+
+}
+#button_details{
+	text-align: center;
+}
+.labels {
+  color: blue;
+  background-color: red;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 9px;
+  text-align: center;
+  width: 25px;
+  white-space: nowrap;
+}
