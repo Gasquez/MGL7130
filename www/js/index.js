@@ -1,6 +1,7 @@
+angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
-var angularScope;
-//Objet evenemnt pour tester les descriptifs :
+
+/* For test, waiting for JSON data */
 var evenement1 = new Object();
  evenement1.titre ="Old help cause for student";
  evenement1.ID = "236554";
@@ -47,8 +48,43 @@ var evenement2 = new Object();
  evenement2.inscred = false;
  evenement2.favored = false;
 
-var evenements= new array[evenement1,evenement2];
+var evenementsData = new Array(evenement1,evenement2);
+/* ********************** */
 
+angularApp.factory('BookMarkFactory', function() {
+  return {
+    all: function() {
+		var projectString = window.sessionStorage['BookMark'];
+		if(projectString) {
+			return angular.fromJson(projectString);
+		}
+		/* Hard-codé pour utilisation sans la fonctionnalité d'ajout de favori */
+		//return [];
+		return [
+			{
+				nom: "Test 1",
+				desc: "Information sur test 1"
+			},
+			{
+				nom: "Test 2",
+				desc: "Information sur test 2"
+			}
+		];
+    },
+    add: function(bookMark) {
+    	var bookMarkArray = this.all();
+    	bookMarkArray.push(bookMark);
+    	window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
+	},
+	/* delete non testé */
+	delete: function(index) {
+		var bookMarkArray = this.all();
+		var newBookMarkArray = bookMarkArray.splice(index, 1);
+		window.sessionStorage['BookMark'] = angular.toJson(newBookMarkArray);
+		return newBookMarkArray;
+    }
+  }
+});
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -59,37 +95,67 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 
 	.state('filter', {
 		url: '/filter',
-		templateUrl: 'filter.html'
+		templateUrl: 'filter.html',
+		controller: 'AppCtrl'
+	})
+	.state('list', {
+		url: '/list',
+		templateUrl: 'list.html',
+		controller: 'AppCtrl'
+	})
+
+	.state('favorite', {
+		url: '/favorite',
+		templateUrl: 'favorite.html',
+		controller: 'AppCtrl'
 	});
 
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope,  $ionicNavBarDelegate){
+angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	angularScope = $scope;
 
 	angularScope.navigation = {
-		page1: {
-			title: 'Volunteer Seeker Map',
-			direction: "/home"
+		pageHeaderLeft1: {
+			icon: "button button-icon icon ion-android-globe",
+			title: 'Carte de recherche de volontariat',
+			directionState: "home"
+		},
+		pageHeaderLeft2: {
+			icon: "button button-icon icon ion-ios-list-outline",
+			title: 'Liste de recherche de volontariat',
+			directionState: "list"
+		},
+		pageHeaderLeft3: {
+			icon: "button button-icon icon ion-ios-heart-outline",
+			title: 'Mes favoris',
+			directionState: "favorite"
 		},
 		pageHeaderRight: {
-			title: 'Filter',
-			direction: "filter"
+			icon: "button button-icon icon ion-android-options",
+			title: "Filter",
+			directionState: "filter"
 		}
 	};
+
+	angularScope.goBack = function(){
+		$ionicHistory.goBack();
+	}
+});
+
+angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
+	var angularScope = $scope;;
 
 	function initialize() {
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
-				disableDefaultUI: true
-
+			disableDefaultUI: true
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
 		var markers = [
 			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4, evenement1],
 			['Other Event, 00/00/00 00:00 PM', 45.52243499999999, -73.60211099999998,4,evenement2],
@@ -100,10 +166,23 @@ angularApp.controller("AppCtrl", function($scope,  $ionicNavBarDelegate){
 
 		// Loop through the array of markers and place each one on the map 
 		for(i = 0; i < markers.length; i += 1) {
-			marker = new google.maps.Marker({
-				position: new google.maps.LatLng(markers[i][1], markers[i][2]),
-				map: map
+		
+			var marker = new MarkerWithLabel({
+					position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+					map: map,
+					labelContent: "21-02",
+					labelAnchor: new google.maps.Point(13, 10),
+				    labelClass: "labels", // the CSS class for the label
+				    labelInBackground: false,
+					icon: {
+	                	path: google.maps.SymbolPath.CIRCLE,
+				        scale: 16,
+				        fillColor: "#FF0000",
+				        fillOpacity: 1,
+				        strokeWeight: 0.8
+				    },					
 			});
+		
 
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -162,6 +241,19 @@ angularApp.controller("AppCtrl", function($scope,  $ionicNavBarDelegate){
 	google.maps.event.addDomListener(window, "load", initialize);
 });
 
+angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
+	var angularScope = $scope;
+	
+	angularScope.items = BookMarkFactory.all();
+
+	angularScope.masterToDetailMode = function() {
+		$('#view').addClass('mode-detail');
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#view').removeClass('mode-detail');
+	};
+});
 
 var app = {
 	initialize: function() {
@@ -171,10 +263,7 @@ var app = {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
 	onDeviceReady: function() {
-		// L'API Cordova est prête		
-		angularScope.$apply(function() {
-			// angularScope.version = device.version;
-		});
+		// L'API Cordova est prête
 	}
 };
 app.initialize();

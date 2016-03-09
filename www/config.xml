@@ -4,9 +4,11 @@
   <description>
         An Ionic Framework and Cordova project.
     </description>
-  <author email="you@example.com" href="http://example.com.com/">
-      Your Name Here
-    </author>
+  <author email="" href="">
+	Thomas Gasquez
+	Boniface KAMKO WOUNDEU
+	Pierre-Quentin Warlot
+  </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
@@ -20,7 +22,67 @@
   <preference name="SplashShowOnlyFirstTime" value="true" />	
   <preference name="permissions" value="none"/>
 
-  <gap:splash src="Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+  <!-- ANDROID -->
+  <icon src="res/drawable-ldpi/icon_36x36_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+  <icon src="res/drawable-mdpi/icon_48x48_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+  <icon src="res/drawable-hdpi/icon_72x72_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+  <icon src="res/drawable-xhdpi/icon_96x96_xhpdi.png" gap:platform="android" gap:qualifier="xhdpi" />
+  <icon src="res/drawable-xxhdpi/icon_144x144_xxhpdi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+  <icon src="res/drawable-xxxhdpi/icon_192x192_xxxhpdi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+
+  <gap:splash gap:platform="android" gap:qualifier="port-ldpi" src="res/drawable-port-ldpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="port-mdpi" src="res/drawable-port-mdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="port-hdpi" src="res/drawable-port-hdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="port-xhdpi" src="res/drawable-port-xhdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="port-xxhdpi" src="res/drawable-port-xxhdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="port-xxxhdpi" src="res/drawable-port-xxxhdpi/screen.png" />
+
+  <gap:splash gap:platform="android" gap:qualifier="land-ldpi" src="res/drawable-land-ldpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="land-mdpi" src="res/drawable-land-mdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="land-hdpi" src="res/drawable-land-hdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="land-xhdpi" src="res/drawable-land-xhdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="land-xxhdpi" src="res/drawable-land-xxhdpi/screen.png" />
+  <gap:splash gap:platform="android" gap:qualifier="land-xxxhdpi" src="res/drawable-land-xxxhdpi/screen.png" />
+
+  <!-- iOS -->
+  <icon src="res/ios/icon_29x29.png" gap:platform="ios" width="29" height="29" />
+  <icon src="res/ios/icon_40x40.png" gap:platform="ios" width="40" height="40" />
+  <icon src="res/ios/icon_50x50.png" gap:platform="ios" width="50" height="50" />
+  <icon src="res/ios/icon_57x57.png" gap:platform="ios" width="57" height="57" />
+  <icon src="res/ios/icon_58x58.png" gap:platform="ios" width="58" height="58" />
+  <icon src="res/ios/icon_60x60.png" gap:platform="ios" width="60" height="60" />
+  <icon src="res/ios/icon_72x72.png" gap:platform="ios" width="72" height="72" />
+  <icon src="res/ios/icon_76x76.png" gap:platform="ios" width="76" height="76" />
+  <icon src="res/ios/icon_80x80.png" gap:platform="ios" width="80" height="80" />
+  <icon src="res/ios/icon_100x100.png" gap:platform="ios" width="100" height="100" />
+  <icon src="res/ios/icon_114x114.png" gap:platform="ios" width="114" height="114" />
+  <icon src="res/ios/icon_120x120.png" gap:platform="ios" width="120" height="120" />
+  <icon src="res/ios/icon_144x144.png" gap:platform="ios" width="144" height="144" />
+  <icon src="res/ios/icon_152x152.png" gap:platform="ios" width="152" height="152" />
+  <icon src="res/ios/icon_180x180.png" gap:platform="ios" width="180" height="180" />
+
+  <!-- iPhone 4 and iPod touch -->
+  <gap:splash src="res/ios/iphone4/Default.png" gap:platform="ios" width="320" height="480" />
+  <gap:splash src="res/ios/iphone4/Default@2x.png" gap:platform="ios" width="640" height="960" />
+
+  <!-- iPhone 5 / iPod Touch (5th Generation) -->
+  <gap:splash src="res/ios/iphone5/Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+
+  <!-- iPhone 6 -->
+  <gap:splash src="res/ios/iphone6/Default-667h@2x.png" gap:platform="ios" width="750" height="1334" />
+  <gap:splash src="res/ios/iphone6/Default-Portrait-736h@3x.png" gap:platform="ios" width="1242" height="2208" />
+  <gap:splash src="res/ios/iphone6/Default-Landscape-736h@3x.png" gap:platform="ios" width="2208" height="1242" />
+
+  <!-- iPad -->
+  <gap:splash src="res/ios/Default-Portrait.png" gap:platform="ios" width="768" height="1024" />
+  <gap:splash src="res/ios/Default-Landscape.png" gap:platform="ios" width="1024" height="768" />
+
+  <!-- Retina iPad -->
+  <gap:splash src="res/ios/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" />
+  <gap:splash src="res/ios/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" />
+
+  <gap:splash src="splash.png" />
+
   <gap:plugin name="cordova-plugin-console" source="npm" />
   <gap:plugin name="cordova-plugin-device" source="npm" />
   <gap:plugin name="cordova-plugin-splashscreen" source="npm" />
@@ -31,59 +93,4 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
-
-  <platform name="android">
-		<allow-intent href="market:*" />
-		
-		<!-- Icon size reference: http://stackoverflow.com/questions/12768128/android-launcher-icon-size -->
-		<icon src="res/android/ldpi.png" density="ldpi" />
-		<icon src="res/android/mdpi.png" density="mdpi" />
-		<icon src="res/android/hdpi.png" density="hdpi" />
-		<icon src="res/android/xhdpi.png" density="xhdpi" />
-		<icon src="res/android/xxhdpi.png" density="xxhdpi" />
-		
-		<!-- Splash Screen size reference: https://cordova.apache.org/docs/en/5.0.0/config_ref/images.html -->
-		<splash src="res/screen/android/screen-land-hdpi.png" density="land-hdpi" qualifier="land-hdpi"/>
-		<splash src="res/screen/android/screen-land-ldpi.png" density="land-ldpi" qualifier="land-ldpi"/>
-		<splash src="res/screen/android/screen-land-mdpi.png" density="land-mdpi" qualifier="land-mdpi"/>
-		<splash src="res/screen/android/screen-land-xhdpi.png" density="land-xhdpi" qualifier="land-xhdpi"/>
-		<splash src="res/screen/android/screen-land-xxhdpi.png" density="land-xxhdpi" qualifier="land-xxhdpi"/>
-		<splash src="res/screen/android/screen-port-hdpi.png" density="port-hdpi" qualifier="port-hdpi"/>
-		<splash src="res/screen/android/screen-port-ldpi.png" density="port-ldpi" qualifier="port-ldpi"/>
-		<splash src="res/screen/android/screen-port-mdpi.png" density="port-mdpi" qualifier="port-mdpi"/>
-		<splash src="res/screen/android/screen-port-xhdpi.png" density="port-xhdpi" qualifier="port-xhdpi"/>
-		<splash src="res/screen/android/screen-port-xxhdpi.png" density="port-xxhdpi" qualifier="port-xxhdpi"/>
-	</platform>
-	<platform name="ios">
-		<allow-intent href="itms:*" />
-		<allow-intent href="itms-apps:*" />
-		
-		<icon src="res/ios/icon-180.png" width="180" height="180" />
-		<icon src="res/ios/icon-60.png" width="60" height="60" />
-		<icon src="res/ios/icon-120.png" width="120" height="120" />
-		<icon src="res/ios/icon-76.png" width="76" height="76" />
-		<icon src="res/ios/icon-152.png" width="152" height="152" />
-		<icon src="res/ios/icon-40.png" width="40" height="40" />
-		<icon src="res/ios/icon-80.png" width="80" height="80" />
-		<icon src="res/ios/icon-57.png" width="57" height="57" />
-		<icon src="res/ios/icon-114.png" width="114" height="114" />
-		<icon src="res/ios/icon-72.png" width="72" height="72" />
-		<icon src="res/ios/icon-144.png" width="144" height="144" />
-		<icon src="res/ios/icon-29.png" width="29" height="29" />
-		<icon src="res/ios/icon-58.png" width="58" height="58" />
-		<icon src="res/ios/icon-50.png" width="50" height="50" />
-		<icon src="res/ios/icon-100.png" width="100" height="100" />
-
-		<!-- Splash Screen size reference: https://cordova.apache.org/docs/en/5.0.0/config_ref/images.html -->
-		<splash src="res/screen/ios/splash-320-480.png" width="320" height="480"/>
-		<splash src="res/screen/ios/splash-640-960.png" width="640" height="960"/>
-		<splash src="res/screen/ios/splash-768-1024.png" width="768" height="1024"/>
-		<splash src="res/screen/ios/splash-1536-2048.png" width="1536" height="2048"/>
-		<splash src="res/screen/ios/splash-1024-768.png" width="1024" height="768"/>
-		<splash src="res/screen/ios/splash-2048-1536.png" width="2048" height="1536"/>
-		<splash src="res/screen/ios/splash-640-1136.png" width="640" height="1136"/>
-		<splash src="res/screen/ios/splash-750-1334.png" width="750" height="1334"/>
-		<splash src="res/screen/ios/splash-1242-2208.png" width="1242" height="2208"/>
-		<splash src="res/screen/ios/splash-2208-1242.png" width="2208" height="1242"/>
-	</platform>
 </widget>

@@ -1,0 +1,28 @@
+var objet = {
+	"evenements": [{
+		"titre": "Old help cause for student",
+		"id": 100002,
+		"cibles": ["jeune"],
+		"longitude": "45.505638",
+		"latitude": "-73.613770",
+		"organisme": "UdeM",
+		"siege": "adresse du siege",
+		"emplacement": "at the place",
+		"jours": ["mardi"],
+		"heureDeFin": "18h00",
+		"heureDeDebut":"20h00",
+		"duree":"2h00",
+		"dateDeBut":"12368522587",
+		"dateDeFin":"123685146545",
+		"langues": ["france","anglais"],
+		"causes": ["Old Help"],
+		"activities": ["aide","accueil"],
+		"avantages": ["contact avec les gens","plaisir de sortir"],
+		"periodicity": "bi-hebdomadaire",
+		"contacts": [{tel:"123456789",mail:"contact@udem.ca",site:"udem.ca"}],
+		"handicape":true,
+		"access": ["Metro University of Montreal","bus numero 42"],
+		"descriptifShort":"Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+		"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
+	}]
+}
