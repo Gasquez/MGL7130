@@ -12,26 +12,6 @@
     <!-- include Style -->
     <link href="css/style.css" rel="stylesheet">
 
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
-
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
-    <script src="cordova.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-
-    <!-- Google JavaScript API -->
-    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-    <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
-    
-     <!-- your data's json -->
-    <script type="text/javascript" src="json/data.json"></script>
-
-    <!-- your app's js -->
-    <script src="js/app.js"></script>
-    <script src="js/index.js"></script>
-
   </head>
   <body ng-app="MenuNav">
 
@@ -43,21 +23,21 @@
     <!-- Page 1 -->
 
     <script type="text/ng-template" id="home.html">
-      <ion-view title="{{navigation.page1.title}}">
+      <ion-view>
 
         <!-- Navigation button -->
         <ion-nav-buttons side="left">
-          <button class="button button-icon icon ion-android-globe"></button>
-          <button class="button button-icon icon ion-ios-list-outline"></button>
-          <button class="button button-icon icon ion-ios-heart-outline"></button>
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
         </ion-nav-buttons>
 
         <ion-nav-buttons side="right">
           <!--  button-icon icon icon-right ion-arrow-right-c -->
-          <button class="button button-icon icon ion-android-options" ui-sref="{{navigation.pageHeaderRight.direction}}"></button>
+          <button class="{{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
         </ion-nav-buttons>
 
-        <ion-content scroll="false" data-tap-disabled="true" id="wrapper">
+        <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
 
           <!-- Google Map -->
           <div id="map_content">
@@ -91,12 +71,66 @@
     </script>
 
     <script type="text/ng-template" id="filter.html">
-      <ion-view title="{{navigation.page1.title}}">
+      <ion-view>
         <ion-nav-buttons side="left">
           <button class="button button-icon" ng-click="goBack()">back</button>
         </ion-nav-buttons>
         <ion-content scroll="false" data-tap-disabled="true"></ion-content>
       </ion-view>
     </script>
+
+    <script type="text/ng-template" id="favorite.html">
+      <ion-view>
+        <ion-nav-buttons side="left">
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        </ion-nav-buttons>
+
+        <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">
+          
+          <div id="master">
+            <ion-list>
+
+              <ion-item class="master-item item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode()">
+
+                <div class="master-button icon ion-chevron-right"></div>
+                <div class="master-title">{{item.nom}}</div>
+                <div class="master-desc">{{item.desc}}</div>
+
+              </ion-item>
+
+            </ion-list>
+          </div>
+
+          <div id="detail">
+            <div id="detail-backButton" ng-click="detailModeToMaster()">Retour</div>
+          </div>
+
+        </ion-content>
+
+      </ion-view>
+    </script>
+
+    <script type="text/ng-template" id="list.html">
+
+    </script>
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>&gt;
+
+    <script src="lib/jquery/jquery-2.2.1.min.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+
+    <script src="js/index.js"></script>
+
+    <!-- Google JavaScript API -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
   </body>
 </html>

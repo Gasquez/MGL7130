@@ -18,6 +18,67 @@
 	height: 100%;
 }
 
+#master {
+	width: 20%;
+	height: 100%;
+	border-right: 1px solid black;
+}
+      
+.master-item {
+	border-right: 1px solid black;
+}
+
+#detail {
+	width: 80%;
+}
+
+#detail-backButton {
+	visibility: hidden;
+}
+
+.master-title {
+	width: 80%;
+}
+
+.master-button {
+	float: right;
+	text-align: right;
+	width: 20%;
+}
+
+.master-desc {
+	text-align: justify;
+}
+
+@media screen and (max-width: 768px) { 
+	#master {
+	  width: 100%;
+	  border-right: none;
+	}
+
+	.master-item {
+	  border-right: none;
+	}
+
+	#detail {
+	  width: 100%;
+	  display: none;
+	}
+
+	#detail-backButton {
+	  visibility: visible;
+	}
+
+	#view.mode-detail #master { 
+	  /* En mode détail, on cache le maitre pour montrer le détail */
+	  display: none;         
+	}
+
+	#view.mode-detail #detail {
+	  display: block;
+}
+}
+
 #description_event_content{
 	height: 30%;
 	width: 100%;

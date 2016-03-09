@@ -1,30 +1,64 @@
 angular.module('starter', ['ionic', 'ngCordova']);
-
 var angularApp = angular.module('MenuNav', ['ionic']);
-var angularScope;
-//Objet evenemnt pour tester les descriptifs :
+
+angularApp.factory('BookMarkFactory', function() {
+  return {
+    all: function() {
+		var projectString = window.sessionStorage['BookMark'];
+		if(projectString) {
+			return angular.fromJson(projectString);
+		}
+		/* Hard-codé pour utilisation sans la fonctionnalité d'ajout de favori */
+		//return [];
+		return [
+			{
+				nom: "Test 1",
+				desc: "Information sur test 1"
+			},
+			{
+				nom: "Test 2",
+				desc: "Information sur test 2"
+			}
+		];
+    },
+    add: function(bookMark) {
+    	var bookMarkArray = this.all();
+    	bookMarkArray.push(bookMark);
+    	window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
+	},
+	/* delete non testé */
+	delete: function(index) {
+		var bookMarkArray = this.all();
+		var newBookMarkArray = bookMarkArray.splice(index, 1);
+		window.sessionStorage['BookMark'] = angular.toJson(newBookMarkArray);
+		return newBookMarkArray;
+    }
+  }
+});
+
+//Objet evenemnt pour tester les descriptifs - For test, waiting for Json Data
 var evenement = new Object();
- evenement.titre ="Old help cause for student";
- evenement.ID = "236554";
- evenement.latlng = "45.514887, -73.559727";
- evenement.organisme ="UQAM";
- evenement.siege ="adresse du siege";
- evenement.webSite="uqam.ca";
- evenement.emplacement = "at the place";
- evenement.date ="23/02/2016";
- evenement.heure ="10h00";
- evenement.langue ="france";
- evenement.causes = "Old Help";
- evenement.activity= "aide et accueil";
- evenement.avantages = "contact avec les gens";
- evenement.periode ="one time";
- evenement.periodicity = "mensuel";
- evenement.contact = "contact@UQAM.ca";
- evenement.acces = "Metro place des arts";
- evenement.descriptif ="Un evenement pour aider les personnes agées à faire les papiers ainsi que leurs courses blabla blabla";
- evenement.accessibleToDisabled = true;
- evenement.inscred = false;
- evenement.favored = false;
+evenement.titre ="Old help cause for student";
+evenement.ID = "236554";
+evenement.latlng = "45.514887, -73.559727";
+evenement.organisme ="UQAM";
+evenement.siege ="adresse du siege";
+evenement.webSite="uqam.ca";
+evenement.emplacement = "at the place";
+evenement.date ="23/02/2016";
+evenement.heure ="10h00";
+evenement.langue ="france";
+evenement.causes = "Old Help";
+evenement.activity= "aide et accueil";
+evenement.avantages = "contact avec les gens";
+evenement.periode ="one time";
+evenement.periodicity = "mensuel";
+evenement.contact = "contact@UQAM.ca";
+evenement.acces = "Metro place des arts";
+evenement.descriptif ="Un evenement pour aider les personnes agées à faire les papiers ainsi que leurs courses blabla blabla";
+evenement.accessibleToDisabled = true;
+evenement.inscred = false;
+evenement.favored = false;
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -37,27 +71,54 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 		url: '/filter',
 		templateUrl: 'filter.html',
 		controller: 'AppCtrl'
+	})
+	.state('list', {
+		url: '/list',
+		templateUrl: 'list.html',
+		controller: 'AppCtrl'
+	})
+
+	.state('favorite', {
+		url: '/favorite',
+		templateUrl: 'favorite.html',
+		controller: 'AppCtrl'
 	});
 
 	$urlRouterProvider.otherwise('/home');
 })
 
 angularApp.controller("AppCtrl", function($scope, $ionicHistory){
-	angularScope = $scope;
+	var angularScope = $scope;
 
 	angularScope.navigation = {
-		page1: {
-			title: 'Symplik Map',
-			direction: "/home"
+		pageHeaderLeft1: {
+			icon: "button button-icon icon ion-android-globe",
+			title: 'Carte de recherche de volontariat',
+			directionState: "home"
+		},
+		pageHeaderLeft2: {
+			icon: "button button-icon icon ion-ios-list-outline",
+			title: 'Liste de recherche de volontariat',
+			directionState: "list"
+		},
+		pageHeaderLeft3: {
+			icon: "button button-icon icon ion-ios-heart-outline",
+			title: 'Mes favoris',
+			directionState: "favorite"
 		},
 		pageHeaderRight: {
-			direction: "filter"
+			icon: "button button-icon icon ion-android-options",
+			directionState: "filter"
 		}
 	};
 
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
-	};
+	}
+});
+
+angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
+	var angularScope = $scope;;
 
 	function initialize() {
 		var mapOptions = {
@@ -134,6 +195,19 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	google.maps.event.addDomListener(window, "load", initialize);
 });
 
+angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
+	var angularScope = $scope;
+	
+	angularScope.items = BookMarkFactory.all();
+
+	angularScope.masterToDetailMode = function() {
+		$('#view').addClass('mode-detail');
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#view').removeClass('mode-detail');
+	};
+});
 
 var app = {
 	initialize: function() {
@@ -143,10 +217,7 @@ var app = {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
 	onDeviceReady: function() {
-		// L'API Cordova est prête		
-		angularScope.$apply(function() {
-			// angularScope.version = device.version;
-		});
+		// L'API Cordova est prête
 	}
 };
 app.initialize();
