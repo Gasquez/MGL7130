@@ -13,7 +13,7 @@
     <link href="css/style.css" rel="stylesheet">
 
   </head>
-  <body ng-app="MenuNav">
+  <body ng-app="MenuNav" ng-controller="AppCtrl">
 
   <ion-side-menus>
       
@@ -29,29 +29,21 @@
     </ion-pane>
     </ion-side-menu-content>
 
-    <ion-side-menu width="150" side ="left" expose-aside-when="(min-width:640px)">
+    <ion-side-menu width="150" side ="left" expose-aside-when="(min-width:768px)">
       <ion-header-bar class="bar-stable title">
         <h2>Simplyk</h2>
       </ion-header-bar>
       <ion-content>
         <div class="list">
-          <a class="item item-icon-left" href="#">
-              <i class="icon ion-earth"></i>
-              Carte
-            </a>
-
-            <a class="item item-icon-left" href="#">
-              <i class="icon ion-ios-list-outline"></i>
-              Liste
-            </a>
-
-            <a class="item item-icon-left" href="#">
-              <i class="icon ion-ios-heart-outline"></i>
-              Favoris
-              <span class="item-note">
-                (0)
-              </span>
-            </a>
+            <button id="wrapper" class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}">
+              {{navigation.pageHeaderLeft1.titleShort}}
+              </button>
+            <button id="wrapper" class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}">
+              {{navigation.pageHeaderLeft2.titleShort}}
+              </button>
+            <button id="wrapper" class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}">
+              {{navigation.pageHeaderLeft3.titleShort}}
+              </button>
         </div>
       </ion-content>
     </ion-side-menu>
@@ -211,7 +203,88 @@
     </script>
 
     <script type="text/ng-template" id="list.html">
+  <ion-view>
+        <ion-nav-buttons side="left">
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        </ion-nav-buttons>
+        <ion-content id="viewList" ng-controller="ListCtrl" scroll="false" data-tap-disabled="true">
+            <div class="portrait">
+              <div id="master">
+                <ion-list>
 
+                  <ion-item class="master-item item-text-wrap" ng-repeat="evenement in allEvent" ng-click="masterToDetailMode(evenement)">
+
+                    <div class="master-button icon ion-chevron-right"></div>
+                    <div class="master-title">{{evenement.titre}}</div>
+                    <div class="master-desc">{{evenement.descriptifShort}}</div>
+
+                  </ion-item>
+
+                </ion-list>
+              </div>
+              <div id="detail">
+                <div id="detail-backButton" ng-click="detailModeToMaster()">Retour</div>
+                <!-- Event information -->
+                <div id="description_event_wrapper" ng-if="evenement.name" class="padding">
+                  <!-- header of description-->
+                  <div id="wrapper">
+                    <div id="description_event_name">
+                      <b> {{evenement.name}} </b>
+                      {{evenement.afterName}}
+                    </div>
+                  </div>
+                  <!-- description details-->
+                  <p ng-bind-html="evenement.desc"></p>
+                  
+                  <div id="button_favoris">
+                    <button class="button button-assertive button-small" ng-click="addtoFavoris()">
+                      Favoris  <i class="icon ion-ios-heart-outline"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Landscape mode, event description -->
+            <div class="paysage">
+             <ion-list id="listeventList">
+              <ion-item class="master-item item-text-wrap" ng-repeat="evenementDetails in allEvent" ng-click="masterToDetailModeLandscape(evenementDetails)">
+
+                <div class="master-button icon ion-chevron-right"></div>
+                <div class="master-title">{{evenementDetails.titre}}</div>
+                <div class="master-desc">{{evenementDetails.descriptifShort}}</div>
+
+              </ion-item>
+
+              </ion-list>
+              <div id="detailsList">
+                <!-- Event information -->
+                <div ng-if="evenementDetails.name" id="description_event_wrapper" class="padding">
+                  <!-- header of description-->
+                  <div id="wrapper">
+                    
+                    <div id="description_event_name">
+                      <b> {{evenementDetails.name}} </b>
+                      {{evenementDetails.afterName}}
+                    </div>
+                  </div>
+                  <!-- description details-->
+                  <p ng-bind-html="evenementDetails.desc"></p>
+                  
+                  <div id="button_favoris">
+                    <button class="button button-assertive button-small" ng-click="addtoFavoris()">
+                      Favoris  <i class="icon ion-ios-heart-outline"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </ion-content>
+        </ion-view>
     </script>
 
     <!-- ionic/angularjs js -->

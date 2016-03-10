@@ -115,28 +115,32 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicHistory){
+angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHistory){
 	angularScope = $scope;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
 			icon: "button button-icon icon ion-android-globe",
 			title: 'Carte de recherche de volontariat',
+			titleShort: 'Carte',
 			directionState: "home"
 		},
 		pageHeaderLeft2: {
 			icon: "button button-icon icon ion-ios-list-outline",
 			title: 'Liste de recherche de volontariat',
+			titleShort: 'Liste',
 			directionState: "list"
 		},
 		pageHeaderLeft3: {
 			icon: "button button-icon icon ion-ios-heart-outline",
 			title: 'Mes favoris',
+			titleShort:'Favoris',
 			directionState: "favorite"
 		},
 		pageHeaderRight: {
 			icon: "button button-icon icon ion-android-options",
 			title: "Filter",
+			titleShort:'Filtres',
 			directionState: "filter"
 		}
 	};
@@ -179,6 +183,14 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	$scope.serverSideChange = function(item) {
 		console.log("Selected Serverside, text:", item.text, "value:", item.value);
 	};
+
+	//Close nav bar every time you load the view
+	angularScope.$on('$ionicView.beforeEnter', function() {
+		if(window.matchMedia("(min-width: 640px)").matches)
+		{
+			$ionicNavBarDelegate.showBar(false);
+		}
+	});
 });
 
 angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
@@ -276,6 +288,38 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 
 	angularScope.detailModeToMaster = function() {
 		$('#view').removeClass('mode-detail');
+	};
+});
+
+
+angularApp.controller("ListCtrl", function($scope){
+	var angularScope = $scope;
+
+	angularScope.allEvent = evenementsData;
+
+	angularScope.masterToDetailMode = function(event) {
+		$('#viewList').addClass('mode-detail');
+		angularScope.evenement = {
+      		name: event.titre,
+			afterName: ', ' +event.date + ', ' + event.heure,
+      		desc: '<b> Descriptif : </b>' + event.descriptif + 
+      		'<br />' + 
+      		'<b>Activités : </b>'+ event.activity
+      	};
+	};
+
+	angularScope.masterToDetailModeLandscape = function(event) {
+		angularScope.evenementDetails = {
+	  		name: event.titre,
+			afterName: ', ' +event.date + ', ' + event.heure,
+	  		desc: '<b> Descriptif : </b>' + event.descriptif + 
+	  		'<br />' + 
+	  		'<b>Activités : </b>'+ event.activity
+	  	};
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#viewList').removeClass('mode-detail');
 	};
 });
 
