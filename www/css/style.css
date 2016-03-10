@@ -19,6 +19,7 @@
 }
 
 #master {
+	float: left;
 	width: 20%;
 	height: 100%;
 	border-right: 1px solid black;
@@ -29,15 +30,22 @@
 }
 
 #detail {
+	float: left;
 	width: 80%;
+	height: 100%;
+}
+#detail p {
+	margin-bottom: 5px;
 }
 
 #detail-backButton {
 	visibility: hidden;
+	position: absolute;
 }
 
 .master-title {
 	width: 80%;
+	text-decoration: underline;
 }
 
 .master-button {
@@ -50,6 +58,10 @@
 	text-align: justify;
 }
 
+.master-item-selected {
+	color: orange;
+}
+
 @media screen and (max-width: 768px) { 
 	#master {
 	  width: 100%;
@@ -58,6 +70,10 @@
 
 	.master-item {
 	  border-right: none;
+	}
+
+	.master-item-selected {
+		color: black;
 	}
 
 	#detail {
@@ -76,7 +92,7 @@
 
 	#view.mode-detail #detail {
 	  display: block;
-}
+	}
 }
 
 #description_event_content{
@@ -112,4 +128,45 @@
   text-align: center;
   width: 25px;
   white-space: nowrap;
+}
+
+.volunteer-header {
+	margin-top: 25px;
+}
+
+.volunteer-title {
+	text-align: center;
+}
+
+.volunteer-join {
+	float: left;
+	margin-left: 20%;
+}
+
+.volunteer-favorite {
+	float: right;
+	margin-right: 20%;
+}
+
+.text-justify {
+	text-align: justify;
+}
+
+.scrollable-wrapper {
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+.icon-img {
+	width: 32px !important;
+	height: 32px !important;
+	top: 11px !important;
+}
+
+.icon-stack {
+	i {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 }

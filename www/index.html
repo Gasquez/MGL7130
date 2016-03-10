@@ -89,22 +89,134 @@
 
         <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">
           
-          <div id="master">
+          <div id="master" id="master-list">
             <ion-list>
 
-              <ion-item class="master-item item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode()">
+              <ion-item class="master-item item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
 
                 <div class="master-button icon ion-chevron-right"></div>
-                <div class="master-title">{{item.nom}}</div>
-                <div class="master-desc">{{item.desc}}</div>
+                <div class="master-title">{{item.titre}}</div>
+                <div class="master-desc">{{item.descriptifShort}}</div>
 
               </ion-item>
 
             </ion-list>
           </div>
 
-          <div id="detail">
-            <div id="detail-backButton" ng-click="detailModeToMaster()">Retour</div>
+          <div id="detail" class="scrollable-wrapper">
+            <div id="detail-backButton" class="button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
+
+            <div class="volunteer-header">
+              <div class="volunteer-join button button-icon icon  ion-android-checkbox-outline"></div>
+              <div class="volunteer-favorite button button-icon icon  ion-ios-heart-outline"></div>
+              <div class="volunteer-title">
+                <p>{{itemSelected.titre}}</p>
+                <p>#{{itemSelected.id}}</p>
+              </div>
+            </div>
+
+            <div class="list">
+
+              <div class="item item-divider">
+                Planification
+              </div>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-calendar"></i>
+                Du {{itemSelected.dateDebut | date: 'dd/MM/yyyy'}} au {{itemSelected.dateDeFin | date: 'dd/MM/yyyy'}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-clock"></i>
+                Du {{itemSelected.heureDeDebut}} à {{itemSelected.heureDeFin}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-gear-a"></i>
+                engagement de {{itemSelected.duree}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-loop"></i>
+                periodicité {{itemSelected.periodicity}}
+              </a>
+
+              <div class="item item-divider">
+                Bénévolat
+              </div>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-clipboard"></i>
+                <span ng-repeat=" activity in itemSelected.activities">
+                  {{activity}}
+                </span>
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-android-contacts"></i>
+                <span ng-repeat=" cible in itemSelected.cibles">
+                  {{cible}}
+                </span>
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-chatbubble-working"></i>
+                <span ng-repeat=" langue in itemSelected.langues">
+                  {{langue}}
+                </span
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-ios-help"></i>
+                <span ng-repeat=" cause in itemSelected.causes">
+                  {{cause}}
+                </span
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-ios-plus"></i>
+                <span ng-repeat=" avantage in itemSelected.avantages">
+                  {{avantage}}
+                </span
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-location"></i>
+                {{itemSelected.emplacement[0]}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-navigate"></i>
+                {{itemSelected.emplacement[1]}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                  <img class="icon icon-img" src="img/icon-disable-people.png"></img>
+                </span>
+                {{itemSelected.handicape}}
+              </a>
+
+              <div class="item item-divider">
+                Description
+              </div>
+              <a class="item item-text-wrap text-justify" href="#">
+                {{itemSelected.descriptifLong}}
+              </a>
+
+              <div class="item item-divider">
+                Organisateur
+              </div>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-location"></i>
+               {{itemSelected.organisme}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-map"></i>
+                {{itemSelected.siege}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-at"></i>
+                {{itemSelected.contacts.mail}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-cloud"></i>
+                {{itemSelected.contacts.site}}
+              </a>
+              <a class="item item-text-wrap item-icon-left" href="#">
+                <i class="icon ion-ios-telephone"></i>
+                {{itemSelected.contacts.tel}}
+              </a>
+
+            </div>
+
           </div>
 
         </ion-content>

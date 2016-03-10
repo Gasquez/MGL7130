@@ -12,12 +12,64 @@ angularApp.factory('BookMarkFactory', function() {
 		//return [];
 		return [
 			{
-				nom: "Test 1",
-				desc: "Information sur test 1"
+				"titre": "Old help cause for student 1",
+				"id": 100002,
+				"cibles": ["jeune"],
+				"longitude": "45.505638",
+				"latitude": "-73.613770",
+				"organisme": "UdeM",
+				"siege": "adresse du siege",
+				"emplacement": ["UQAM", "2100 St-Urb"],
+				"jours": ["mardi"],
+				"heureDeFin": "18h00",
+				"heureDeDebut": "20h00",
+				"duree": "2h00",
+				"dateDebut": "12368522587",
+				"dateDeFin": "123685146545",
+				"langues": ["france", "anglais"],
+				"causes": ["Old Help"],
+				"activities": ["aide,", "accueil"],
+				"avantages": ["contact avec les gens,", "plaisir de sortir"],
+				"periodicity": "bi-hebdomadaire",
+				"contacts": {
+					"tel": "123456789",
+					"mail": "contact@udem.ca",
+					"site": "udem.ca"
+				},
+				"handicape": "oui",
+				"access": ["Metro University of Montreal", "bus numero 42"],
+				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
 			},
 			{
-				nom: "Test 2",
-				desc: "Information sur test 2"
+				"titre": "Old help cause for student 2",
+				"id": 100003,
+				"cibles": ["jeune"],
+				"longitude": "45.505638",
+				"latitude": "-73.613770",
+				"organisme": "UdeM",
+				"siege": "adresse du siege",
+				"emplacement": ["UQAM", "2100 St-Urb"],
+				"jours": ["mardi"],
+				"heureDeFin": "18h00",
+				"heureDeDebut": "20h00",
+				"duree": "2h00",
+				"dateDebut": "12368522587",
+				"dateDeFin": "123685146545",
+				"langues": ["france", "anglais"],
+				"causes": ["Old Help"],
+				"activities": ["aide", "accueil"],
+				"avantages": ["contact avec les gens", "plaisir de sortir"],
+				"periodicity": "bi-hebdomadaire",
+				"contacts": {
+					"tel": "123456789",
+					"mail": "contact@udem.ca",
+					"site": "udem.ca"
+				},
+				"handicape": "non",
+				"access": ["Metro University of Montreal", "bus numero 42"],
+				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
 			}
 		];
     },
@@ -118,7 +170,7 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 });
 
 angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
-	var angularScope = $scope;;
+	var angularScope = $scope;
 
 	function initialize() {
 		var mapOptions = {
@@ -199,9 +251,15 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	var angularScope = $scope;
 	
 	angularScope.items = BookMarkFactory.all();
+	angularScope.itemSelected = null;
 
-	angularScope.masterToDetailMode = function() {
+	angularScope.masterToDetailMode = function($index) {
 		$('#view').addClass('mode-detail');
+
+		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
+		$(".master-item:nth-child(" + childNumber + ")").addClass('master-item-selected').siblings().removeClass('master-item-selected');
+	
+		angularScope.itemSelected = BookMarkFactory.all()[$index];
 	};
 
 	angularScope.detailModeToMaster = function() {
