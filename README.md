@@ -36,6 +36,7 @@ Exemple ionic.project :
   "name": "Simplyk",
   "app_id": "",
   "watchPatterns": [
+    "www/*",
     "www/js/*",
     "!www/css/**/*"
   ],
@@ -69,7 +70,7 @@ Identifiez-vous sur https://build.phonegap.com/ avec votre Adobe ID.
 
 Avant de zipper, déplacer les dossiers .git (si vous utilisez un outil de diff, par exemple winmerge) et node_modules de la racine du projet hors du dossier de projet. 
 
-Faites un zip du projet au complet et envoyez le sur le site phonegap. Lancez la compilation, scanner le QR code et c'est prêt.
+Faites un zip du repertoire www au complet et envoyez le sur le site phonegap. Lancez la compilation, scanner le QR code et c'est prêt.
 
 Référence : http://pointdeveloper.com/how-to-build-ionic-app-with-phonegap-build/
 
