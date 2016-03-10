@@ -1,5 +1,5 @@
-/* Empty. Add your own CSS if you like */
 #wrapper {
+	width: 100%;
 	box-shadow: 0px 1px 0px #b4b4b4;
 }
 
@@ -108,22 +108,65 @@
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
+
+#description_event{
+	float:left;
+	width: 30%;
+	height: 100%;
+}
+
+/* Portrait  */
+@media (max-width: 640px){
+	.portrait{
+		visibility: visible;
+		display: block;
+	}
+	.paysage{
+		visibility: hidden;
+		display: none;
+	}
+}
+
+/* Paysage */ 
+@media (min-width: 640px){
+	.paysage{
+		visibility: visible;
+		display: block;
+	}
+	.portrait{
+		visibility: hidden;
+		display: none;
+	}
+
+	#map_content{
+		height: 100%;
+		width: 70%
+	}
+
+	#description_event_wrapper{
+		height: 100%;
+	}
+}
+
 #button_favoris{
 	text-align: center;
 	padding-left: 2px;
 }
-#description_event_name{
-	text-align: center;
-	padding-left: 2px;
 
+#description_event_name{
+	padding-left: 2px;
+	text-align: center;
 }
+
 #button_details{
 	text-align: center;
 }
+
 .labels {
-  color: blue;
+  color: white;
   background-color: red;
   font-family: "Lucida Grande", "Arial", sans-serif;
+  font-weight : bold;
   font-size: 9px;
   text-align: center;
   width: 25px;
