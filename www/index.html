@@ -71,12 +71,40 @@
     </script>
 
     <script type="text/ng-template" id="filter.html">
-      <ion-view>
-        <ion-nav-buttons side="left">
-          <button class="button button-icon" ng-click="goBack()">back</button>
-        </ion-nav-buttons>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon" ng-click="goBack()">back</button>
+      </ion-nav-buttons>
         <ion-content scroll="false" data-tap-disabled="true"></ion-content>
-      </ion-view>
+      	<ion-content>
+		  <div class="list">
+  	        <div class="item item-divider"> 
+  	          Temps, Selected Value: {{ data.temps }}
+  	        </div>
+  	        <ion-radio ng-repeat="item in temps"
+  	                   ng-value="item.value"
+  	                   ng-model="data.temps">
+  	          {{ item.text }}
+  	        </ion-radio>
+  	        <div class="item item-divider"> 
+  	          Population cible, Selected Value: {{ data.populationCible }}
+  	        </div>
+  	        <ion-radio ng-repeat="item in populationCible"
+  	                   ng-value="item.value"
+  	                   ng-model="data.populationCible">
+  	          {{ item.text }}
+  	        </ion-radio>
+  	        <div class="item item-divider">
+  	        	Periodicite, Selected Value: {{ data.periodicity }}
+  	        </div>
+  	        <ion-radio ng-repeat="item in periodicity"
+  	                   ng-value="item.value"
+  	                   ng-model="data.periodicity"
+  	                   ng-change="serverSideChange(item)"
+  	                   name="server-side">
+  	          {{ item.text }}
+  	        </ion-radio>  
+	     </div>
+	  </ion-content>
     </script>
 
     <script type="text/ng-template" id="favorite.html">

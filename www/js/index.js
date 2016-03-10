@@ -114,7 +114,33 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
-	}
+	};
+
+	$scope.temps = [
+	    { text: "< 1 heure", value: "true" },
+	    { text: "< 3 heures", value: "yes" },
+	    { text: "< 1 jour", value: "oui" }
+	];
+
+	$scope.populationCible = [
+		{ text: "Jeune", value: "jeune" },
+	    { text: "Vielle", value: "vielle" },
+	    { text: "Handicapee", value: "handicapee" }
+	];
+
+  	$scope.periodicity = [
+	    { text: "Jounaliere", value: "jo" },
+	    { text: "Quotidien", value: "qo" },
+	    { text: "Mensuel", value: "mo" }
+	];
+
+    $scope.data = {
+    //periodicity: 'yes'
+ 	};
+	  
+	$scope.serverSideChange = function(item) {
+		console.log("Selected Serverside, text:", item.text, "value:", item.value);
+	};
 });
 
 angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
