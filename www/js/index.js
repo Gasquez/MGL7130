@@ -116,28 +116,37 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 		$ionicHistory.goBack();
 	};
 
+	$scope.distance = [
+	    { text: "rayon 1 km", value: "1km" },
+	    { text: "rayon 5 km", value: "5km" },
+	    { text: "rayon 10 km", value: "10km" },
+	    { text: "rayon > 10 km", value: "10km++" }
+	];
+
 	$scope.temps = [
-	    { text: "< 1 heure", value: "true" },
-	    { text: "< 3 heures", value: "yes" },
-	    { text: "< 1 jour", value: "oui" }
+	    { text: "< 1 heure", value: "1hre" },
+	    { text: "< 3 heures", value: "3hres" },
+	    { text: "< 1 jour", value: "1jr" },
+	    { text: ">= 1 jour", value: "1jr++" }
 	];
 
 	$scope.populationCible = [
-		{ text: "Jeune", value: "jeune" },
-	    { text: "Vielle", value: "vielle" },
-	    { text: "Handicapee", value: "handicapee" }
+		{ text: "Jeune", value: "jeun" },
+	    { text: "Vielle", value: "viel" },
+	    { text: "Handicapee", value: "handi" }
 	];
 
   	$scope.periodicity = [
-	    { text: "Jounaliere", value: "jo" },
-	    { text: "Quotidien", value: "qo" },
-	    { text: "Mensuel", value: "mo" }
+	    { text: "Jounaliere", value: "jour" },
+	    { text: "Quotidienne", value: "quot" },
+	    { text: "Mensuelle", value: "mens" }
 	];
 
     $scope.data = {
-    //periodicity: 'yes'
+    distance: '5km'
+    //temps: '1jr'
  	};
-	  
+ 		  
 	$scope.serverSideChange = function(item) {
 		console.log("Selected Serverside, text:", item.text, "value:", item.value);
 	};

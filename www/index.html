@@ -77,36 +77,45 @@
         <ion-content scroll="false" data-tap-disabled="true"></ion-content>
       	<ion-content>
 		  <div class="list">
-  	        <div class="item item-divider"> 
-  	          Temps, Selected Value: {{ data.temps }}
-  	        </div>
-  	        <ion-radio ng-repeat="item in temps"
-  	                   ng-value="item.value"
-  	                   ng-model="data.temps">
-  	          {{ item.text }}
-  	        </ion-radio>
-  	        <div class="item item-divider"> 
-  	          Population cible, Selected Value: {{ data.populationCible }}
-  	        </div>
-  	        <ion-radio ng-repeat="item in populationCible"
-  	                   ng-value="item.value"
-  	                   ng-model="data.populationCible">
-  	          {{ item.text }}
-  	        </ion-radio>
-  	        <div class="item item-divider">
-  	        	Periodicite, Selected Value: {{ data.periodicity }}
-  	        </div>
-  	        <ion-radio ng-repeat="item in periodicity"
-  	                   ng-value="item.value"
-  	                   ng-model="data.periodicity"
-  	                   ng-change="serverSideChange(item)"
-  	                   name="server-side">
-  	          {{ item.text }}
-  	        </ion-radio>  
+        <div class="item item-divider"> 
+          Distance, Selected Value: {{ data.distance }}
+        </div>
+        <ion-radio ng-repeat="item in distance"
+                   ng-value="item.value"
+                   ng-model="data.distance">
+          {{ item.text }}
+        </ion-radio>
+        <div class="item item-divider"> 
+          Temps, Selected Value: {{ data.temps }}
+        </div>
+        <ion-radio ng-repeat="item in temps"
+                   ng-value="item.value"
+                   ng-model="data.temps"
+                   ng-change="serverSideChange(item)"
+                   name="server-side">
+          {{ item.text }}
+        </ion-radio>
+        <div class="item item-divider"> 
+          Population cible, Selected Value: {{ data.populationCible }}
+        </div>
+        <ion-radio ng-repeat="item in populationCible"
+                   ng-value="item.value"
+                   ng-model="data.populationCible">
+          {{ item.text }}
+        </ion-radio>
+        <div class="item item-divider">
+        	Periodicite, Selected Value: {{ data.periodicity }}
+        </div>
+        <ion-radio ng-repeat="item in periodicity"
+                   ng-value="item.value"
+                   ng-model="data.periodicity"
+                   ng-change="serverSideChange(item)"
+                   name="server-side">
+          {{ item.text }}
+        </ion-radio>  
 	     </div>
 	  </ion-content>
     </script>
-
     <script type="text/ng-template" id="favorite.html">
       <ion-view>
         <ion-nav-buttons side="left">
