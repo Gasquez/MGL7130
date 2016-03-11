@@ -1,10 +1,9 @@
-{
-	"evenements": [{
+[{
 		"titre": "Old help cause for student",
 		"id": 100001,
 		"cibles": ["jeune","vielle"],
-		"longitude": "45.514887",
-		"latitude": "-73.559727",
+		"longitude": "-73.559727",
+		"latitude": "45.514887",
 		"organisme": "UQAM",
 		"siege": "adresse du siege",
 		"emplacement": ["UQAM", "2100 St-Urb"],
@@ -28,8 +27,8 @@
 		"titre": "Old help cause for student",
 		"id": 100002,
 		"cibles": ["jeune"],
-		"longitude": "45.505638",
-		"latitude": "-73.613770",
+		"longitude": "45.514887",
+		"latitude": "-73.559727",
 		"organisme": "UdeM",
 		"siege": "adresse du siege",
 		"emplacement": ["UQAM", "2100 St-Urb"],
@@ -150,4 +149,3 @@
 		"descriptifShort":"Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
 		"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
 	}]
-}

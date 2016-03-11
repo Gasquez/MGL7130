@@ -1,21 +1,8 @@
 angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
 
-var json = (function() {
-	json = null;
-	$.ajax({
-	    'async': false,
-	    'global': false,
-	    'url': "/data.json",
-	    'dataType': "json",
-	    'success': function (data) {
-	        json = data;
-	    }
-	});
-	return json;
-})();
-
-var evenementsData = json.evenements;
+var App = angular.module('App', []);
+var evenementsData = new Array();
 
 angularApp.factory('BookMarkFactory', function() {
   return { 
@@ -212,8 +199,16 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	});
 });
 
-angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 	var angularScope = $scope;
+	function loadData(){
+		$http.get('data.json')
+	    .then(function(res){
+	    	evenementsData = res.data;
+	    	initialize();
+	    });
+	}
+
 
 	function initialize() {
 		var mapOptions = {
@@ -293,7 +288,8 @@ angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
 	  }
 
 	};
-	google.maps.event.addDomListener(window, "load", initialize);
+	google.maps.event.addDomListener(window, "load", loadData);
+
 });
 
 angularApp.controller("HomeEventCtrl", function($scope){
@@ -323,8 +319,7 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	angularScope.masterToDetailMode(0);
 });
 
-
-angularApp.controller("ListCtrl", function($scope){
+angularApp.controller("ListCtrl", function($scope,$http){
 	var angularScope = $scope;
 	
 	angularScope.items = evenementsData;
@@ -354,7 +349,7 @@ var app = {
 	bindEvents: function() {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
-	onDeviceReady: function() {
+	onDeviceReady: function($http) {
 		// L'API Cordova est prête
 	}
 };
