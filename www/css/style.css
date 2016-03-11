@@ -58,6 +58,63 @@
 	color: orange;
 }
 
+#button_favoris{
+	text-align: center;
+	padding-left: 2px;
+}
+
+#description_event_name{
+	padding-left: 2px;
+	text-align: center;
+}
+
+#button_details{
+	text-align: center;
+}
+
+.labels {
+  color: white;
+  background-color: red;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-weight : bold;
+  font-size: 9px;
+  text-align: center;
+  width: 25px;
+  white-space: nowrap;
+}
+
+
+#description_event_content{
+	height: 30%;
+	width: 100%;
+}
+
+#description_event_wrapper{
+	height: 30%;
+	width: 100%;
+	text-align: center;
+	font-size: 1.2em;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+#detailpanel{
+	visibility: hidden;
+	display: none;
+}
+
+#description_event{
+	float:left;
+	width: 30%;
+	height: 100%;
+}
+
+#description_event{
+	float:left;
+	width: 30%;
+	height: 100%;
+}
+
 .master-item-favorite-selected {
 	color: orange;
 }
@@ -176,7 +233,8 @@
 		float: left;
 		width:30%;
 	}
-	.detailsList{
+
+	#detailsList{
 		float: right;
 		width:70%;
 		height: 100%;
@@ -192,11 +250,6 @@
 	#map_content{
 		height: 100%;
 		width: 70%
-	}
-
-	.detailpanel{
-		float:right;
-		width: 70%;
 	}
 
 	#description_event_wrapper{
