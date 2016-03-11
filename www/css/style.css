@@ -114,3 +114,24 @@
   width: 25px;
   white-space: nowrap;
 }
+
+.labels.active .inner {
+    background-color: red;
+}
+.labels.hover .inner {
+    background-color: red;
+}
+
+.labels .arrow{
+    background-color: red;
+}
+
+.labels.active .arrow {
+    
+    background-color: green;
+}
+
+.labels.hover .arrow {
+    background-color: green;
+}
+

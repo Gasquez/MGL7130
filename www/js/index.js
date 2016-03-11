@@ -181,38 +181,56 @@ angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
 			var marker = new MarkerWithLabel({
 					position: new google.maps.LatLng(markers[i][1], markers[i][2]),
 					map: map,
-					labelContent: "21-02",
+					labelContent: "<div class='arrow'></div><div class='inner'>21-02</div>",
 					labelAnchor: new google.maps.Point(13, 10),
 				    labelClass: "labels", // the CSS class for the label
 				    labelInBackground: false,
+				    //draggable: true,
+				    //raiseOnDrag: true,
+				    isClicked: false,
 					icon: {
 	                	path: google.maps.SymbolPath.CIRCLE,
 				        scale: 16,
 				        fillColor: "#FF0000",
 				        fillOpacity: 1,
 				        strokeWeight: 0.8
-				    },					
+				    }					
 			});
-		
 
 			// Add click action on each marcker
-			google.maps.event.addListener(marker, 'click', (function(marker, i) {
-			  	return function() {
+			google.maps.event.addListener(marker, 'click', (function(marker,i) {
+		        marker.isClicked = true;
+		        marker.set('labelClass', 'labels active');
+		        return function() {
 			  		infowindow.setContent(markers[i][0]);
 			  		infowindow.open(map, marker);
 
-			      // Display event informations
-			      eventInfoContent = markers[i][1] + " - " + markers[i][2];
-			      angularScope.$apply(function() {
-			      	angularScope.eventSelected = { 
-			      		name: evenement.titre,
-						afterName: ', ' + evenement.date + ', ' + evenement.heure,
-			      		desc: '<b> Descriptif : </b>' + evenement.descriptif + 
-			      		'<br />' + 
-			      		'<b>Activités : </b>'+ evenement.activity
-			      	};
-			      });
-				}
+				    // Display event informations
+				    eventInfoContent = markers[i][1] + " - " + markers[i][2];
+				    angularScope.$apply(function() {
+				      	angularScope.eventSelected = { 
+				      		name: evenement.titre,
+							afterName: ', ' + evenement.date + ', ' + evenement.heure,
+				      		desc: '<b> Descriptif : </b>' + evenement.descriptif + 
+				      		'<br />' + 
+				      		'<b>Activités : </b>'+ evenement.activity
+				     	};
+		     	  	});
+		        }
+		    })(marker, i));
+					
+			// Add mouseover action on each marcker
+		    google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+		        marker.set('labelClass', 'labels hover');
+		    })(marker, i));
+
+		    // Add mouseout action on each marcker
+		    google.maps.event.addListener(marker, 'mouseout', (function(marker, i) {
+		        if (marker.isClicked) {
+		            marker.set('labelClass', 'labels active');
+		    	} else {
+		            marker.set('labelClass', 'labels');
+		        	}
 			})(marker, i));
 		}
 
@@ -220,10 +238,7 @@ angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
 		  var watchId = navigator.geolocation.watchPosition(function(position){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-//For test :var marker = new google.maps.Marker({
-//			    position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
-//			    map: map
-//		 	}); 
+
 		  }, null, {enableHighAccuracy:true});
 	};
 
