@@ -13,7 +13,7 @@
     <link href="css/style.css" rel="stylesheet">
 
   </head>
-  <body ng-app="MenuNav">
+  <body ng-app="MenuNav" ng-controller="AppCtrl">
 
   <ion-side-menus>
       
@@ -29,29 +29,21 @@
     </ion-pane>
     </ion-side-menu-content>
 
-    <ion-side-menu width="150" side ="left" expose-aside-when="(min-width:640px)">
+    <ion-side-menu width="150" side ="left" expose-aside-when="(min-width:768px)">
       <ion-header-bar class="bar-stable title">
         <h2>Simplyk</h2>
       </ion-header-bar>
       <ion-content>
         <div class="list">
-          <a class="item item-icon-left" href="#">
-              <i class="icon ion-earth"></i>
-              Carte
-            </a>
-
-            <a class="item item-icon-left" href="#">
-              <i class="icon ion-ios-list-outline"></i>
-              Liste
-            </a>
-
-            <a class="item item-icon-left" href="#">
-              <i class="icon ion-ios-heart-outline"></i>
-              Favoris
-              <span class="item-note">
-                (0)
-              </span>
-            </a>
+            <button class="wrapper {{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}">
+              {{navigation.pageHeaderLeft1.titleShort}}
+              </button>
+            <button class="wrapper {{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}">
+              {{navigation.pageHeaderLeft2.titleShort}}
+              </button>
+            <button class="wrapper {{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}">
+              {{navigation.pageHeaderLeft3.titleShort}}
+              </button>
         </div>
       </ion-content>
     </ion-side-menu>
@@ -142,7 +134,7 @@
         <ion-content id="view" ng-controller="HomeEventCtrl" scroll="false" data-tap-disabled="true">
           
           <div class="scrollable-wrapper">
-            <div id="detail-backButton" class="button button-icon icon ion-ios-undo-outline" ng-click="goBack()"></div>
+            <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="goBack()"></div>
 
             <div ng-include src="'./detailEvent.html'"></div>
 
@@ -210,10 +202,10 @@
 
         <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">
           
-          <div id="master" id="master-list">
+          <div class="master">
             <ion-list>
 
-              <ion-item class="master-item item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
+              <ion-item class="master-item-favorite item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
 
                 <div class="master-button icon ion-chevron-right"></div>
                 <div class="master-title">{{item.titre}}</div>
@@ -223,9 +215,8 @@
 
             </ion-list>
           </div>
-
-          <div id="detail" class="scrollable-wrapper">
-            <div id="detail-backButton" class="button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
+          <div class="detail" class="scrollable-wrapper">
+            <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
 
             <div ng-include src="'./detailEvent.html'"></div>
 
@@ -237,7 +228,37 @@
     </script>
 
     <script type="text/ng-template" id="list.html">
+            <ion-view>
+        <ion-nav-buttons side="left">
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        </ion-nav-buttons>
 
+        <ion-content id="viewList" ng-controller="ListCtrl" scroll="false" data-tap-disabled="true">
+          
+          <div class="master">
+            <ion-list>
+
+              <ion-item class="master-item-list item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
+
+                <div class="master-button icon ion-chevron-right"></div>
+                <div class="master-title">{{item.titre}}</div>
+                <div class="master-desc">{{item.descriptifShort}}</div>
+
+              </ion-item>
+
+            </ion-list>
+          </div>
+
+          <div class="detail" class="scrollable-wrapper">
+            <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
+
+            <div ng-include src="'./detailEvent.html'"></div>
+
+          </div>
+
+        </ion-content>
     </script>
 
     <!-- ionic/angularjs js -->

@@ -138,28 +138,28 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicHistory){
+angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHistory){
 	angularScope = $scope;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
 			icon: "button button-icon icon ion-android-globe",
-			title: 'Carte de recherche de volontariat',
+			titleShort: 'Carte',
 			directionState: "home"
 		},
 		pageHeaderLeft2: {
 			icon: "button button-icon icon ion-ios-list-outline",
-			title: 'Liste de recherche de volontariat',
+			titleShort: 'Liste',
 			directionState: "list"
 		},
 		pageHeaderLeft3: {
 			icon: "button button-icon icon ion-ios-heart-outline",
-			title: 'Mes favoris',
+			titleShort:'Favoris',
 			directionState: "favorite"
 		},
 		pageHeaderRight: {
 			icon: "button button-icon icon ion-android-options",
-			title: "Filter",
+			titleShort:'Filtres',
 			directionState: "filter"
 		}
 	};
@@ -202,6 +202,14 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	$scope.serverSideChange = function(item) {
 		console.log("Selected Serverside, text:", item.text, "value:", item.value);
 	};
+
+	//Close nav bar every time you load the view
+	angularScope.$on('$ionicView.beforeEnter', function() {
+		if(window.matchMedia("(min-width: 768px)").matches)
+		{
+			$ionicNavBarDelegate.showBar(false);
+		}
+	});
 });
 
 angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
@@ -262,13 +270,13 @@ angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  }, null, {enableHighAccuracy:true});
-		WidthChange(window.matchMedia("(min-width: 640px)"));
+		WidthChange(window.matchMedia("(min-width: 768px)"));
 
 	};
 
 	// media query event handler
 	if (matchMedia) {
-	  var mq = window.matchMedia("(min-width: 640px)");
+	  var mq = window.matchMedia("(min-width: 768px)");
 	  mq.addListener(WidthChange);
 	  WidthChange(mq);
 	}
@@ -277,10 +285,10 @@ angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
 	function WidthChange(mq) {
 
 	  if (mq.matches) {
-	  	// if screen >= 640px, hidde nav bar
+	  	// if screen >= 768px, hidde nav bar
 	  	 $ionicNavBarDelegate.showBar(false);
 	  } else {
-	  	// if screen < 640px, show nav bar
+	  	// if screen < 768px, show nav bar
 	  	$ionicNavBarDelegate.showBar(true);
 	  }
 
@@ -302,7 +310,7 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 		$('#view').addClass('mode-detail');
 
 		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
-		$(".master-item:nth-child(" + childNumber + ")").addClass('master-item-selected').siblings().removeClass('master-item-selected');
+		$(".master-item-favorite:nth-child(" + childNumber + ")").addClass('master-item-favorite-selected').siblings().removeClass('master-item-favorite-selected');
 	
 		angularScope.itemSelected = BookMarkFactory.all()[$index];
 	};
@@ -310,6 +318,33 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	angularScope.detailModeToMaster = function() {
 		$('#view').removeClass('mode-detail');
 	};
+
+	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
+	angularScope.masterToDetailMode(0);
+});
+
+
+angularApp.controller("ListCtrl", function($scope){
+	var angularScope = $scope;
+	
+	angularScope.items = evenementsData;
+	angularScope.itemSelected = evenementsData[0];
+
+	angularScope.masterToDetailMode = function($index) {
+		$('#viewList').addClass('mode-detail');
+
+		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
+		$(".master-item-list:nth-child(" + childNumber + ")").addClass('master-item-list-selected').siblings().removeClass('master-item-list-selected');
+	
+		angularScope.itemSelected = evenementsData[$index];
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#viewList').removeClass('mode-detail');
+	};
+
+	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
+	angularScope.masterToDetailMode(0);
 });
 
 var app = {
