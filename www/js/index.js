@@ -316,10 +316,13 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	};
 
 	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
-	angularScope.masterToDetailMode(0);
+	if(window.matchMedia("(min-width: 768px)").matches)
+	{
+		angularScope.masterToDetailMode(0);
+	}
 });
 
-angularApp.controller("ListCtrl", function($scope,$http){
+angularApp.controller("ListCtrl", function($scope){
 	var angularScope = $scope;
 	
 	angularScope.items = evenementsData;
@@ -339,7 +342,11 @@ angularApp.controller("ListCtrl", function($scope,$http){
 	};
 
 	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
-	angularScope.masterToDetailMode(0);
+	if(window.matchMedia("(min-width: 768px)").matches)
+	{
+		angularScope.masterToDetailMode(0);
+	}
+
 });
 
 var app = {
