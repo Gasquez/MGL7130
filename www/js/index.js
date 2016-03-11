@@ -186,7 +186,7 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 
 	//Close nav bar every time you load the view
 	angularScope.$on('$ionicView.beforeEnter', function() {
-		if(window.matchMedia("(min-width: 640px)").matches)
+		if(window.matchMedia("(min-width: 768px)").matches)
 		{
 			$ionicNavBarDelegate.showBar(false);
 		}
@@ -251,13 +251,13 @@ angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  }, null, {enableHighAccuracy:true});
-		WidthChange(window.matchMedia("(min-width: 640px)"));
+		WidthChange(window.matchMedia("(min-width: 768px)"));
 
 	};
 
 	// media query event handler
 	if (matchMedia) {
-	  var mq = window.matchMedia("(min-width: 640px)");
+	  var mq = window.matchMedia("(min-width: 768px)");
 	  mq.addListener(WidthChange);
 	  WidthChange(mq);
 	}
@@ -266,10 +266,10 @@ angularApp.controller("HomeCtrl", function($scope, $ionicNavBarDelegate){
 	function WidthChange(mq) {
 
 	  if (mq.matches) {
-	  	// if screen >= 640px, hidde nav bar
+	  	// if screen >= 768px, hidde nav bar
 	  	 $ionicNavBarDelegate.showBar(false);
 	  } else {
-	  	// if screen < 640px, show nav bar
+	  	// if screen < 768px, show nav bar
 	  	$ionicNavBarDelegate.showBar(true);
 	  }
 
