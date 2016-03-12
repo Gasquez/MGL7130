@@ -69,55 +69,19 @@
 
         <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
 
-          <!-- Landscape mode, event description -->
-            <div class="paysage" id="description_event">
-              <!-- Event information -->
-              <div ng-if="eventSelected.name" id="description_event_wrapper" class="padding">
-                <!-- header of description-->
-                <div id="wrapper">
-                  
-                  <div id="description_event_name">
-                    <b> {{eventSelected.name}} </b>
-                    {{eventSelected.afterName}}
-                  </div>
-                </div>
-                <!-- description details-->
-                <p ng-bind-html="eventSelected.desc"></p>
-                
-                <div id="button_favoris">
-                  <button class="button button-assertive button-small" ng-click="addtoFavoris()">
-                    Favoris  <i class="icon ion-ios-heart-outline"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
 
           <!-- Google Map -->
           <div id="map_content">
             <div id="map_canvas"></div>
           </div>
+          <!-- Landscape mode, event description -->
+          <div class="paysage scrollable-wrapper" id="description_event">
+            <div ng-include src="'./detailEvent.html'"></div>
+          </div>
 
-          <!-- Event information -->
-          <div ng-if="eventSelected.name" id="description_event_wrapper" class="padding portrait">
-            <!-- header of description-->
-            <div class ="row" id="wrapper">
-              <div class= "col-25" id="button_favoris">
-                <button class="button button-assertive button-small" ng-click="addtoFavoris()">
-                  Favoris  <i class="icon ion-ios-heart-outline"></i>
-                </button>
-              </div>
-              <div class ="col-50" id="description_event_name">
-                <b> {{eventSelected.name}} </b>
-                {{eventSelected.afterName}}
-              </div>
-              <div class="col-25h" id="button_details">
-                <button class="button button-assertive button-small" ui-sref="homeEvent">
-                  Détails  <i class="icon ion-arrow-right-a"></i>
-                </button>
-              </div>
-            </div>
-            <!-- description details-->
-            <p ng-bind-html="eventSelected.desc"></p>
+          <!-- Portrait mode, event description -->
+          <div class="portrait" id="description_event_wrapper"
+            <div ng-include src="'./detailShortEvent.html'"></div>
           </div>
         </ion-content>
       </ion-view>
@@ -203,24 +167,28 @@
         <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">
           
           <div class="master">
-            <ion-list>
+            <div class="scrollable-wrapper">
+              <ion-list>
 
-              <ion-item class="master-item-favorite item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
+                <ion-item class="master-item-favorite item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
 
-                <div class="master-button icon ion-chevron-right"></div>
-                <div class="master-title">{{item.titre}}</div>
-                <div class="master-desc">{{item.descriptifShort}}</div>
+                  <div class="master-button icon ion-chevron-right"></div>
+                  <div class="master-title">{{item.titre}}</div>
+                  <div class="master-desc">{{item.descriptifShort}}</div>
 
-              </ion-item>
+                </ion-item>
 
-            </ion-list>
+              </ion-list>
+            </div>
           </div>
-          <div class="detail" class="scrollable-wrapper">
-            <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
+          <div class="detail">
+            <div class="scrollable-wrapper">
+              <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
 
-            <div ng-include src="'./detailEvent.html'"></div>
+              <div ng-include src="'./detailEvent.html'"></div>
 
-          </div>
+            </div>
+          </div
 
         </ion-content>
 
@@ -238,24 +206,27 @@
         <ion-content id="viewList" ng-controller="ListCtrl" scroll="false" data-tap-disabled="true">
           
           <div class="master">
-            <ion-list>
+            <div class="scrollable-wrapper">
+              <ion-list>
 
-              <ion-item class="master-item-list item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
+                <ion-item class="master-item-list item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
 
-                <div class="master-button icon ion-chevron-right"></div>
-                <div class="master-title">{{item.titre}}</div>
-                <div class="master-desc">{{item.descriptifShort}}</div>
+                  <div class="master-button icon ion-chevron-right"></div>
+                  <div class="master-title">{{item.titre}}</div>
+                  <div class="master-desc">{{item.descriptifShort}}</div>
 
-              </ion-item>
+                </ion-item>
 
-            </ion-list>
+              </ion-list>
+            </div>
           </div>
+          <div class="detail">
+            <div class="scrollable-wrapper">
+              <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
 
-          <div class="detail" class="scrollable-wrapper">
-            <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
+              <div ng-include src="'./detailEvent.html'"></div>
 
-            <div ng-include src="'./detailEvent.html'"></div>
-
+            </div>
           </div>
 
         </ion-content>

@@ -220,16 +220,17 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
+		angularScope.itemSelected = evenementsData[0];
 		// Loop through the array of evenements and place each one on the map 
 		for(i = 0; i < evenementsData.length; i += 1) {
 
 			//Loading information events from bdd
-			var currentEvenement = evenementsData[i];
+			var itemSelected = evenementsData[i];
 
 			var marker = new MarkerWithLabel({
-					position: new google.maps.LatLng(currentEvenement.latitude,currentEvenement.longitude),
+					position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
 					map: map,
-					labelContent: "currentEvenement.date",
+					labelContent: itemSelected.jours[0],
 					labelAnchor: new google.maps.Point(13, 10),
 				    labelClass: "labels", // the CSS class for the label
 				    labelInBackground: false,
@@ -244,20 +245,14 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		
 
 			// Add click action on each marcker
-			google.maps.event.addListener(marker, 'click', (function(currentEvenement) {
+			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
 			  	return function() {
 			      // Display event informations
 			      angularScope.$apply(function() {
-			      	angularScope.eventSelected = {
-			      		name: currentEvenement.titre,
-						afterName: ', ' + "currentEvenement.date" + ', ' + "currentEvenement.heure",
-			      		desc: '<b> Descriptif : </b>' + currentEvenement.descriptifShort + 
-			      		'<br />' + 
-			      		'<b>Activités : </b>'+ currentEvenement.activities
-			      	};
+			      	angularScope.itemSelected = itemSelected;
 			      });
 				}
-			})(currentEvenement));
+			})(itemSelected));
 		}
 
 		if (navigator.geolocation)

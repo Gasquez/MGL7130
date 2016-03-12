@@ -11,6 +11,7 @@
 #map_content {
 	height: 70%;
 	width: 100%;
+	float:left;
 	overflow: hidden;
 
 }
@@ -104,16 +105,12 @@
 }
 
 #description_event{
-	float:left;
+	float:right;
 	width: 30%;
 	height: 100%;
 }
 
-#description_event{
-	float:left;
-	width: 30%;
-	height: 100%;
-}
+
 
 .master-item-favorite-selected {
 	color: orange;
@@ -164,17 +161,6 @@
 	display: none;
 }
 
-#description_event{
-	float:left;
-	width: 30%;
-	height: 100%;
-}
-
-#description_event{
-	float:left;
-	width: 30%;
-	height: 100%;
-}
 
 @media screen and (max-width: 768px) { 
 	.master {
@@ -291,6 +277,10 @@
 }
 
 .volunteer-join {
+	float: left;
+	margin-left: 20%;
+}
+.volunteer-details {
 	float: left;
 	margin-left: 20%;
 }
