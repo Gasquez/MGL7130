@@ -1,8 +1,11 @@
 angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
 
+var App = angular.module('App', []);
+var evenementsData = new Array();
+
 angularApp.factory('BookMarkFactory', function() {
-  return {
+  return { 
     all: function() {
 		var projectString = window.sessionStorage['BookMark'];
 		if(projectString) {
@@ -12,12 +15,97 @@ angularApp.factory('BookMarkFactory', function() {
 		//return [];
 		return [
 			{
-				nom: "Test 1",
-				desc: "Information sur test 1"
+				"titre": "Old help cause for student 1",
+				"id": 100002,
+				"cibles": ["jeune"],
+				"latitude": "45.514887",
+				"longitude": "-73.559727",
+				"organisme": "UdeM",
+				"siege": "adresse du siege",
+				"emplacement": ["UQAM", "2100 St-Urb"],
+				"jours": ["mardi"],
+				"date": ["20-02"],
+				"heureDeFin": "18h00",
+				"heureDeDebut": "20h00",
+				"duree": "2h00",
+				"dateDebut": "12368522587",
+				"dateDeFin": "123685146545",
+				"langues": ["france", "anglais"],
+				"causes": ["Old Help"],
+				"activities": ["aide,", "accueil"],
+				"avantages": ["contact avec les gens,", "plaisir de sortir"],
+				"periodicity": "bi-hebdomadaire",
+				"contacts": {
+					"tel": "123456789",
+					"mail": "contact@udem.ca",
+					"site": "udem.ca"
+				},
+				"handicape": "oui",
+				"access": ["Metro University of Montreal", "bus numero 42"],
+				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
 			},
 			{
-				nom: "Test 2",
-				desc: "Information sur test 2"
+				"titre": "Old help cause for student 2",
+				"id": 100003,
+				"cibles": ["jeune"],
+				"latitude": "45.503452",
+				"longitude": "-73.621021",
+				"organisme": "UdeM",
+				"siege": "adresse du siege",
+				"emplacement": ["UQAM", "2100 St-Urb"],
+				"jours": ["lundi"],
+				"date": ["19-02"],
+				"heureDeFin": "18h00",
+				"heureDeDebut": "20h00",
+				"duree": "2h00",
+				"dateDebut": "12368522587",
+				"dateDeFin": "123685146545",
+				"langues": ["france", "anglais"],
+				"causes": ["Old Help"],
+				"activities": ["aide", "accueil"],
+				"avantages": ["contact avec les gens", "plaisir de sortir"],
+				"periodicity": "bi-hebdomadaire",
+				"contacts": {
+					"tel": "123456789",
+					"mail": "contact@udem.ca",
+					"site": "udem.ca"
+				},
+				"handicape": "non",
+				"access": ["Metro University of Montreal", "bus numero 42"],
+				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
+			},	
+			{
+				"titre": "Old help cause for student",
+				"id": 100006,
+				"cibles": ["jeune"],
+				"latitude": "45.490764",
+				"longitude": "-73.581272",
+				"organisme": "CLSC Lasalle",
+				"siege": "adresse du siege",
+				"emplacement": "at the place",
+				"jours": ["vendredi"],
+				"date": ["23-02"],
+				"heureDeFin": "18h00",
+				"heureDeDebut":"20h00",
+				"duree":"2h00",
+				"dateDeBut":"12368522587",
+				"dateDeFin":"123685146545",
+				"langues": ["french","english"],
+				"causes": ["Old Help"],
+				"activities": ["aide","accueil"],
+				"avantages": ["contact avec les gens","plaisir de sortir"],
+				"periodicity": "bi-hebdomadaire",
+				"contacts": {
+					"tel":"123456789",
+					"mail":"contact@clsc.ca",
+					"site":"clsc.ca"
+				},
+				"handicape":true,
+				"access": ["Metro Atwarer","bus numero 46"],
+				"descriptifShort":"Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
 			}
 		];
     },
@@ -36,30 +124,6 @@ angularApp.factory('BookMarkFactory', function() {
   }
 });
 
-//Objet evenemnt pour tester les descriptifs - For test, waiting for Json Data
-var evenement = new Object();
-evenement.titre ="Old help cause for student";
-evenement.ID = "236554";
-evenement.latlng = "45.514887, -73.559727";
-evenement.organisme ="UQAM";
-evenement.siege ="adresse du siege";
-evenement.webSite="uqam.ca";
-evenement.emplacement = "at the place";
-evenement.date ="23/02/2016";
-evenement.heure ="10h00";
-evenement.langue ="france";
-evenement.causes = "Old Help";
-evenement.activity= "aide et accueil";
-evenement.avantages = "contact avec les gens";
-evenement.periode ="one time";
-evenement.periodicity = "mensuel";
-evenement.contact = "contact@UQAM.ca";
-evenement.acces = "Metro place des arts";
-evenement.descriptif ="Un evenement pour aider les personnes agées à faire les papiers ainsi que leurs courses blabla blabla";
-evenement.accessibleToDisabled = true;
-evenement.inscred = false;
-evenement.favored = false;
-
 angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
 		url: '/home',
@@ -72,6 +136,13 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 		templateUrl: 'filter.html',
 		controller: 'AppCtrl'
 	})
+
+	.state('homeEvent', {
+		url: '/homeEventlter',
+		templateUrl: 'homeEvent.html',
+		controller: 'AppCtrl'
+	})
+
 	.state('list', {
 		url: '/list',
 		templateUrl: 'list.html',
@@ -87,27 +158,28 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicHistory){
-	var angularScope = $scope;
+angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHistory){
+	angularScope = $scope;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
 			icon: "button button-icon icon ion-android-globe",
-			title: 'Carte de recherche de volontariat',
+			titleShort: 'Carte',
 			directionState: "home"
 		},
 		pageHeaderLeft2: {
 			icon: "button button-icon icon ion-ios-list-outline",
-			title: 'Liste de recherche de volontariat',
+			titleShort: 'Liste',
 			directionState: "list"
 		},
 		pageHeaderLeft3: {
 			icon: "button button-icon icon ion-ios-heart-outline",
-			title: 'Mes favoris',
+			titleShort:'Favoris',
 			directionState: "favorite"
 		},
 		pageHeaderRight: {
 			icon: "button button-icon icon ion-android-options",
+			titleShort:'Filtres',
 			directionState: "filter"
 		}
 	};
@@ -150,113 +222,161 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory){
 	$scope.serverSideChange = function(item) {
 		console.log("Selected Serverside, text:", item.text, "value:", item.value);
 	};
+
+	//Close nav bar every time you load the view
+	angularScope.$on('$ionicView.beforeEnter', function() {
+		if(window.matchMedia("(min-width: 768px)").matches)
+		{
+			$ionicNavBarDelegate.showBar(false);
+		}
+	});
 });
 
-angularApp.controller("HomeCtrl", function($scope, $ionicHistory){
-	var angularScope = $scope;;
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
+	var angularScope = $scope;
+	function loadData(){
+		$http.get('data.json')
+	    .then(function(res){
+	    	evenementsData = res.data;
+	    	initialize();
+	    });
+	}
+
 
 	function initialize() {
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			disableDefaultUI: true
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-		var markers = [
-			['Old help, 23/02/16 10:00 PM', 45.514887, -73.559727, 4],
-			['Other Event, 21/02/16 15:00 PM', 45.522434, -73.602112],
-			['Old help, 25/02/16 09:00 PM', 45.623736, -73.769054],
-			['New Event, 27/02/16 11:00 PM', 45.536887, -73.559727],
-			['Old help, 29/02/16 14:00 PM', 45.568887, -73.559727],
-			['New help, 05/03/16 08:00 PM', 45.557678, -73.864627]
-		];
 
-		// Info windows displayed above each markers
-		var infowindow = new google.maps.InfoWindow();
+		angularScope.itemSelected = evenementsData[0];
+		// Loop through the array of evenements and place each one on the map 
+		for(i = 0; i < evenementsData.length; i += 1) {
 
-		// Loop through the array of markers and place each one on the map 
-		for(i = 0; i < markers.length; i += 1) {
-		
+			//Loading information events from bdd
+			var itemSelected = evenementsData[i];
+
+			var lab = itemSelected.date[0];
+
 			var marker = new MarkerWithLabel({
-					position: new google.maps.LatLng(markers[i][1], markers[i][2]),
-					map: map,
-					labelContent: "<div class='arrow'></div><div class='inner'>21-02</div>",
-					labelAnchor: new google.maps.Point(13, 10),
-				    labelClass: "labels", // the CSS class for the label
-				    labelInBackground: false,
-				    //draggable: true,
-				    //raiseOnDrag: true,
-				    isClicked: false,
-					icon: {
-	                	path: google.maps.SymbolPath.CIRCLE,
-				        scale: 16,
-				        fillColor: "#FF0000",
-				        fillOpacity: 1,
-				        strokeWeight: 0.8
-				    }					
+				position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
+				map: map,
+				labelContent: lab,
+				labelAnchor: new google.maps.Point(13, 10),
+			    labelClass: "labels", // the CSS class for the label
+			    labelInBackground: false,
+				icon: {
+                	path: google.maps.SymbolPath.CIRCLE,
+			        scale: 16,
+			        fillColor: "#FF0000",
+			        fillOpacity: 1,
+			        strokeWeight: 0.8
+			    },					
 			});
+		
 
 			// Add click action on each marcker
-			google.maps.event.addListener(marker, 'click', (function(marker,i) {
-		        marker.isClicked = true;
-		        marker.set('labelClass', 'labels active');
-		        return function() {
-			  		infowindow.setContent(markers[i][0]);
-			  		infowindow.open(map, marker);
-
-				    // Display event informations
-				    eventInfoContent = markers[i][1] + " - " + markers[i][2];
-				    angularScope.$apply(function() {
-				      	angularScope.eventSelected = { 
-				      		name: evenement.titre,
-							afterName: ', ' + evenement.date + ', ' + evenement.heure,
-				      		desc: '<b> Descriptif : </b>' + evenement.descriptif + 
-				      		'<br />' + 
-				      		'<b>Activités : </b>'+ evenement.activity
-				     	};
-		     	  	});
-		        }
-		    })(marker, i));
-					
-			// Add mouseover action on each marcker
-		    google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
-		        marker.set('labelClass', 'labels hover');
-		    })(marker, i));
-
-		    // Add mouseout action on each marcker
-		    google.maps.event.addListener(marker, 'mouseout', (function(marker, i) {
-		        if (marker.isClicked) {
-		            marker.set('labelClass', 'labels active');
-		    	} else {
-		            marker.set('labelClass', 'labels');
-		        	}
-			})(marker, i));
+			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
+			  	return function() {
+			      // Display event informations
+			      angularScope.$apply(function() {
+			      	angularScope.itemSelected = itemSelected;
+			      });
+				}
+			})(itemSelected));
 		}
 
 		if (navigator.geolocation)
 		  var watchId = navigator.geolocation.watchPosition(function(position){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-
 		  }, null, {enableHighAccuracy:true});
+		WidthChange(window.matchMedia("(min-width: 768px)"));
+
 	};
 
-	google.maps.event.addDomListener(window, "load", initialize);
+	// media query event handler
+	if (matchMedia) {
+	  var mq = window.matchMedia("(min-width: 768px)");
+	  mq.addListener(WidthChange);
+	  WidthChange(mq);
+	}
+
+	// change in fonction of width
+	function WidthChange(mq) {
+
+	  if (mq.matches) {
+	  	// if screen >= 768px, hidde nav bar
+	  	 $ionicNavBarDelegate.showBar(false);
+	  } else {
+	  	// if screen < 768px, show nav bar
+	  	$ionicNavBarDelegate.showBar(true);
+	  }
+
+	};
+	google.maps.event.addDomListener(window, "load", loadData);
+
+});
+
+angularApp.controller("HomeEventCtrl", function($scope){
+	angularScope.itemSelected = evenementsData[1];
 });
 
 angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	var angularScope = $scope;
 	
 	angularScope.items = BookMarkFactory.all();
+	angularScope.itemSelected = null;
 
-	angularScope.masterToDetailMode = function() {
+	angularScope.masterToDetailMode = function($index) {
 		$('#view').addClass('mode-detail');
+
+		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
+		$(".master-item-favorite:nth-child(" + childNumber + ")").addClass('master-item-favorite-selected').siblings().removeClass('master-item-favorite-selected');
+	
+		angularScope.itemSelected = BookMarkFactory.all()[$index];
 	};
 
 	angularScope.detailModeToMaster = function() {
 		$('#view').removeClass('mode-detail');
 	};
+
+	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
+	if(window.matchMedia("(min-width: 768px)").matches)
+	{
+		angularScope.masterToDetailMode(0);
+	}
+});
+
+angularApp.controller("ListCtrl", function($scope){
+	var angularScope = $scope;
+	
+	angularScope.items = evenementsData;
+	angularScope.itemSelected = evenementsData[0];
+
+	angularScope.masterToDetailMode = function($index) {
+		$('#viewList').addClass('mode-detail');
+
+		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
+		$(".master-item-list:nth-child(" + childNumber + ")").addClass('master-item-list-selected').siblings().removeClass('master-item-list-selected');
+	
+		angularScope.itemSelected = evenementsData[$index];
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#viewList').removeClass('mode-detail');
+	};
+
+	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
+	if(window.matchMedia("(min-width: 768px)").matches)
+	{
+		angularScope.masterToDetailMode(0);
+	}
+
 });
 
 var app = {
@@ -266,7 +386,7 @@ var app = {
 	bindEvents: function() {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
-	onDeviceReady: function() {
+	onDeviceReady: function($http) {
 		// L'API Cordova est prête
 	}
 };

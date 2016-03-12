@@ -1,5 +1,5 @@
-/* Empty. Add your own CSS if you like */
-#wrapper {
+.wrapper {
+	width: 100%;
 	box-shadow: 0px 1px 0px #b4b4b4;
 }
 
@@ -11,6 +11,7 @@
 #map_content {
 	height: 70%;
 	width: 100%;
+	float:left;
 	overflow: hidden;
 
 }
@@ -18,26 +19,30 @@
 	height: 100%;
 }
 
-#master {
-	width: 20%;
+.master {
+	float: left;
+	width: 30%;
 	height: 100%;
 	border-right: 1px solid black;
 }
-      
-.master-item {
-	border-right: 1px solid black;
+    
+.detail {
+	float: left;
+	width: 70%;
+	height: 100%;
+}
+.detail p {
+	margin-bottom: 5px;
 }
 
-#detail {
-	width: 80%;
-}
-
-#detail-backButton {
+.detail-backButton {
 	visibility: hidden;
+	position: absolute;
 }
 
 .master-title {
 	width: 80%;
+	text-decoration: underline;
 }
 
 .master-button {
@@ -50,34 +55,35 @@
 	text-align: justify;
 }
 
-@media screen and (max-width: 768px) { 
-	#master {
-	  width: 100%;
-	  border-right: none;
-	}
-
-	.master-item {
-	  border-right: none;
-	}
-
-	#detail {
-	  width: 100%;
-	  display: none;
-	}
-
-	#detail-backButton {
-	  visibility: visible;
-	}
-
-	#view.mode-detail #master { 
-	  /* En mode détail, on cache le maitre pour montrer le détail */
-	  display: none;         
-	}
-
-	#view.mode-detail #detail {
-	  display: block;
+.master-item-list-selected {
+	color: orange;
 }
+
+#button_favoris{
+	text-align: center;
+	padding-left: 2px;
 }
+
+#description_event_name{
+	padding-left: 2px;
+	text-align: center;
+}
+
+#button_details{
+	text-align: center;
+}
+
+.labels {
+  color: white;
+  background-color: red;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-weight : bold;
+  font-size: 9px;
+  text-align: center;
+  width: 25px;
+  white-space: nowrap;
+}
+
 
 #description_event_content{
 	height: 30%;
@@ -92,18 +98,165 @@
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
+
+#detailpanel{
+	visibility: hidden;
+	display: none;
+}
+
+#description_event{
+	float:right;
+	width: 30%;
+	height: 100%;
+}
+
+
+
+.master-item-favorite-selected {
+	color: orange;
+}
+
 #button_favoris{
 	text-align: center;
 	padding-left: 2px;
 }
-#description_event_name{
-	text-align: center;
-	padding-left: 2px;
 
+#description_event_name{
+	padding-left: 2px;
+	text-align: center;
 }
+
 #button_details{
 	text-align: center;
 }
+
+.labels {
+  color: blue;
+  background-color: red;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-weight : bold;
+  font-size: 9px;
+  text-align: center;
+  width: 25px;
+  white-space: nowrap;
+}
+
+
+#description_event_content{
+	height: 30%;
+	width: 100%;
+}
+
+#description_event_wrapper{
+	height: 30%;
+	width: 100%;
+	text-align: center;
+	font-size: 1.2em;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+.detailpanel{
+	visibility: hidden;
+	display: none;
+}
+
+
+@media screen and (max-width: 768px) { 
+	.master {
+	  width: 100%;
+	  border-right: none;
+	}
+
+	.master-item-list-selected {
+		color: black;
+	}
+	.master-item-favorite-selected {
+		color: black;
+	}
+
+	.detail {
+	  width: 100%;
+	  display: none;
+	}
+
+	.detail-backButton {
+	  visibility: visible;
+	}
+
+	#view.mode-detail .master { 
+	  /* En mode détail, on cache le maitre pour montrer le détail */
+	  display: none;         
+	}
+
+	#view.mode-detail .detail {
+	  display: block;
+	}
+
+	#viewList.mode-detail .master { 
+	  display: none;         
+	}
+
+	#viewList.mode-detail .detail {
+	  display: block;
+	}
+
+	.portrait{
+		visibility: visible;
+		display: block;
+	}
+	.paysage{
+		visibility: hidden;
+		display: none;
+	}
+}
+
+
+/* Paysage */ 
+@media (min-width: 768px){
+
+	#listeventList{
+		float: left;
+		width:30%;
+	}
+
+	#detailsList{
+		float: right;
+		width:70%;
+		height: 100%;
+	}
+	.paysage{
+		visibility: visible;
+	}
+	.portrait{
+		visibility: hidden;
+		display: none;
+	}
+
+	#map_content{
+		height: 100%;
+		width: 70%
+	}
+
+	#description_event_wrapper{
+		height: 100%;
+	}
+}
+
+#button_favoris{
+	text-align: center;
+	padding-left: 2px;
+}
+
+#description_event_name{
+	padding-left: 2px;
+	text-align: center;
+}
+
+#button_details{
+	text-align: center;
+}
+
 .labels {
   color: white;
   background-color: red;
@@ -115,23 +268,48 @@
   white-space: nowrap;
 }
 
-.labels.active .inner {
-    background-color: red;
-}
-.labels.hover .inner {
-    background-color: red;
+.volunteer-header {
+	margin-top: 25px;
 }
 
-.labels .arrow{
-    background-color: red;
+.volunteer-title {
+	text-align: center;
 }
 
-.labels.active .arrow {
-    
-    background-color: green;
+.volunteer-join {
+	float: left;
+	margin-left: 20%;
+}
+.volunteer-details {
+	float: left;
+	margin-left: 20%;
 }
 
-.labels.hover .arrow {
-    background-color: green;
+.volunteer-favorite {
+	float: right;
+	margin-right: 20%;
 }
 
+.text-justify {
+	text-align: justify;
+}
+
+.scrollable-wrapper {
+	height: 100%;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+.icon-img {
+	width: 32px !important;
+	height: 32px !important;
+	top: 11px !important;
+}
+
+.icon-stack {
+	i {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+}
