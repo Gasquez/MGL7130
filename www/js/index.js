@@ -18,12 +18,13 @@ angularApp.factory('BookMarkFactory', function() {
 				"titre": "Old help cause for student 1",
 				"id": 100002,
 				"cibles": ["jeune"],
-				"longitude": "45.505638",
-				"latitude": "-73.613770",
+				"latitude": "45.514887",
+				"longitude": "-73.559727",
 				"organisme": "UdeM",
 				"siege": "adresse du siege",
 				"emplacement": ["UQAM", "2100 St-Urb"],
 				"jours": ["mardi"],
+				"date": "20-02",
 				"heureDeFin": "18h00",
 				"heureDeDebut": "20h00",
 				"duree": "2h00",
@@ -48,12 +49,13 @@ angularApp.factory('BookMarkFactory', function() {
 				"titre": "Old help cause for student 2",
 				"id": 100003,
 				"cibles": ["jeune"],
-				"longitude": "45.505638",
-				"latitude": "-73.613770",
+				"latitude": "45.503452",
+				"longitude": "-73.621021",
 				"organisme": "UdeM",
 				"siege": "adresse du siege",
 				"emplacement": ["UQAM", "2100 St-Urb"],
-				"jours": ["mardi"],
+				"jours": ["lundi"],
+				"date": "19-02",
 				"heureDeFin": "18h00",
 				"heureDeDebut": "20h00",
 				"duree": "2h00",
@@ -72,6 +74,37 @@ angularApp.factory('BookMarkFactory', function() {
 				"handicape": "non",
 				"access": ["Metro University of Montreal", "bus numero 42"],
 				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
+				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
+			},	
+			{
+				"titre": "Old help cause for student",
+				"id": 100006,
+				"cibles": ["jeune"],
+				"latitude": "45.490764",
+				"longitude": "-73.581272",
+				"organisme": "CLSC Lasalle",
+				"siege": "adresse du siege",
+				"emplacement": "at the place",
+				"jours": ["vendredi"],
+				"date": "23-02",
+				"heureDeFin": "18h00",
+				"heureDeDebut":"20h00",
+				"duree":"2h00",
+				"dateDeBut":"12368522587",
+				"dateDeFin":"123685146545",
+				"langues": ["french","english"],
+				"causes": ["Old Help"],
+				"activities": ["aide","accueil"],
+				"avantages": ["contact avec les gens","plaisir de sortir"],
+				"periodicity": "bi-hebdomadaire",
+				"contacts": {
+					"tel":"123456789",
+					"mail":"contact@clsc.ca",
+					"site":"clsc.ca"
+				},
+				"handicape":true,
+				"access": ["Metro Atwarer","bus numero 46"],
+				"descriptifShort":"Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
 				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
 			}
 		];
@@ -227,20 +260,22 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			//Loading information events from bdd
 			var itemSelected = evenementsData[i];
 
+			var lab = itemSelected.jours[0];
+
 			var marker = new MarkerWithLabel({
-					position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
-					map: map,
-					labelContent: itemSelected.jours[0],
-					labelAnchor: new google.maps.Point(13, 10),
-				    labelClass: "labels", // the CSS class for the label
-				    labelInBackground: false,
-					icon: {
-	                	path: google.maps.SymbolPath.CIRCLE,
-				        scale: 16,
-				        fillColor: "#FF0000",
-				        fillOpacity: 1,
-				        strokeWeight: 0.8
-				    },					
+				position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
+				map: map,
+				labelContent: lab,
+				labelAnchor: new google.maps.Point(13, 10),
+			    labelClass: "labels", // the CSS class for the label
+			    labelInBackground: false,
+				icon: {
+                	path: google.maps.SymbolPath.CIRCLE,
+			        scale: 16,
+			        fillColor: "#FF0000",
+			        fillOpacity: 1,
+			        strokeWeight: 0.8
+			    },					
 			});
 		
 
