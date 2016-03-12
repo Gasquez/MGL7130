@@ -24,7 +24,7 @@ angularApp.factory('BookMarkFactory', function() {
 				"siege": "adresse du siege",
 				"emplacement": ["UQAM", "2100 St-Urb"],
 				"jours": ["mardi"],
-				"date": "20-02",
+				"date": ["20-02"],
 				"heureDeFin": "18h00",
 				"heureDeDebut": "20h00",
 				"duree": "2h00",
@@ -55,7 +55,7 @@ angularApp.factory('BookMarkFactory', function() {
 				"siege": "adresse du siege",
 				"emplacement": ["UQAM", "2100 St-Urb"],
 				"jours": ["lundi"],
-				"date": "19-02",
+				"date": ["19-02"],
 				"heureDeFin": "18h00",
 				"heureDeDebut": "20h00",
 				"duree": "2h00",
@@ -86,7 +86,7 @@ angularApp.factory('BookMarkFactory', function() {
 				"siege": "adresse du siege",
 				"emplacement": "at the place",
 				"jours": ["vendredi"],
-				"date": "23-02",
+				"date": ["23-02"],
 				"heureDeFin": "18h00",
 				"heureDeDebut":"20h00",
 				"duree":"2h00",
@@ -260,7 +260,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			//Loading information events from bdd
 			var itemSelected = evenementsData[i];
 
-			var lab = itemSelected.jours[0];
+			var lab = itemSelected.date[0];
 
 			var marker = new MarkerWithLabel({
 				position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
