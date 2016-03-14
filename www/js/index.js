@@ -259,11 +259,12 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 			//Loading information events from bdd
 			var itemSelected = evenementsData[i];
-
 			var lab = itemSelected.date[0];
+			var Lat = itemSelected.latitude;
+			var Lgn = itemSelected.longitude;
 
 			var marker = new MarkerWithLabel({
-				position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
+				position: new google.maps.LatLng(Lat,Lgn),
 				map: map,
 				labelContent: lab,
 				labelAnchor: new google.maps.Point(13, 10),
@@ -275,7 +276,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			        fillColor: "#FF0000",
 			        fillOpacity: 1,
 			        strokeWeight: 0.8
-			    },					
+			    }					
 			});
 		
 
