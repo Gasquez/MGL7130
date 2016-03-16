@@ -1,7 +1,6 @@
 angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
 
-var App = angular.module('App', []);
 var evenementsData = new Array();
 
 angularApp.factory('BookMarkFactory', function() {
@@ -138,7 +137,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	})
 
 	.state('homeEvent', {
-		url: '/homeEventlter',
+		url: '/homeEvent/:eventId',
 		templateUrl: 'homeEvent.html',
 		controller: 'AppCtrl'
 	})
@@ -322,10 +321,24 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 });
 
-angularApp.controller("HomeEventCtrl", function($scope){
-	angularScope.itemSelected = evenementsData[1];
-});
+angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
+	var angularScope = $scope;
+	var eventId = $stateParams.eventId;
 
+	if ( $stateParams.hasOwnProperty("eventId") && eventId.trim() != "" ) {
+
+		evenementsData.forEach( function(element, index, array) {
+
+			if ( element.hasOwnProperty("id") && element.id == eventId ) {
+				angularScope.itemSelected = array[index];
+			}
+
+		});
+
+	} else {
+		console.log("Error: no eventId parameter!");
+	}
+});
 angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	var angularScope = $scope;
 	
