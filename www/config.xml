@@ -89,6 +89,7 @@
   <gap:plugin name="cordova-plugin-statusbar" source="npm" />
   <gap:plugin name="cordova-plugin-whitelist" source="npm" />
   <gap:plugin name="cordova-plugin-keyboard" source="npm" />
+  <gap:plugin name="org.apache.cordova.dialogs" source="npm" />
 
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>

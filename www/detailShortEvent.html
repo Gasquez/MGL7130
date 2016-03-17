@@ -1,6 +1,10 @@
 <div class="volunteer-header">
+  
   <div class="volunteer-details button button-icon icon  ion-ios-search-strong" ui-sref="homeEvent({eventId: itemSelected.id})"></div>
-  <div class="volunteer-favorite button button-icon icon  ion-ios-heart-outline"></div>
+  
+  <!-- add/delete to/from bookmark button -->
+  <div ng-class="{true: 'volunteer-favorite button button-icon icon ion-ios-heart', false: 'volunteer-favorite button button-icon icon ion-ios-heart-outline'}[itemInFavorite]" data-ng-click="changeBookMark(itemSelected)"></div>
+
   <div class="volunteer-title">
     <p>{{itemSelected.titre}}</p>
   </div>

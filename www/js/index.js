@@ -7,118 +7,44 @@ angularApp.factory('BookMarkFactory', function() {
   return { 
     all: function() {
 		var projectString = window.sessionStorage['BookMark'];
-		if(projectString) {
+		if( projectString != "null" && projectString != "undefined" ) {	
 			return angular.fromJson(projectString);
 		}
-		/* Hard-codé pour utilisation sans la fonctionnalité d'ajout de favori */
-		//return [];
-		return [
-			{
-				"titre": "Old help cause for student 1",
-				"id": 100002,
-				"cibles": ["jeune"],
-				"latitude": "45.514887",
-				"longitude": "-73.559727",
-				"organisme": "UdeM",
-				"siege": "adresse du siege",
-				"emplacement": ["UQAM", "2100 St-Urb"],
-				"jours": ["mardi"],
-				"date": ["20-02"],
-				"heureDeFin": "18h00",
-				"heureDeDebut": "20h00",
-				"duree": "2h00",
-				"dateDebut": "12368522587",
-				"dateDeFin": "123685146545",
-				"langues": ["france", "anglais"],
-				"causes": ["Old Help"],
-				"activities": ["aide,", "accueil"],
-				"avantages": ["contact avec les gens,", "plaisir de sortir"],
-				"periodicity": "bi-hebdomadaire",
-				"contacts": {
-					"tel": "123456789",
-					"mail": "contact@udem.ca",
-					"site": "udem.ca"
-				},
-				"handicape": "oui",
-				"access": ["Metro University of Montreal", "bus numero 42"],
-				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
-				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
-			},
-			{
-				"titre": "Old help cause for student 2",
-				"id": 100003,
-				"cibles": ["jeune"],
-				"latitude": "45.503452",
-				"longitude": "-73.621021",
-				"organisme": "UdeM",
-				"siege": "adresse du siege",
-				"emplacement": ["UQAM", "2100 St-Urb"],
-				"jours": ["lundi"],
-				"date": ["19-02"],
-				"heureDeFin": "18h00",
-				"heureDeDebut": "20h00",
-				"duree": "2h00",
-				"dateDebut": "12368522587",
-				"dateDeFin": "123685146545",
-				"langues": ["france", "anglais"],
-				"causes": ["Old Help"],
-				"activities": ["aide", "accueil"],
-				"avantages": ["contact avec les gens", "plaisir de sortir"],
-				"periodicity": "bi-hebdomadaire",
-				"contacts": {
-					"tel": "123456789",
-					"mail": "contact@udem.ca",
-					"site": "udem.ca"
-				},
-				"handicape": "non",
-				"access": ["Metro University of Montreal", "bus numero 42"],
-				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
-				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
-			},	
-			{
-				"titre": "Old help cause for student",
-				"id": 100006,
-				"cibles": ["jeune"],
-				"latitude": "45.490764",
-				"longitude": "-73.581272",
-				"organisme": "CLSC Lasalle",
-				"siege": "adresse du siege",
-				"emplacement": "at the place",
-				"jours": ["vendredi"],
-				"date": ["23-02"],
-				"heureDeFin": "18h00",
-				"heureDeDebut":"20h00",
-				"duree":"2h00",
-				"dateDeBut":"12368522587",
-				"dateDeFin":"123685146545",
-				"langues": ["french","english"],
-				"causes": ["Old Help"],
-				"activities": ["aide","accueil"],
-				"avantages": ["contact avec les gens","plaisir de sortir"],
-				"periodicity": "bi-hebdomadaire",
-				"contacts": {
-					"tel":"123456789",
-					"mail":"contact@clsc.ca",
-					"site":"clsc.ca"
-				},
-				"handicape":true,
-				"access": ["Metro Atwarer","bus numero 46"],
-				"descriptifShort":"Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
-				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
-			}
-		];
+		return [];
     },
-    add: function(bookMark) {
+    add: function(bookMark) { //bookMark is a JavaScript object
     	var bookMarkArray = this.all();
     	bookMarkArray.push(bookMark);
     	window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
 	},
-	/* delete non testé */
-	delete: function(index) {
+	delete: function(bookMark) {
 		var bookMarkArray = this.all();
-		var newBookMarkArray = bookMarkArray.splice(index, 1);
-		window.sessionStorage['BookMark'] = angular.toJson(newBookMarkArray);
-		return newBookMarkArray;
+
+		// Look for element's index and remove element from array
+		bookMarkArray.forEach( function(element, index, array) {
+    		
+    		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
+    			bookMarkArray.splice(index, 1);
+    			window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
+    			return;
+    		}
+
+		});
+    },
+    exist: function(bookMark) {	//bookMark is a JavaScript object
+    	var bookMarkArray = this.all();
+    	var exist = false;
+
+    	bookMarkArray.forEach( function(element, index, array) {
+    		
+    		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
+    			exist = true;
+    			return
+    		}
+
+		});
+
+		return exist;
     }
   }
 });
@@ -231,8 +157,30 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	});
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, BookMarkFactory){
 	var angularScope = $scope;
+	angularScope.itemSelected = null;
+	angularScope.itemInFavorite = false;
+
+	/***	Reload itemInFavorite when view loading (fix bug on itemInFavorite value when going back to home) 	***/
+	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
+		if ( angularScope.itemSelected != null ) {
+			angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
+		}
+	});
+
+	angularScope.changeBookMark = function(eventObj) {
+		if ( angularScope.itemInFavorite == false ) {
+			BookMarkFactory.add(eventObj);
+
+			angularScope.itemInFavorite = true;
+		} else {
+			BookMarkFactory.delete(eventObj);
+
+			angularScope.itemInFavorite = false;
+		}
+	};
+
 	function loadData(){
 		$http.get('data.json')
 	    .then(function(res){
@@ -274,16 +222,17 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			        fillColor: "#FF0000",
 			        fillOpacity: 1,
 			        strokeWeight: 0.8
-			    },					
+			    }					
 			});
 		
-
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
 			  	return function() {
 			      // Display event informations
 			      angularScope.$apply(function() {
 			      	angularScope.itemSelected = itemSelected;
+
+			      	angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
 			      });
 				}
 			})(itemSelected));
@@ -294,19 +243,19 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  }, null, {enableHighAccuracy:true});
-		WidthChange(window.matchMedia("(min-width: 768px)"));
+		handleNavBarVisibility(window.matchMedia("(min-width: 768px)"));
 
 	};
 
 	// media query event handler
 	if (matchMedia) {
 	  var mq = window.matchMedia("(min-width: 768px)");
-	  mq.addListener(WidthChange);
-	  WidthChange(mq);
+	  mq.addListener(handleNavBarVisibility);
+	  handleNavBarVisibility(mq);
 	}
 
 	// change in fonction of width
-	function WidthChange(mq) {
+	function handleNavBarVisibility(mq) {
 
 	  if (mq.matches) {
 	  	// if screen >= 768px, hidde nav bar
@@ -318,7 +267,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 	};
 	google.maps.event.addDomListener(window, "load", loadData);
-
 });
 
 angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
@@ -339,11 +287,37 @@ angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
 		console.log("Error: no eventId parameter!");
 	}
 });
-angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
+
+angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMarkFactory){
 	var angularScope = $scope;
-	
 	angularScope.items = BookMarkFactory.all();
 	angularScope.itemSelected = null;
+	angularScope.itemInFavorite = true; 
+
+	angularScope.changeBookMark = function(eventObj) {
+		// In this controller, items always are in favorite
+		if ( angularScope.itemInFavorite == false ) {
+			// Nothing to do, cannot add event to favorite from here
+		} else {
+			BookMarkFactory.delete(eventObj);
+
+			if (navigator.notification) {
+				navigator.notification.alert( "Favoris supprimé.", null, '', 'Ok' );
+			}
+			else {
+				alert( "Favoris supprimé." );
+			}
+			
+			// Switch to next favorite if exists, otherwise refresh page
+			var favoriteList = BookMarkFactory.all();
+
+			if ( favoriteList.length != 0 ) {
+				angularScope.itemSelected = favoriteList[0];
+			} else {
+				$state.go("home");
+			}
+		}
+	};
 
 	angularScope.masterToDetailMode = function($index) {
 		$('#view').addClass('mode-detail');
@@ -367,9 +341,21 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 
 angularApp.controller("ListCtrl", function($scope){
 	var angularScope = $scope;
-	
 	angularScope.items = evenementsData;
 	angularScope.itemSelected = evenementsData[0];
+	angularScope.itemInFavorite = false;
+
+	angularScope.changeBookMark = function(eventObj) {
+		if ( angularScope.itemInFavorite == false ) {
+			BookMarkFactory.add(eventObj);
+
+			angularScope.itemInFavorite = true;
+		} else {
+			BookMarkFactory.delete(eventObj);
+
+			angularScope.itemInFavorite = false;
+		}
+	};
 
 	angularScope.masterToDetailMode = function($index) {
 		$('#viewList').addClass('mode-detail');
@@ -399,7 +385,7 @@ var app = {
 	bindEvents: function() {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
-	onDeviceReady: function($http) {
+	onDeviceReady: function() {
 		// L'API Cordova est prête
 	}
 };
