@@ -183,44 +183,50 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 			directionState: "filter"
 		}
 	};
+	
+		$scope.distance = [
+		    { text: "rayon 1 km", value: "1km" },
+		    { text: "rayon 5 km", value: "5km" },
+		    { text: "rayon 10 km", value: "10km" },
+		    { text: "rayon > 10 km", value: "10km++" }
+		];
+
+		$scope.temps = [
+		    { text: "< 1 heure", value: "1hre" },
+		    { text: "< 3 heures", value: "3hres" },
+		    { text: "< 1 jour", value: "1jr" },
+		    { text: ">= 1 jour", value: "1jr++" }
+		];
+
+		$scope.populationCible = [
+			{ text: "Jeune", value: "jeun" },
+		    { text: "Vielle", value: "viel" },
+		    { text: "Handicapee", value: "hdicap" }
+		];
+
+	  	$scope.periodicity = [
+		    { text: "Jounaliere", value: "jour" },
+		    { text: "Quotidienne", value: "quot" },
+		    { text: "Mensuelle", value: "mens" }
+		];
+
+		$scope.lieu = [
+		    { text: "Postal code", value: "pcode" },
+		    { text: "City", value: "city" },
+		    { text: "State", value: "state" },
+		    { text: "Pays", value: "pays" }
+		];
+
+	    $scope.data = {
+	    distance: '5km'
+	    };
+	 		  
+		$scope.serverSideChange = function(item) {
+			console.log("Selected Serverside, text:", item.text, "value:", item.value);
+		};
 
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
-	};
-
-	$scope.distance = [
-	    { text: "rayon 1 km", value: "1km" },
-	    { text: "rayon 5 km", value: "5km" },
-	    { text: "rayon 10 km", value: "10km" },
-	    { text: "rayon > 10 km", value: "10km++" }
-	];
-
-	$scope.temps = [
-	    { text: "< 1 heure", value: "1hre" },
-	    { text: "< 3 heures", value: "3hres" },
-	    { text: "< 1 jour", value: "1jr" },
-	    { text: ">= 1 jour", value: "1jr++" }
-	];
-
-	$scope.populationCible = [
-		{ text: "Jeune", value: "jeun" },
-	    { text: "Vielle", value: "viel" },
-	    { text: "Handicapee", value: "handi" }
-	];
-
-  	$scope.periodicity = [
-	    { text: "Jounaliere", value: "jour" },
-	    { text: "Quotidienne", value: "quot" },
-	    { text: "Mensuelle", value: "mens" }
-	];
-
-    $scope.data = {
-    distance: '5km'
-    //temps: '1jr'
- 	};
- 		  
-	$scope.serverSideChange = function(item) {
-		console.log("Selected Serverside, text:", item.text, "value:", item.value);
 	};
 
 	//Close nav bar every time you load the view
