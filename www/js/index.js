@@ -7,10 +7,10 @@ angularApp.factory('BookMarkFactory', function() {
   return { 
     all: function() {
 		var projectString = window.sessionStorage['BookMark'];
-		if( projectString != "null" && projectString != "undefined" ) {	
+		if( projectString != null && projectString != "" && projectString != "undefined" ) {	
 			return angular.fromJson(projectString);
 		}
-		return [];
+		return new Array();
     },
     add: function(bookMark) { //bookMark is a JavaScript object
     	var bookMarkArray = this.all();
@@ -194,7 +194,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			mapTypeControl: false,
+			mapTypeId: google.maps.MapTypeId.SATELLITE,
 			disableDefaultUI: true
 		};
 
@@ -279,6 +280,7 @@ angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
 
 			if ( element.hasOwnProperty("id") && element.id == eventId ) {
 				angularScope.itemSelected = array[index];
+				return;
 			}
 
 		});
@@ -339,7 +341,7 @@ angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMark
 	}
 });
 
-angularApp.controller("ListCtrl", function($scope){
+angularApp.controller("ListCtrl", function($scope, BookMarkFactory){
 	var angularScope = $scope;
 	angularScope.items = evenementsData;
 	angularScope.itemSelected = evenementsData[0];
@@ -358,12 +360,21 @@ angularApp.controller("ListCtrl", function($scope){
 	};
 
 	angularScope.masterToDetailMode = function($index) {
+		angularScope.itemInFavorite = false;
+
 		$('#viewList').addClass('mode-detail');
 
 		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
 		$(".master-item-list:nth-child(" + childNumber + ")").addClass('master-item-list-selected').siblings().removeClass('master-item-list-selected');
 	
 		angularScope.itemSelected = evenementsData[$index];
+
+		// Check if the new event selected is already inside favorite list
+		if ( BookMarkFactory.exist(angularScope.itemSelected) ) {
+			angularScope.itemInFavorite = true;
+		} else {
+			angularScope.itemInFavorite = false;
+		}
 	};
 
 	angularScope.detailModeToMaster = function() {
