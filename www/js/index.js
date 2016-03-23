@@ -254,7 +254,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			disableDefaultUI: true
+			disableDefaultUI: true,
+			MapTypeControlStyle: false
 		};
 
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
