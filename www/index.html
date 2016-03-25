@@ -90,13 +90,15 @@
       <button class="button button-icon" ng-click="goBack()">back</button>
     </ion-nav-buttons>
     <ion-content scroll="false" data-tap-disabled="true"></ion-content>
-    <ion-content>
+    <ion-content ng-controller="FilterCtrl">
 		  <div class="list">
         <div class="item item-divider"> 
           Distance, Selected Value: {{ data.distance }}
         </div>
         <ion-radio ng-repeat="item in distance"
                    ng-value="item.value"
+                   ng-change="changePreferences('distance',item)"
+
                    ng-model="data.distance">
           {{ item.text }}
         </ion-radio>
@@ -106,7 +108,7 @@
         <ion-radio ng-repeat="item in temps"
                    ng-value="item.value"
                    ng-model="data.temps"
-                   ng-change="serverSideChange(item)"
+                   ng-change="changePreferences('temps',item)"
                    name="server-side">
           {{ item.text }}
         </ion-radio>
@@ -115,6 +117,8 @@
         </div>
         <ion-radio ng-repeat="item in populationCible"
                    ng-value="item.value"
+                   ng-change="changePreferences('populationCible',item)"
+
                    ng-model="data.populationCible">
           {{ item.text }}
         </ion-radio>
@@ -124,7 +128,7 @@
         <ion-radio ng-repeat="item in periodicity"
                    ng-value="item.value"
                    ng-model="data.periodicity"
-                   ng-change="serverSideChange(item)"
+                   ng-change="changePreferences('periodicity',item)"
                    name="server-side">
           {{ item.text }}
         </ion-radio>  

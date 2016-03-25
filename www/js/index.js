@@ -187,42 +187,6 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
-
-	$scope.distance = [
-	    { text: "rayon 1 km", value: "1km" },
-	    { text: "rayon 5 km", value: "5km" },
-	    { text: "rayon 10 km", value: "10km" },
-	    { text: "rayon > 10 km", value: "10km++" }
-	];
-
-	$scope.temps = [
-	    { text: "< 1 heure", value: "1hre" },
-	    { text: "< 3 heures", value: "3hres" },
-	    { text: "< 1 jour", value: "1jr" },
-	    { text: ">= 1 jour", value: "1jr++" }
-	];
-
-	$scope.populationCible = [
-		{ text: "Jeune", value: "jeun" },
-	    { text: "Vielle", value: "viel" },
-	    { text: "Handicapee", value: "handi" }
-	];
-
-  	$scope.periodicity = [
-	    { text: "Jounaliere", value: "jour" },
-	    { text: "Quotidienne", value: "quot" },
-	    { text: "Mensuelle", value: "mens" }
-	];
-
-    $scope.data = {
-    distance: '5km'
-    //temps: '1jr'
- 	};
- 		  
-	$scope.serverSideChange = function(item) {
-		console.log("Selected Serverside, text:", item.text, "value:", item.value);
-	};
-
 	//Close nav bar every time you load the view
 	angularScope.$on('$ionicView.beforeEnter', function() {
 		if(window.matchMedia("(min-width: 768px)").matches)
@@ -378,6 +342,76 @@ angularApp.controller("ListCtrl", function($scope){
 	}
 
 });
+
+angularApp.controller("FilterCtrl", function($scope){
+	var angularScope = $scope;
+
+
+	angularScope.distance = [
+	    { text: "rayon 1 km", value: "1km" },
+	    { text: "rayon 5 km", value: "5km" },
+	    { text: "rayon 10 km", value: "10km" },
+	    { text: "rayon > 10 km", value: "10km++" }
+	];
+
+	angularScope.temps = [
+	    { text: "< 1 heure", value: "1hre" },
+	    { text: "< 3 heures", value: "3hres" },
+	    { text: "< 1 jour", value: "1jr" },
+	    { text: ">= 1 jour", value: "1jr++" }
+	];
+
+	angularScope.populationCible = [
+		{ text: "Jeune", value: "jeun" },
+	    { text: "Vielle", value: "viel" },
+	    { text: "Handicapee", value: "handi" }
+	];
+
+  	angularScope.periodicity = [
+	    { text: "Jounaliere", value: "jour" },
+	    { text: "Quotidienne", value: "quot" },
+	    { text: "Mensuelle", value: "mens" }
+	];
+
+    angularScope.data = {
+    distance: '5km'
+    //temps: '1jr'
+ 	};
+ 		  
+	angularScope.changePreferences = function(category,item) {
+		if(category == "periodicity"){
+
+		}
+
+	};
+
+
+
+/*	
+	angularScope.items = evenementsData;
+	angularScope.itemSelected = evenementsData[0];
+
+	angularScope.masterToDetailMode = function($index) {
+		$('#viewList').addClass('mode-detail');
+
+		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
+		$(".master-item-list:nth-child(" + childNumber + ")").addClass('master-item-list-selected').siblings().removeClass('master-item-list-selected');
+	
+		angularScope.itemSelected = evenementsData[$index];
+	};
+
+	angularScope.detailModeToMaster = function() {
+		$('#viewList').removeClass('mode-detail');
+	};
+
+	 For test : open automaticaly first event (we know it exists because data.json is hard-coded)
+	if(window.matchMedia("(min-width: 768px)").matches)
+	{
+		angularScope.masterToDetailMode(0);
+	}
+*/
+});
+
 
 var app = {
 	initialize: function() {
