@@ -258,6 +258,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			MapTypeControlStyle: false
 		};
 
+		var markers = [];
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 		angularScope.itemSelected = evenementsData[0];
@@ -285,6 +286,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			        strokeWeight: 0.8
 			    }					
 			});
+
+			markers.push(marker);
 		
 
 			// Add click action on each marcker
@@ -297,6 +300,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 				}
 			})(itemSelected));
 		}
+
+		var markerCluster = new MarkerClusterer(map, markers /*, mcOptions fix javascript error */);
 
 		if (navigator.geolocation)
 		  var watchId = navigator.geolocation.watchPosition(function(position){
