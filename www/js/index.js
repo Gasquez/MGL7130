@@ -248,6 +248,28 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 	    });
 	}
 
+	var styles = [{
+        url: 'img/people35.png',
+        height: 35,
+        width: 35,
+        anchor: [0, 0],
+        textColor: 'white',
+        textSize: 10
+      }, {
+        url: 'img/people45.png',
+        height: 45,
+        width: 45,
+        anchor: [24, 0],
+        textColor: '#ff0000',
+        textSize: 11
+      }, {
+        url: 'img/people55.png',
+        height: 55,
+        width: 55,
+        anchor: [32, 0],
+        textColor: '#ffffff',
+        textSize: 12
+      }];
 
 	function initialize() {
 		var mapOptions = {
@@ -258,6 +280,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			MapTypeControlStyle: false
 		};
 
+		var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
 		var markers = [];
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
@@ -301,7 +324,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			})(itemSelected));
 		}
 
-		var markerCluster = new MarkerClusterer(map, markers /*, mcOptions fix javascript error */);
+		var markerCluster = new MarkerClusterer(map, markers, mcOptions);
 
 		if (navigator.geolocation)
 		  var watchId = navigator.geolocation.watchPosition(function(position){
