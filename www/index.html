@@ -99,7 +99,8 @@
                    ng-value="item.value"
                    ng-change="changePreferences('distance',item)"
 
-                   ng-model="data.distance">
+                   ng-model="data.distance"
+                   name="distance-button">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider"> 
@@ -109,7 +110,7 @@
                    ng-value="item.value"
                    ng-model="data.temps"
                    ng-change="changePreferences('temps',item)"
-                   name="server-side">
+                   name="temps-button">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider"> 
@@ -119,7 +120,8 @@
                    ng-value="item.value"
                    ng-change="changePreferences('populationCible',item)"
 
-                   ng-model="data.populationCible">
+                   ng-model="data.populationCible"          
+                   name="populationCible-button">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider">
@@ -129,9 +131,9 @@
                    ng-value="item.value"
                    ng-model="data.periodicity"
                    ng-change="changePreferences('periodicity',item)"
-                   name="server-side">
+                   name="periodicity-button">
           {{ item.text }}
-        </ion-radio>  
+        </ion-radio>
 	    </div>
    </ion-content>
   </script>
