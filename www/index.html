@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height">
-    <title>Welcome</title>
+    <title>Simplyk</title>
 
 
     <!-- compiled css output -->
@@ -29,15 +29,9 @@
         </ion-header-bar>
         <ion-content>
           <div class="list">
-            <button class="wrapper {{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}">
-              {{navigation.pageHeaderLeft1.titleShort}}
-              </button>
-            <button class="wrapper {{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}">
-              {{navigation.pageHeaderLeft2.titleShort}}
-              </button>
-            <button class="wrapper {{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}">
-              {{navigation.pageHeaderLeft3.titleShort}}
-              </button>
+            <button class="wrapper {{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+            <button class="wrapper {{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+            <button class="wrapper {{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
           </div>
         </ion-content>
       </ion-side-menu>        
@@ -100,50 +94,57 @@
       <ion-nav-buttons side="left">
         <button class="button button-icon" ng-click="goBack()">Back</button>
       </ion-nav-buttons>
-      <ion-content>
+      <ion-content scroll="false" data-tap-disabled="true"></ion-content>
+      <ion-content ng-controller="FilterCtrl">
   		  <div class="list">
           <div class="item item-divider"> 
             Distance, Selected Value: {{ data.distance }}
           </div>
           <ion-radio ng-repeat="item in distance"
-                     ng-value="item.value"
-                     ng-model="data.distance">
-            {{ item.text }}
+                   ng-value="item.value"
+                   ng-change="changePreferences('distance',item)"
+                   ng-model="data.distance"
+                   name="distance-button">
+          {{ item.text }}
           </ion-radio>
           <div class="item item-divider"> 
             Temps, Selected Value: {{ data.temps }}
           </div>
           <ion-radio ng-repeat="item in temps"
-                     ng-value="item.value"
-                     ng-model="data.temps"
-                     ng-change="serverSideChange(item)"
-                     name="server-side">
-            {{ item.text }}
-          </ion-radio>
+                   ng-value="item.value"
+                   ng-model="data.temps"
+                   ng-change="changePreferences('temps',item)"
+                   name="temps-button">
+          {{ item.text }}
+         </ion-radio>
           <div class="item item-divider"> 
             Population cible, Selected Value: {{ data.populationCible }}
           </div>
           <ion-radio ng-repeat="item in populationCible"
-                     ng-value="item.value"
-                     ng-model="data.populationCible">
-            {{ item.text }}
+                   ng-value="item.value"
+                   ng-change="changePreferences('populationCible',item)"
+                   ng-model="data.populationCible"          
+                   name="populationCible-button">
+          {{ item.text }}
           </ion-radio>
           <div class="item item-divider">
           	Periodicite, Selected Value: {{ data.periodicity }}
           </div>
           <ion-radio ng-repeat="item in periodicity"
-                     ng-value="item.value"
-                     ng-model="data.periodicity"
-                     ng-change="serverSideChange(item)"
-                     name="server-side">
-            {{ item.text }}
-          </ion-radio>  
+                   ng-value="item.value"
+                   ng-model="data.periodicity"
+                   ng-change="changePreferences('periodicity',item)"
+                   name="periodicity-button">
+          {{ item.text }}
+          </ion-radio> 
           <div class="item item-divider"> 
             Lieu, Selected Value: {{ data.lieu }}
           </div>
           <ion-radio ng-repeat="item in lieu"
                      ng-value="item.value"
-                     ng-model="data.lieu">
+                     ng-model="data.lieu"
+                     ng-change="changePreferences('lieu',item)"
+                     name="lieu-button">
             {{ item.text }}
           </ion-radio>
   	    </div>

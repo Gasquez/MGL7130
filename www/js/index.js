@@ -4,6 +4,91 @@ var angularApp = angular.module('MenuNav', ['ionic']);
 var App = angular.module('App', []);
 var evenementsData = new Array();
 
+angularApp.service('PreferencesService', function() {
+    this.all =  function() {
+		if(window.localStorage.getItem('Preferences') == null){
+			return new Array();
+		} else{
+			return angular.fromJson(window.localStorage.getItem('Preferences'));
+		}
+    },
+    this.add = function(category,item) {
+		var success = false;
+		if(window.localStorage.getItem('Preferences') == null){
+			var object = new Array();
+			object.push([category,item]);
+			window.localStorage.setItem('Preferences',angular.toJson(object));
+		} else{
+			var myPreferences = angular.fromJson(window.localStorage.getItem('Preferences'));
+			myPreferences.forEach(function (element, index, array) {
+				//element is one couple of category and item
+				if(element[0].toString() == category.toString()){
+					if(element[1].text.toString() == item.text.toString()){
+						success = true;
+						return;
+					} else {
+						myPreferences[index] = [category,item];
+						success = true;
+						return;
+					}
+				}
+			});
+			window.localStorage.removeItem('Preferences');
+			if(success != true){
+				if(myPreferences == null || myPreferences.toString() == ""){
+					var object = new Array([category,item]);
+					window.localStorage.setItem('Preferences',angular.toJson(object));
+				} else {
+					myPreferences.push([category,item]);
+					window.localStorage.setItem('Preferences',angular.toJson(myPreferences));
+				}
+			} else {
+				window.localStorage.setItem('Preferences',angular.toJson(myPreferences));
+			}
+		}
+	},
+
+	this.delete = function(category) {
+		if(!window.localStorage.getItem('Preferences')){
+			return;
+		} else{
+			var myPreferences = angular.fromJson(window.localStorage.getItem('Preferences'));
+			myPreferences.forEach(function (element, index, array) {
+				//element is one couple of category and item
+				if(element[0] == category){
+					myPreferences.splice(index, 1);
+					return;
+				}
+			});
+			window.localStorage.removeItem('Preferences');
+			if(myPreferences.toString() != "undefined" ){
+				window.localStorage.setItem('Preferences',angular.toJson(myPreferences));
+			}
+		}
+    },
+
+    this.getPreferences = function (category) {
+		if(window.localStorage.getItem('Preferences') == null){
+			return;
+		} else{
+			var returnValue = "none";
+			var myPreferences = angular.fromJson(window.localStorage.getItem('Preferences'));
+			myPreferences.forEach(function (element, index, array) {
+				//element is one couple of category and item
+				if(element[0].toString() == category.toString()){
+					returnValue = element[1].value;
+					return
+				}
+			});
+			return returnValue;
+		}
+	};
+
+    this.clear = function(){
+    	localStorage.clear();
+    }
+});
+
 angularApp.factory('BookMarkFactory', function() {
   return { 
     all: function() {
@@ -184,47 +269,6 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 		}
 	};
 	
-		$scope.distance = [
-		    { text: "rayon 1 km", value: "1km" },
-		    { text: "rayon 5 km", value: "5km" },
-		    { text: "rayon 10 km", value: "10km" },
-		    { text: "rayon > 10 km", value: "10km++" }
-		];
-
-		$scope.temps = [
-		    { text: "< 1 heure", value: "1hre" },
-		    { text: "< 3 heures", value: "3hres" },
-		    { text: "< 1 jour", value: "1jr" },
-		    { text: ">= 1 jour", value: "1jr++" }
-		];
-
-		$scope.populationCible = [
-			{ text: "Jeune", value: "jeun" },
-		    { text: "Vielle", value: "viel" },
-		    { text: "Handicapee", value: "hdicap" }
-		];
-
-	  	$scope.periodicity = [
-		    { text: "Jounaliere", value: "jour" },
-		    { text: "Quotidienne", value: "quot" },
-		    { text: "Mensuelle", value: "mens" }
-		];
-
-		$scope.lieu = [
-		    { text: "Postal code", value: "pcode" },
-		    { text: "City", value: "city" },
-		    { text: "State", value: "state" },
-		    { text: "Pays", value: "pays" }
-		];
-
-	    $scope.data = {
-	    distance: '5km'
-	    };
-	 		  
-		$scope.serverSideChange = function(item) {
-			console.log("Selected Serverside, text:", item.text, "value:", item.value);
-		};
-
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
@@ -236,6 +280,65 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 			$ionicNavBarDelegate.showBar(false);
 		}
 	});
+});
+
+angularApp.controller("FilterCtrl", function($scope, PreferencesService){
+	var angularScope = $scope;
+
+
+	angularScope.distance = [
+	    { text: "rayon 1 km", value: "1km" },
+	    { text: "rayon 5 km", value: "5km" },
+	    { text: "rayon 10 km", value: "10km" },
+	    { text: "rayon > 10 km", value: "10km++" },
+	    { text: "None", value: "none"}
+	];
+
+	angularScope.temps = [
+	    { text: "< 1 heure", value: "1hre" },
+	    { text: "< 3 heures", value: "3hres" },
+	    { text: "< 1 jour", value: "1jr" },
+	    { text: ">= 1 jour", value: "1jr++" },
+	    { text: "None", value: "none"}
+	];
+
+	angularScope.populationCible = [
+		{ text: "Jeune", value: "jeun" },
+	    { text: "Vielle", value: "viel" },
+	    { text: "Handicapee", value: "handi" },
+	    { text: "None", value: "none"}
+	];
+
+  	angularScope.periodicity = [
+	    { text: "Jounaliere", value: "jour" },
+	    { text: "Quotidienne", value: "quot" },
+	    { text: "Mensuelle", value: "mens" },
+	    { text: "None", value: "none"}
+	];
+
+	angularScope.lieu = [
+		    { text: "Postal code", value: "pcode" },
+		    { text: "City", value: "city" },
+		    { text: "State", value: "state" },
+		    { text: "Pays", value: "pays" },
+		    { text: "None", value: "none"}
+		];
+
+    angularScope.data = {
+	    distance: PreferencesService.getPreferences('distance'),
+	    temps: PreferencesService.getPreferences('temps'),
+	    populationCible: PreferencesService.getPreferences('populationCible'),
+	    periodicity: PreferencesService.getPreferences('periodicity'),
+	    lieu: PreferencesService.getPreferences('lieu')
+ 	};
+
+	angularScope.changePreferences = function(category,item) {
+		if (item.text == "None"){
+			PreferencesService.delete(category);
+		} else {
+			PreferencesService.add(category,item);
+		}
+	};
 });
 
 angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
