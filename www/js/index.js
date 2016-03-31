@@ -1,6 +1,7 @@
 angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
 
+var userLogged = false;
 var evenementsData = new Array();
 
 angularApp.factory('BookMarkFactory', function() {
@@ -39,7 +40,7 @@ angularApp.factory('BookMarkFactory', function() {
     		
     		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
     			exist = true;
-    			return
+    			return;
     		}
 
 		});
@@ -47,6 +48,22 @@ angularApp.factory('BookMarkFactory', function() {
 		return exist;
     }
   }
+});
+
+angularApp.service('UserService', function() {
+	var profilStored = sessionStorage.getItem("facebook");
+
+	this.getUser = function() {
+		if ( profilStored == null ) {
+	    	return {name: "unknow", picture: ""};
+		} else {
+			return profilStored;
+		}
+	};
+
+	this.setUser = function(name, picture) {
+	    profilStored = {name: name, picture: picture};
+	};
 });
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
@@ -83,8 +100,8 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHistory){
-	angularScope = $scope;
+angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHistory, UserService){
+	var angularScope = $scope;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
@@ -113,43 +130,58 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 		$ionicHistory.goBack();
 	};
 
-	$scope.distance = [
+	angularScope.logOut = function() {
+		facebookConnectPlugin.logout(function() {
+			userLogged = false;
+			window.location.reload();
+		}, function(msg){
+			console.log(msg);
+		});
+	};
+
+	angularScope.distance = [
 	    { text: "rayon 1 km", value: "1km" },
 	    { text: "rayon 5 km", value: "5km" },
 	    { text: "rayon 10 km", value: "10km" },
 	    { text: "rayon > 10 km", value: "10km++" }
 	];
 
-	$scope.temps = [
+	angularScope.temps = [
 	    { text: "< 1 heure", value: "1hre" },
 	    { text: "< 3 heures", value: "3hres" },
 	    { text: "< 1 jour", value: "1jr" },
 	    { text: ">= 1 jour", value: "1jr++" }
 	];
 
-	$scope.populationCible = [
+	angularScope.populationCible = [
 		{ text: "Jeune", value: "jeun" },
 	    { text: "Vielle", value: "viel" },
 	    { text: "Handicapee", value: "handi" }
 	];
 
-  	$scope.periodicity = [
+  	angularScope.periodicity = [
 	    { text: "Jounaliere", value: "jour" },
 	    { text: "Quotidienne", value: "quot" },
 	    { text: "Mensuelle", value: "mens" }
 	];
 
-    $scope.data = {
+    angularScope.data = {
     distance: '5km'
     //temps: '1jr'
  	};
  		  
-	$scope.serverSideChange = function(item) {
+	angularScope.serverSideChange = function(item) {
 		console.log("Selected Serverside, text:", item.text, "value:", item.value);
 	};
 
 	//Close nav bar every time you load the view
 	angularScope.$on('$ionicView.beforeEnter', function() {
+		// Update user profil info
+		angularScope.userNameFB = UserService.getUser().name;
+		angularScope.userPictureFB= UserService.getUser().picture;
+
+		angularScope.logged = userLogged;
+
 		if(window.matchMedia("(min-width: 768px)").matches)
 		{
 			$ionicNavBarDelegate.showBar(false);
@@ -290,6 +322,66 @@ angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
 	}
 });
 
+angularApp.controller("detailEventCtrl", function($scope, UserService) {
+	var angularScope = $scope;
+	angularScope.showLoginView = false;
+	angularScope.participationPending = false;
+
+	angularScope.participateToEvent = function() {
+		// if not logged
+		if (userLogged == false) {
+			angularScope.showLoginView = true;
+			angularScope.participationPending = true;
+		} else {
+			joiningEvent();
+		}
+	}
+
+	angularScope.connectWithFB = function() {
+		// Connect with FB, participate to an event on success if participationPending is true
+
+		facebookConnectPlugin.login(["public_profile"], connectionSucceeded, function(msg){
+			console.log(msg);
+		});
+	}
+
+	angularScope.goBack = function() {
+		angularScope.showLoginView = false;
+	}
+
+	function connectionSucceeded(response) {
+		userLogged = true;
+
+		// Fetch the name
+		facebookConnectPlugin.api("/me", ["public_profile"], function(data){
+			// Fetch the picture
+			facebookConnectPlugin.api("/me/picture?redirect=false", ["public_profile"], function(ret){
+				UserService.setUser(data.name, ret.data.url);
+			}, function(msg){		
+				console.log(msg);
+			});
+		}, function(msg){		
+			console.log(msg);
+		});
+
+		if (angularScope.participationPending == true) {
+			joiningEvent();
+		}
+
+		// Not working, is supposed to hide the connection panel
+		angularScope.goBack();
+	}
+
+	function joiningEvent() {
+		//TODO Register people to the event
+		console.log("participating to an event .....");
+
+
+
+
+	}
+});
+
 angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMarkFactory){
 	var angularScope = $scope;
 	angularScope.items = BookMarkFactory.all();
@@ -398,6 +490,15 @@ var app = {
 	},
 	onDeviceReady: function() {
 		// L'API Cordova est prête
+		console.log("onDeviceReady");
+
+		//Initialize the JS SDK if in browser mode
+		if (window.cordova.platformId == "browser") {
+			facebookConnectPlugin.browserInit('101844923550027', 'v2.5', function(){
+			});			
+		} else {
+			// Nothing to do
+		}
 	}
 };
 app.initialize();

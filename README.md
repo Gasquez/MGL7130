@@ -94,3 +94,9 @@ else {
 ```
 
 Source : https://mindfiremobile.wordpress.com/2013/10/30/using-phonegap-notification-api-to-display-customized-alert/
+
+## Facebook
+
+Register and configure an app.
+
+Source : http://www.lafermeduweb.net/tutorial/creer-une-nouvelle-application-facebook-p80.html

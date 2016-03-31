@@ -80,11 +80,12 @@
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
           <!--  button-icon icon icon-right ion-arrow-right-c -->
-          <button class="{{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
+          <img ng-show="logged" class="valign userProfil-img" src="{{userPictureFB}}" ng-click="logOut()" />
+          <span ng-show="logged" class="valign userProfil-text">{{userNameFB}}</span>
+          <button class="valign {{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
         </ion-nav-buttons>
 
         <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
-
 
           <!-- Google Map -->
           <div id="map_content">
