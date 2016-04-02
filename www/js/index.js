@@ -404,6 +404,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 				labelAnchor: new google.maps.Point(13, 10),
 			    labelClass: "labels", // the CSS class for the label
 			    labelInBackground: false,
+			    labelVisible: true,
+			    isClicked: false,
 				icon: {
                 	path: google.maps.SymbolPath.CIRCLE,
 			        scale: 16,
@@ -414,7 +416,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			});
 
 			markers.push(marker);
-		
 
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
@@ -425,6 +426,27 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			      });
 				}
 			})(itemSelected));
+
+			google.maps.event.addListener(marker, 'click', function(e) {
+				this.isClicked = true;
+				this.set('labelClass', 'labels active');     	       
+		    });
+
+		    google.maps.event.addListener(marker, 'dblclick', function(e) {
+		    	this.isClicked = false;
+		    	this.set('labelClass', 'labels');
+			});
+
+		    google.maps.event.addListener(marker, 'mouseover', function(e) {
+		        this.set('labelClass', 'labels hover');
+		    });
+		    google.maps.event.addListener(marker, 'mouseout', function(e) {
+		        if (this.isClicked){
+		            this.set('labelClass', 'labels active');
+		        } else {
+		            this.set('labelClass', 'labels');
+		        }
+		    });		
 		}
 
 		var markerCluster = new MarkerClusterer(map, markers, mcOptions);
