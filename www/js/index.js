@@ -4,6 +4,91 @@ var angularApp = angular.module('MenuNav', ['ionic']);
 var userLogged = false;
 var evenementsData = new Array();
 
+angularApp.service('PreferencesService', function() {
+    this.all =  function() {
+		if(window.localStorage.getItem('Preferences') == null){
+			return new Array();
+		} else{
+			return angular.fromJson(window.localStorage.getItem('Preferences'));
+		}
+    },
+    this.add = function(category,item) {
+		var success = false;
+		if(window.localStorage.getItem('Preferences') == null){
+			var object = new Array();
+			object.push([category,item]);
+			window.localStorage.setItem('Preferences',angular.toJson(object));
+		} else{
+			var myPreferences = angular.fromJson(window.localStorage.getItem('Preferences'));
+			myPreferences.forEach(function (element, index, array) {
+				//element is one couple of category and item
+				if(element[0].toString() == category.toString()){
+					if(element[1].text.toString() == item.text.toString()){
+						success = true;
+						return;
+					} else {
+						myPreferences[index] = [category,item];
+						success = true;
+						return;
+					}
+				}
+			});
+			window.localStorage.removeItem('Preferences');
+			if(success != true){
+				if(myPreferences == null || myPreferences.toString() == ""){
+					var object = new Array([category,item]);
+					window.localStorage.setItem('Preferences',angular.toJson(object));
+				} else {
+					myPreferences.push([category,item]);
+					window.localStorage.setItem('Preferences',angular.toJson(myPreferences));
+				}
+			} else {
+				window.localStorage.setItem('Preferences',angular.toJson(myPreferences));
+			}
+		}
+	},
+
+	this.delete = function(category) {
+		if(!window.localStorage.getItem('Preferences')){
+			return;
+		} else{
+			var myPreferences = angular.fromJson(window.localStorage.getItem('Preferences'));
+			myPreferences.forEach(function (element, index, array) {
+				//element is one couple of category and item
+				if(element[0] == category){
+					myPreferences.splice(index, 1);
+					return;
+				}
+			});
+			window.localStorage.removeItem('Preferences');
+			if(myPreferences.toString() != "undefined" ){
+				window.localStorage.setItem('Preferences',angular.toJson(myPreferences));
+			}
+		}
+    },
+
+    this.getPreferences = function (category) {
+		if(window.localStorage.getItem('Preferences') == null){
+			return;
+		} else{
+			var returnValue = "none";
+			var myPreferences = angular.fromJson(window.localStorage.getItem('Preferences'));
+			myPreferences.forEach(function (element, index, array) {
+				//element is one couple of category and item
+				if(element[0].toString() == category.toString()){
+					returnValue = element[1].value;
+					return
+				}
+			});
+			return returnValue;
+		}
+	};
+
+    this.clear = function(){
+    	localStorage.clear();
+    }
+});
+
 angularApp.factory('BookMarkFactory', function() {
   return { 
     all: function() {
@@ -125,10 +210,24 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHi
 			directionState: "filter"
 		}
 	};
-
+	
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
+
+	angularScope.$on('$ionicView.beforeEnter', function() {
+		// Update user profil info
+		angularScope.userNameFB = UserService.getUser().name;
+		angularScope.userPictureFB= UserService.getUser().picture;
+
+		angularScope.logged = userLogged;
+
+		//Close nav bar every time you enter the view
+		if(window.matchMedia("(min-width: 768px)").matches)
+		{
+			$ionicNavBarDelegate.showBar(false);
+		}
+	});
 
 	angularScope.logOut = function() {
 		facebookConnectPlugin.logout(function() {
@@ -138,55 +237,64 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHi
 			console.log(msg);
 		});
 	};
+});
+
+angularApp.controller("FilterCtrl", function($scope, PreferencesService){
+	var angularScope = $scope;
 
 	angularScope.distance = [
 	    { text: "rayon 1 km", value: "1km" },
 	    { text: "rayon 5 km", value: "5km" },
 	    { text: "rayon 10 km", value: "10km" },
-	    { text: "rayon > 10 km", value: "10km++" }
+	    { text: "rayon > 10 km", value: "10km++" },
+	    { text: "None", value: "none"}
 	];
 
 	angularScope.temps = [
 	    { text: "< 1 heure", value: "1hre" },
 	    { text: "< 3 heures", value: "3hres" },
 	    { text: "< 1 jour", value: "1jr" },
-	    { text: ">= 1 jour", value: "1jr++" }
+	    { text: ">= 1 jour", value: "1jr++" },
+	    { text: "None", value: "none"}
 	];
 
 	angularScope.populationCible = [
 		{ text: "Jeune", value: "jeun" },
 	    { text: "Vielle", value: "viel" },
-	    { text: "Handicapee", value: "handi" }
+	    { text: "Handicapee", value: "handi" },
+	    { text: "None", value: "none"}
 	];
 
   	angularScope.periodicity = [
 	    { text: "Jounaliere", value: "jour" },
 	    { text: "Quotidienne", value: "quot" },
-	    { text: "Mensuelle", value: "mens" }
+	    { text: "Mensuelle", value: "mens" },
+	    { text: "None", value: "none"}
 	];
 
+	angularScope.lieu = [
+		    { text: "Postal code", value: "pcode" },
+		    { text: "City", value: "city" },
+		    { text: "State", value: "state" },
+		    { text: "Pays", value: "pays" },
+		    { text: "None", value: "none"}
+		];
+
     angularScope.data = {
-    distance: '5km'
-    //temps: '1jr'
+	    distance: PreferencesService.getPreferences('distance'),
+	    temps: PreferencesService.getPreferences('temps'),
+	    populationCible: PreferencesService.getPreferences('populationCible'),
+	    periodicity: PreferencesService.getPreferences('periodicity'),
+	    lieu: PreferencesService.getPreferences('lieu')
  	};
- 		  
-	angularScope.serverSideChange = function(item) {
-		console.log("Selected Serverside, text:", item.text, "value:", item.value);
-	};
 
-	//Close nav bar every time you load the view
-	angularScope.$on('$ionicView.beforeEnter', function() {
-		// Update user profil info
-		angularScope.userNameFB = UserService.getUser().name;
-		angularScope.userPictureFB= UserService.getUser().picture;
-
-		angularScope.logged = userLogged;
-
-		if(window.matchMedia("(min-width: 768px)").matches)
-		{
-			$ionicNavBarDelegate.showBar(false);
+	angularScope.changePreferences = function(category,item) {
+		if (item.text == "None"){
+			PreferencesService.delete(category);
+		} else {
+			PreferencesService.add(category,item);
 		}
-	});
+	};
 });
 
 angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, BookMarkFactory){
@@ -221,6 +329,28 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 	    });
 	}
 
+	var styles = [{
+        url: 'img/people35.png',
+        height: 35,
+        width: 35,
+        anchor: [0, 0],
+        textColor: 'white',
+        textSize: 10
+      }, {
+        url: 'img/people45.png',
+        height: 45,
+        width: 45,
+        anchor: [24, 0],
+        textColor: '#ff0000',
+        textSize: 11
+      }, {
+        url: 'img/people55.png',
+        height: 55,
+        width: 55,
+        anchor: [32, 0],
+        textColor: '#ffffff',
+        textSize: 12
+      }];
 
 	function initialize() {
 		var mapOptions = {
@@ -231,6 +361,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 			disableDefaultUI: true
 		};
 
+		var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
+		var markers = [];
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 		angularScope.itemSelected = evenementsData[0];
@@ -239,16 +371,19 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 
 			//Loading information events from bdd
 			var itemSelected = evenementsData[i];
-
 			var lab = itemSelected.date[0];
+			var Lat = itemSelected.latitude;
+			var Lgn = itemSelected.longitude;
 
 			var marker = new MarkerWithLabel({
-				position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
+				position: new google.maps.LatLng(Lat,Lgn),
 				map: map,
 				labelContent: lab,
 				labelAnchor: new google.maps.Point(13, 10),
 			    labelClass: "labels", // the CSS class for the label
 			    labelInBackground: false,
+			    labelVisible: true,
+			    isClicked: false,
 				icon: {
                 	path: google.maps.SymbolPath.CIRCLE,
 			        scale: 16,
@@ -257,7 +392,9 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 			        strokeWeight: 0.8
 			    }					
 			});
-		
+
+			markers.push(marker);
+
 			// Add click action on each marcker
 			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
 			  	return function() {
@@ -269,7 +406,30 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 			      });
 				}
 			})(itemSelected));
+
+			google.maps.event.addListener(marker, 'click', function(e) {
+				this.isClicked = true;
+				this.set('labelClass', 'labels active');     	       
+		    });
+
+		    google.maps.event.addListener(marker, 'dblclick', function(e) {
+		    	this.isClicked = false;
+		    	this.set('labelClass', 'labels');
+			});
+
+		    google.maps.event.addListener(marker, 'mouseover', function(e) {
+		        this.set('labelClass', 'labels hover');
+		    });
+		    google.maps.event.addListener(marker, 'mouseout', function(e) {
+		        if (this.isClicked){
+		            this.set('labelClass', 'labels active');
+		        } else {
+		            this.set('labelClass', 'labels');
+		        }
+		    });		
 		}
+
+		var markerCluster = new MarkerClusterer(map, markers, mcOptions);
 
 		if (navigator.geolocation)
 		  var watchId = navigator.geolocation.watchPosition(function(position){
