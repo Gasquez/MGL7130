@@ -272,7 +272,6 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
-
 	//Close nav bar every time you load the view
 	angularScope.$on('$ionicView.beforeEnter', function() {
 		if(window.matchMedia("(min-width: 768px)").matches)

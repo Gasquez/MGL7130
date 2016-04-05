@@ -162,11 +162,11 @@
 		"periodicity": "hebdomadaire",
 		"contacts": {
 			"tel":"123456789",
-			"mail":"contact@clsc.ca",
-			"site":"clsc.ca"
+			"mail":"contact@exponewarts.ca",
+			"site":"exponewarts.ca"
 		},
-		"handicape":false,
-		"access": ["Metro Montmorency","bus numero 65"],
-		"descriptifShort":"Un evenement pour aider les enfants malades à faire les papiers ainsi que leurs courses",
-		"descriptifLong": "Un evenement pour aider les enfants malades à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
+		"handicape":true,
+		"access": ["Metro Atwarer","bus numero 46"],
+		"descriptifShort":"Venez nous aider à réaliser une expo Art fantastique !",
+		"descriptifLong": "Venez nous aider à réaliser une expo Art fantastique pres du métro Atwater avec toute l'équipe surmotivée de expo d'arts !"
 	}]
