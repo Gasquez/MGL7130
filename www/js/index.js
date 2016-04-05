@@ -3,6 +3,9 @@ var angularApp = angular.module('MenuNav', ['ionic']);
 
 var App = angular.module('App', []);
 var evenementsData = new Array();
+var map;
+var markers = new Array(); 
+var MyPosition = null;
 
 angularApp.service('PreferencesService', function() {
     this.all =  function() {
@@ -82,11 +85,177 @@ angularApp.service('PreferencesService', function() {
 			});
 			return returnValue;
 		}
-	};
+	},
 
     this.clear = function(){
     	localStorage.clear();
     }
+});
+
+angularApp.service('CheckEvenementService', function(MathsService) {
+	this.checkPeriodicity = function(periodicity, evenement){
+		if(periodicity != "none"){
+			if(evenement.periodicity == periodicity){
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.checkTime = function(temps, evenement){
+		if(temps != "none"){
+			var valueOfEvenementTime = "none";
+			var valueOfTemps = "none";
+			var valueOfEvenementTimeDayOrHours = "none";
+
+			//Evenement time traitment
+			if(evenement.duree.indexOf("h") != -1){
+				valueOfEvenementTime = evenement.duree.split("h");
+				valueOfEvenementTimeDayOrHours = "h";
+			} else {
+				valueOfEvenementTime = evenement.duree.split("j");
+				valueOfEvenementTimeDayOrHours = "j";
+			}
+			//Filter time traitment
+			if(temps == "++"){
+				//Case time fitler is more than one days
+				if(valueOfEvenementTimeDayOrHours != "h" && valueOfEvenementTime[0] > 1){
+					return true;
+				}
+			} else if(temps.indexOf("h") != -1){
+				//Case time filter in hours
+				valueOfTemps = temps.split("h");
+				if(valueOfEvenementTimeDayOrHours == "h"){
+					if(valueOfEvenementTime[0] < valueOfTemps[0]){
+						return true;
+					} else if (valueOfEvenementTime[0] == valueOfTemps[0]){
+						if(valueOfEvenementTime[1] <= valueOfTemps[1]){
+							return true;
+						}
+					}
+				}
+			} else {
+				//Case time filter in days
+				if(valueOfEvenementTimeDayOrHours == "h"){
+					return true;
+				} else {
+					valueOfTemps = temps.split("j");
+					if(valueOfEvenementTime[0] < valueOfTemps[0]){
+						return true;
+					} else if (valueOfEvenementTime[0] == valueOfTemps[0]){
+						if(valueOfEvenementTime[1] <= valueOfTemps[1]){
+							return true;
+						}
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.checkPopulationCible = function(populationCible, evenement){
+		if(populationCible != "none"){
+			if(evenement.cibles == populationCible){
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.chekDistance = function(distance, evenement){
+		if(distance != "none"){
+			var distanceUserAndParameters = MathsService.distanceBetweenUserAndParameters(evenement.latitude,evenement.longitude,MyPosition);
+			if(distance == "++"){
+				if(distanceUserAndParameters > 30){
+					return true;
+				}
+			} else if(distanceUserAndParameters <= distance){
+				return true;
+			};
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.checkEvenement = function(periodicity, temps, populationCible, distance, evenement, myPosition){
+		return this.checkTime(temps, evenement) 
+				&& this.checkPeriodicity(periodicity, evenement) 
+				&& this.checkPopulationCible(populationCible, evenement) 
+				&& this.chekDistance(distance, evenement, myPosition);
+	}
+});
+
+angularApp.service('FilterMarkersService', function(PreferencesService, CheckEvenementService){
+	this.filterMarkers = function(){
+		var preferences = PreferencesService.all();
+		var periodicity = "none";
+		var temps = "none";
+		var populationCible = "none";
+		var distance = "none";
+		var returnValue = "none";
+		
+		if(preferences == null || preferences.toString() == ""){
+			//set visiblity for each markers
+			markers.forEach(function(element, index, array) {
+			    markers[index].setMap(map);
+			});
+			return returnValue;
+		} else {//filter to apply
+			markers.forEach(function(element, index, array) {
+			    markers[index].setMap(null);
+			});
+
+			for(i = 0; i < preferences.length ; i++){//catch preference
+				if(preferences[i][0] == "periodicity"){
+					periodicity = preferences[i][1].value;
+				} else if (preferences[i][0] == "temps"){
+					temps = preferences[i][1].value;
+				} else if (preferences[i][0] == "populationCible"){
+					populationCible = preferences[i][1].value;
+				} else if (preferences[i][0] == "distance"){
+					distance = preferences[i][1].value;
+				}
+			}
+			//apply preference on filter
+			for(indexMarker = 0; indexMarker < evenementsData.length; indexMarker ++) {
+				if(CheckEvenementService.checkEvenement(periodicity, temps, populationCible, distance, evenementsData[indexMarker],MyPosition)){
+					markers[indexMarker].setMap(map);
+					if(returnValue == "none"){
+						returnValue = indexMarker;
+					}
+				}
+			}
+			return returnValue;
+		}
+	}
+});
+
+angularApp.service('MathsService', function() {
+	// Calculate distance (in km) between two points specified by latitude/longitude with Haversine formula source : http://www.developpez.net/forums/d272814/php/langage/fonctions/traduire-fonction-js-php-distance-km-entre-longitudes-latitudes/
+	this.distanceBetweenUserAndParameters = function(p2lat, p2long, MyPosition) {
+		if(MyPosition != null){
+			//TODO A retirer
+			//var p1lat = MyPosition.coords.latitude;
+			//var p1long = MyPosition.coords.longitude;
+			var p1lat = 45.501689;
+			var p1long = -73.567256;
+		} else{ // Default Montreal value
+			var p1lat = 45.501689;
+			var p1long = -73.567256;
+		}
+
+		var R = 6371; // earth's mean radius in km
+		var dLat  = p2lat - p1lat;
+		var dLong = p2long - p1long;
+
+		var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(p1lat) * Math.cos(p2lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		var d = R * c;
+		return d;
+	}
 });
 
 angularApp.factory('BookMarkFactory', function() {
@@ -213,7 +382,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
 		url: '/home',
 		templateUrl: 'home.html',
-		controller: 'AppCtrl'
+		controller: 'HomeCtrl'
 	})
 
 	.state('filter', {
@@ -281,8 +450,40 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	});
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate,FilterMarkersService){
 	var angularScope = $scope;
+
+	angularScope.navigation = {
+		pageHeaderLeft1: {
+			icon: "button button-icon icon ion-android-globe",
+			titleShort: 'Carte',
+			directionState: "home"
+		},
+		pageHeaderLeft2: {
+			icon: "button button-icon icon ion-ios-list-outline",
+			titleShort: 'Liste',
+			directionState: "list"
+		},
+		pageHeaderLeft3: {
+			icon: "button button-icon icon ion-ios-heart-outline",
+			titleShort:'Favoris',
+			directionState: "favorite"
+		},
+		pageHeaderRight: {
+			icon: "button button-icon icon ion-android-options",
+			titleShort:'Filtres',
+			directionState: "filter"
+		}
+	};
+
+	angularScope.goBack = function(){
+		$ionicHistory.goBack();
+	};
+
+	function setPosition(NewPosition){
+		MyPosition = NewPosition;
+	}
+
 	function loadData(){
 		$http.get('data.json')
 	    .then(function(res){
@@ -291,8 +492,10 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 	    });
 	}
 
-
 	function initialize() {
+		if(markers.length !=0){//This test is for escape if it's not the first time you go in initialize methode
+			return;
+		}
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
@@ -300,7 +503,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			disableDefaultUI: true
 		};
 
-		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+		map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 		angularScope.itemSelected = evenementsData[0];
 		// Loop through the array of evenements and place each one on the map 
@@ -313,7 +516,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 			var marker = new MarkerWithLabel({
 				position: new google.maps.LatLng(itemSelected.latitude,itemSelected.longitude),
-				map: map,
 				labelContent: lab,
 				labelAnchor: new google.maps.Point(13, 10),
 			    labelClass: "labels", // the CSS class for the label
@@ -326,26 +528,26 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			        strokeWeight: 0.8
 			    },					
 			});
-		
-
+			markers.push(marker);
 			// Add click action on each marcker
-			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
+			google.maps.event.addListener(markers[i], 'click', (function(evenementsData,i) {
 			  	return function() {
 			      // Display event informations
 			      angularScope.$apply(function() {
-			      	angularScope.itemSelected = itemSelected;
+			      	angularScope.itemSelected = evenementsData[i];
 			      });
 				}
-			})(itemSelected));
+			})(evenementsData,i));
 		}
 
 		if (navigator.geolocation)
 		  var watchId = navigator.geolocation.watchPosition(function(position){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		  	setPosition(position);
 		  }, null, {enableHighAccuracy:true});
 		WidthChange(window.matchMedia("(min-width: 768px)"));
-
+		FilterMarkersService.filterMarkers();
 	};
 
 	// media query event handler
@@ -368,6 +570,21 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 	};
 	google.maps.event.addDomListener(window, "load", loadData);
+	//Close nav bar every time you load the view
+	angularScope.$on('$ionicView.beforeEnter', function(map) {
+		if(window.matchMedia("(min-width: 768px)").matches)
+		{
+			$ionicNavBarDelegate.showBar(false);
+		}
+	});
+	angularScope.$on('$ionicView.afterEnter', function(map) {
+		var valueOfFirstMarker = FilterMarkersService.filterMarkers();
+		google.maps.event.trigger(map,'resize');
+		if(valueOfFirstMarker != "none"){
+			angularScope.itemSelected =  evenementsData[valueOfFirstMarker];
+			angularScope.$apply();
+		}
+	});
 
 });
 
@@ -433,32 +650,33 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 
 
 	angularScope.distance = [
-	    { text: "rayon 1 km", value: "1km" },
-	    { text: "rayon 5 km", value: "5km" },
-	    { text: "rayon 10 km", value: "10km" },
-	    { text: "rayon > 10 km", value: "10km++" },
+	    { text: "rayon 1 km", value: "1" },
+	    { text: "rayon 5 km", value: "5" },
+	    { text: "rayon 10 km", value: "10" },
+	    { text: "rayon 30 km", value: "30" },
+	    { text: "rayon > 30 km", value: "++" },
 	    { text: "None", value: "none"}
 	];
 
 	angularScope.temps = [
-	    { text: "< 1 heure", value: "1hre" },
-	    { text: "< 3 heures", value: "3hres" },
-	    { text: "< 1 jour", value: "1jr" },
-	    { text: ">= 1 jour", value: "1jr++" },
+	    { text: "< 1 heure", value: "1h00" },
+	    { text: "< 3 heures", value: "3h00" },
+	    { text: "< 1 jour", value: "1j00" },
+	    { text: ">= 1 jour", value: "++" },
 	    { text: "None", value: "none"}
 	];
 
 	angularScope.populationCible = [
-		{ text: "Jeune", value: "jeun" },
-	    { text: "Vielle", value: "viel" },
-	    { text: "Handicapee", value: "handi" },
+		{ text: "Jeune", value: "jeune" },
+	    { text: "Vielle", value: "vielle" },
+	    { text: "Handicapee", value: "handicapee" },
 	    { text: "None", value: "none"}
 	];
 
   	angularScope.periodicity = [
-	    { text: "Jounaliere", value: "jour" },
-	    { text: "Quotidienne", value: "quot" },
-	    { text: "Mensuelle", value: "mens" },
+	    { text: "Jounaliere", value: "journalieres" },
+	    { text: "Quotidienne", value: "quotidienne" },
+	    { text: "Mensuelle", value: "mensuelle" },
 	    { text: "None", value: "none"}
 	];
 
