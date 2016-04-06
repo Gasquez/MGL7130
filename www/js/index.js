@@ -3,9 +3,6 @@ var angularApp = angular.module('MenuNav', ['ionic']);
 
 var App = angular.module('App', []);
 var evenementsData = new Array();
-var map;
-var markers = new Array(); 
-var MyPosition = null;
 
 angularApp.service('PreferencesService', function() {
     this.all =  function() {
@@ -165,9 +162,9 @@ angularApp.service('CheckEvenementService', function(MathsService) {
 		}
 		return false;
 	},
-	this.chekDistance = function(distance, evenement){
+	this.chekDistance = function(distance, evenement, myPosition){
 		if(distance != "none"){
-			var distanceUserAndParameters = MathsService.distanceBetweenUserAndParameters(evenement.latitude,evenement.longitude,MyPosition);
+			var distanceUserAndParameters = MathsService.distanceBetweenUserAndParameters(evenement.latitude,evenement.longitude,myPosition);
 			if(distance == "++"){
 				if(distanceUserAndParameters > 30){
 					return true;
@@ -189,7 +186,7 @@ angularApp.service('CheckEvenementService', function(MathsService) {
 });
 
 angularApp.service('FilterMarkersService', function(PreferencesService, CheckEvenementService){
-	this.filterMarkers = function(){
+	this.filterMarkers = function(markers, map, myPosition){
 		var preferences = PreferencesService.all();
 		var periodicity = "none";
 		var temps = "none";
@@ -221,8 +218,8 @@ angularApp.service('FilterMarkersService', function(PreferencesService, CheckEve
 			}
 			//apply preference on filter
 			for(indexMarker = 0; indexMarker < evenementsData.length; indexMarker ++) {
-				if(CheckEvenementService.checkEvenement(periodicity, temps, populationCible, distance, evenementsData[indexMarker],MyPosition)){
-					markers[indexMarker].setMap(map);
+				if(CheckEvenementService.checkEvenement(periodicity, temps, populationCible, distance, evenementsData[indexMarker],myPosition)){
+					markers[indexMarker].setMap(map);	
 					if(returnValue == "none"){
 						returnValue = indexMarker;
 					}
@@ -237,11 +234,8 @@ angularApp.service('MathsService', function() {
 	// Calculate distance (in km) between two points specified by latitude/longitude with Haversine formula source : http://www.developpez.net/forums/d272814/php/langage/fonctions/traduire-fonction-js-php-distance-km-entre-longitudes-latitudes/
 	this.distanceBetweenUserAndParameters = function(p2lat, p2long, MyPosition) {
 		if(MyPosition != null){
-			//TODO A retirer
-			//var p1lat = MyPosition.coords.latitude;
-			//var p1long = MyPosition.coords.longitude;
-			var p1lat = 45.501689;
-			var p1long = -73.567256;
+			var p1lat = MyPosition.coords.latitude;
+			var p1long = MyPosition.coords.longitude;
 		} else{ // Default Montreal value
 			var p1lat = 45.501689;
 			var p1long = -73.567256;
@@ -382,7 +376,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
 		url: '/home',
 		templateUrl: 'home.html',
-		controller: 'HomeCtrl'
+		controller: 'AppCtrl'
 	})
 
 	.state('filter', {
@@ -413,7 +407,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 })
 
 angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHistory){
-	angularScope = $scope;
+	var angularScope = $scope;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
@@ -450,38 +444,14 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	});
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate,FilterMarkersService){
+angularApp.controller("HomeCtrl", function($scope, $rootScope,$http, $ionicNavBarDelegate,FilterMarkersService){
 	var angularScope = $scope;
-
-	angularScope.navigation = {
-		pageHeaderLeft1: {
-			icon: "button button-icon icon ion-android-globe",
-			titleShort: 'Carte',
-			directionState: "home"
-		},
-		pageHeaderLeft2: {
-			icon: "button button-icon icon ion-ios-list-outline",
-			titleShort: 'Liste',
-			directionState: "list"
-		},
-		pageHeaderLeft3: {
-			icon: "button button-icon icon ion-ios-heart-outline",
-			titleShort:'Favoris',
-			directionState: "favorite"
-		},
-		pageHeaderRight: {
-			icon: "button button-icon icon ion-android-options",
-			titleShort:'Filtres',
-			directionState: "filter"
-		}
-	};
-
-	angularScope.goBack = function(){
-		$ionicHistory.goBack();
-	};
+	var map = null;
+	var markers = new Array(); 
+	var myPosition = null;
 
 	function setPosition(NewPosition){
-		MyPosition = NewPosition;
+		myPosition = NewPosition;
 	}
 
 	function loadData(){
@@ -493,9 +463,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate,Fi
 	}
 
 	function initialize() {
-		if(markers.length !=0){//This test is for escape if it's not the first time you go in initialize methode
-			return;
-		}
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
@@ -547,7 +514,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate,Fi
 		  	setPosition(position);
 		  }, null, {enableHighAccuracy:true});
 		WidthChange(window.matchMedia("(min-width: 768px)"));
-		FilterMarkersService.filterMarkers();
+		FilterMarkersService.filterMarkers(markers,map, myPosition);
 	};
 
 	// media query event handler
@@ -569,26 +536,35 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate,Fi
 	  }
 
 	};
+
+	function applyFilter(){
+		if(markers.length == 0){
+			return;
+		}
+		var valueOfFirstMarker = FilterMarkersService.filterMarkers(markers, map, myPosition);
+		google.maps.event.trigger(map,'resize');
+		if(valueOfFirstMarker != "none"){
+			angularScope.itemSelected =  evenementsData[valueOfFirstMarker];
+		}
+	}
+
 	google.maps.event.addDomListener(window, "load", loadData);
 	//Close nav bar every time you load the view
-	angularScope.$on('$ionicView.beforeEnter', function(map) {
+	angularScope.$on('$ionicView.beforeEnter', function() {
 		if(window.matchMedia("(min-width: 768px)").matches)
 		{
 			$ionicNavBarDelegate.showBar(false);
 		}
 	});
-	angularScope.$on('$ionicView.afterEnter', function(map) {
-		var valueOfFirstMarker = FilterMarkersService.filterMarkers();
-		google.maps.event.trigger(map,'resize');
-		if(valueOfFirstMarker != "none"){
-			angularScope.itemSelected =  evenementsData[valueOfFirstMarker];
-			angularScope.$apply();
-		}
+	$rootScope.$on('$ionicView.afterEnter', function() {
+		applyFilter();
 	});
 
 });
 
 angularApp.controller("HomeEventCtrl", function($scope){
+	var angularScope = $scope;
+
 	angularScope.itemSelected = evenementsData[1];
 });
 
