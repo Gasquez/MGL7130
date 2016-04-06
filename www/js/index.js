@@ -631,29 +631,29 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	    { text: "rayon 10 km", value: "10" },
 	    { text: "rayon 30 km", value: "30" },
 	    { text: "rayon > 30 km", value: "++" },
-	    { text: "None", value: "none"}
+	    { text: "Aucun", value: "none"}
 	];
 
 	angularScope.temps = [
 	    { text: "< 1 heure", value: "1h00" },
 	    { text: "< 3 heures", value: "3h00" },
 	    { text: "< 1 jour", value: "1j00" },
-	    { text: ">= 1 jour", value: "++" },
-	    { text: "None", value: "none"}
+	    { text: "> 1 jour", value: "++" },
+	    { text: "Aucun", value: "none"}
 	];
 
 	angularScope.populationCible = [
 		{ text: "Jeune", value: "jeune" },
 	    { text: "Vielle", value: "vielle" },
-	    { text: "Handicapee", value: "handicapee" },
-	    { text: "None", value: "none"}
+	    { text: "Handicapée", value: "handicapee" },
+	    { text: "Aucun", value: "none"}
 	];
 
   	angularScope.periodicity = [
-	    { text: "Jounaliere", value: "journalieres" },
+	    { text: "Jounalière", value: "journalieres" },
 	    { text: "Quotidienne", value: "quotidienne" },
 	    { text: "Mensuelle", value: "mensuelle" },
-	    { text: "None", value: "none"}
+	    { text: "Aucun", value: "none"}
 	];
 
     angularScope.data = {

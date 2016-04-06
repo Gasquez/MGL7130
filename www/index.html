@@ -93,7 +93,7 @@
     <ion-content ng-controller="FilterCtrl">
 		  <div class="list">
         <div class="item item-divider"> 
-          Distance, Selected Value: {{ data.distance }}
+          Distance
         </div>
         <ion-radio ng-repeat="item in distance"
                    ng-value="item.value"
@@ -104,7 +104,7 @@
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider"> 
-          Temps, Selected Value: {{ data.temps }}
+          Temps
         </div>
         <ion-radio ng-repeat="item in temps"
                    ng-value="item.value"
@@ -114,7 +114,7 @@
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider"> 
-          Population cible, Selected Value: {{ data.populationCible }}
+          Population ciblée
         </div>
         <ion-radio ng-repeat="item in populationCible"
                    ng-value="item.value"
@@ -125,7 +125,7 @@
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider">
-        	Periodicite, Selected Value: {{ data.periodicity }}
+        	Periodicité
         </div>
         <ion-radio ng-repeat="item in periodicity"
                    ng-value="item.value"
