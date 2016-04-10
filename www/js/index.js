@@ -386,6 +386,54 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		var markers = [];
 		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
+		// Function for getting new default icon
+	    function getDefaultIcon () {
+	        return {
+            	path: google.maps.SymbolPath.CIRCLE,
+		        scale: 16,
+		        fillColor: "#FF0000",
+		        fillOpacity: 1,
+		        strokeWeight: 0.8
+		    }
+	    }
+
+	    // Function for getting new highlight icon on click
+	    function getClickHighlightIcon () {
+	        return {
+            	path: google.maps.SymbolPath.CIRCLE,
+		        scale: 16,
+		        fillColor: "#00FFFF",
+		        fillOpacity: 1,
+		        strokeWeight: 0.8
+		    }
+	    }
+
+	    // Function for getting new highlight icon on mouseover
+	    function getHoverHighlightIcon () {
+	        return {
+            	path: google.maps.SymbolPath.CIRCLE,
+		        scale: 16,
+		        fillColor: "#00FF00",
+		        fillOpacity: 1,
+		        strokeWeight: 0.8
+		    }
+	    }
+
+	    // Function for getting new default labelClass
+	    function getDefaultLabelClass () {
+	    	marker.set('labelClass', 'labels');			
+	    }
+
+	    // Function for getting new highlight labelClass on click
+	    function getClickHighlightLabelClass () {
+	    	marker.set('labelClass', 'labels active');
+	    }
+
+	    // Function for getting new highlight labelClass on mouseover
+	    function getHoverHighlightLabelClass () {
+	    	marker.set('labelClass', 'labels hover');
+	    }
+
 		angularScope.itemSelected = evenementsData[0];
 		// Loop through the array of evenements and place each one on the map 
 		for(i = 0; i < evenementsData.length; i += 1) {
@@ -401,56 +449,76 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 				map: map,
 				labelContent: lab,
 				labelAnchor: new google.maps.Point(13, 10),
-			    labelClass: "labels", // the CSS class for the label
+			    labelClass: "lalels", // the CSS class for the label
 			    labelInBackground: false,
 			    labelVisible: true,
 			    isClicked: false,
-				icon: {
-                	path: google.maps.SymbolPath.CIRCLE,
-			        scale: 16,
-			        fillColor: "#FF0000",
-			        fillOpacity: 1,
-			        strokeWeight: 0.8
-			    }					
+				icon: getDefaultIcon()				
 			});
 
-			markers.push(marker);
+			getDefaultLabelClass ()
 
 			// Add click action on each marcker
-			google.maps.event.addListener(marker, 'click', (function(itemSelected) {
+			google.maps.event.addListener(marker, 'click', (function(itemSelected, marker,i) {
 			  	return function() {
-			      // Display event informations
-			      angularScope.$apply(function() {
-			      	angularScope.itemSelected = itemSelected;
-			      });
+			        // Display event informations
+			        angularScope.$apply(function() {
+			          angularScope.itemSelected = itemSelected;
+			        });
+			        //reset default icon
+			        for (var j = 0; j < markers.length; j++) {
+			          markers[j].setIcon(getDefaultIcon ());
+			          markers[j].set('labelClass','labels');
+			      	  markers[j].isClicked = false;
+			        }
+			        //get highlighticon
+			        marker.isClicked = true;
+	                marker.setIcon(getClickHighlightIcon ());
+	                marker.set('labelClass', 'labels active');
 				}
-			})(itemSelected));
+			})(itemSelected, marker, i));
 
-			// change color marker on click
-			google.maps.event.addListener(marker, 'click', function(e) {
-				this.isClicked = true;
-				this.set('labelClass', 'labels active');     	       
-		    });
-
-			// reset color marker on double click
+			// deselect marker color
 		    google.maps.event.addListener(marker, 'dblclick', function(e) {
-		    	this.isClicked = false;
-		    	this.set('labelClass', 'labels');
-			});
+		        this.set('labelClass', 'labels');
+		        this.setIcon(getDefaultIcon ());
+		        this.isClicked = false;
+		    });
 
 		    // change color marker on mouseover
-		    google.maps.event.addListener(marker, 'mouseover', function(e) {
-		        this.set('labelClass', 'labels hover');
-		    });
+		    google.maps.event.addListener(marker, 'mouseover', (function(marker,i) {
+		    	return function() {
+		        	if (this.isClicked){
+		        	    //reset default labelclass
+	                    marker.set('labelClass', 'labels active');
+	                    marker.setIcon(getClickHighlightIcon ());
+		            } else {
+		                marker.set('labelClass', 'labels hover');
+		                marker.setIcon(getHoverHighlightIcon ());
+		            }
+		        }   
+		    })(marker,i));
 
-		    // change or reset color marker on mouseout
-		    google.maps.event.addListener(marker, 'mouseout', function(e) {
-		        if (this.isClicked){
-		            this.set('labelClass', 'labels active');
-		        } else {
-		            this.set('labelClass', 'labels');
-		        }
-		    });		
+		    //change or reset color marker on mouseout
+		    google.maps.event.addListener(marker, 'mouseout', (function(marker,i) {
+		        return function() {
+		        	if (this.isClicked){
+		        	    //reset default labelclass
+			            for (var t = 0; t < markers.length; t++) {
+			                markers[t].set('labelClass', 'labels');
+			      	        markers[t].setIcon(getDefaultIcon ());
+			            }
+			            //get highlightlabelclass
+	                    marker.set('labelClass', 'labels active');
+	                    marker.setIcon(getClickHighlightIcon ());
+		            } else {
+		                marker.set('labelClass', 'labels');
+		                marker.setIcon(getDefaultIcon ());
+		            }
+		        }   
+		    })(marker,i));
+
+		    markers.push(marker);		
 		}
 
 		var markerCluster = new MarkerClusterer(map, markers, mcOptions);

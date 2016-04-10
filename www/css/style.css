@@ -75,24 +75,39 @@
 }
 
 .labels {
-  color: white;
-  background-color: red;
-  font-family: "Lucida Grande", "Arial", sans-serif;
-  font-weight : bold;
-  font-size: 9px;
-  text-align: center;
-  width: 25px;
-  white-space: nowrap;
+   color: white;
+   background-color: #FF0000;
+   border-radius: 10px;
+   font-family: "Lucida Grande", "Arial", sans-serif;
+   font-weight : bold;
+   font-size: 9px;
+   text-align: center;
+   width: 25px;
+   white-space: nowrap;
 }
 
 .labels.active {
-    background: cyan;
+    background: #00FFFF;
+    border-radius: 10px;
     color: black;
+    font-family: "Lucida Grande", "Arial", sans-serif;
+    font-weight : bold;
+    font-size: 9px;
+    text-align: center;
+    width: 25px;
+    white-space: nowrap;
 }
 
 .labels.hover {
-    background-color: white;
+    background: #00FF00;
+    border-radius: 4px;
     color: red;
+    font-family: "Lucida Grande", "Arial", sans-serif;
+    font-weight : bold;
+    font-size: 9px;
+    text-align: center;
+    width: 25px;
+    white-space: nowrap;
 }
 
 #description_event_content{
@@ -251,17 +266,6 @@
 
 #button_details{
 	text-align: center;
-}
-
-.labels {
-  color: white;
-  background-color: red;
-  font-family: "Lucida Grande", "Arial", sans-serif;
-  font-weight : bold;
-  font-size: 9px;
-  text-align: center;
-  width: 25px;
-  white-space: nowrap;
 }
 
 .volunteer-header {
