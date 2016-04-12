@@ -285,6 +285,10 @@
 	float: left;
 	margin-left: 20%;
 }
+.volunteer-favorite-details {
+	float: right;
+	margin-right: 20%;
+}
 
 .text-justify {
 	text-align: justify;
