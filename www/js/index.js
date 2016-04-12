@@ -407,19 +407,24 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 				}
 			})(itemSelected));
 
+			// change color marker on click
 			google.maps.event.addListener(marker, 'click', function(e) {
 				this.isClicked = true;
 				this.set('labelClass', 'labels active');     	       
 		    });
 
+			// reset color marker on double click
 		    google.maps.event.addListener(marker, 'dblclick', function(e) {
 		    	this.isClicked = false;
 		    	this.set('labelClass', 'labels');
 			});
 
+		    // change color marker on mouseover
 		    google.maps.event.addListener(marker, 'mouseover', function(e) {
 		        this.set('labelClass', 'labels hover');
 		    });
+
+		    // change or reset color marker on mouseout
 		    google.maps.event.addListener(marker, 'mouseout', function(e) {
 		        if (this.isClicked){
 		            this.set('labelClass', 'labels active');
