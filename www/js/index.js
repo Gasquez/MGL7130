@@ -185,7 +185,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHistory, UserService){
+angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 	var angularScope = $scope;
 
 	angularScope.navigation = {
@@ -221,12 +221,6 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHi
 		angularScope.userPictureFB= UserService.getUser().picture;
 
 		angularScope.logged = userLogged;
-
-		//Close nav bar every time you enter the view
-		if(window.matchMedia("(min-width: 768px)").matches)
-		{
-			$ionicNavBarDelegate.showBar(false);
-		}
 	});
 
 	angularScope.logOut = function() {
@@ -297,7 +291,7 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	};
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, BookMarkFactory){
+angularApp.controller("HomeCtrl", function($scope,$http, BookMarkFactory){
 	var angularScope = $scope;
 	angularScope.itemSelected = null;
 	angularScope.itemInFavorite = false;
@@ -441,29 +435,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  }, null, {enableHighAccuracy:true});
-		handleNavBarVisibility(window.matchMedia("(min-width: 768px)"));
-
 	};
 
-	// media query event handler
-	if (matchMedia) {
-	  var mq = window.matchMedia("(min-width: 768px)");
-	  mq.addListener(handleNavBarVisibility);
-	  handleNavBarVisibility(mq);
-	}
-
-	// change in fonction of width
-	function handleNavBarVisibility(mq) {
-
-	  if (mq.matches) {
-	  	// if screen >= 768px, hidde nav bar
-	  	 $ionicNavBarDelegate.showBar(false);
-	  } else {
-	  	// if screen < 768px, show nav bar
-	  	$ionicNavBarDelegate.showBar(true);
-	  }
-
-	};
 	google.maps.event.addDomListener(window, "load", loadData);
 });
 
@@ -511,7 +484,9 @@ angularApp.controller("detailEventCtrl", function($scope, UserService) {
 	}
 
 	angularScope.goBack = function() {
-		angularScope.showLoginView = false;
+      angularScope.$apply(function() {
+      	angularScope.showLoginView = false;
+      });
 	}
 
 	function connectionSucceeded(response) {
