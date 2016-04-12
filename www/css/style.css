@@ -209,7 +209,7 @@
 
 
 /* Paysage */ 
-@media (min-width: 768px){
+@media screen and (min-width: 768px){
 
 	#listeventList{
 		float: left;
@@ -277,13 +277,13 @@
 	margin-left: 20%;
 }
 .volunteer-details {
-	float: left;
-	margin-left: 20%;
+	float: right;
+	margin-right: 20%;
 }
 
 .volunteer-favorite {
-	float: right;
-	margin-right: 20%;
+	float: left;
+	margin-left: 20%;
 }
 
 .text-justify {
@@ -366,6 +366,12 @@
 	display: inline-block !important;
 }
 
+@media screen and (max-width: 768px){
+	.userProfil-text {
+		display: none !important;
+	}
+}
+
 .userProfil-img {
 	width: 35px;
 	display: inline-block !important;
@@ -373,4 +379,9 @@
 
 .valign {
 	vertical-align: middle !important;
+}
+
+/* Mark the active navbav button */
+.borderB {
+	border-bottom: 1px solid orange !important;
 }
