@@ -4,6 +4,11 @@ var angularApp = angular.module('MenuNav', ['ionic']);
 var userLogged = false;
 var evenementsData = new Array();
 
+/* JUST FOR TEST */
+window.sessionStorage['EventJoined'] = [];
+window.sessionStorage['BookMark'] = [];
+/* JUST FOR TEST */
+
 angularApp.service('PreferencesService', function() {
     this.all =  function() {
 		if(window.localStorage.getItem('Preferences') == null){
@@ -89,50 +94,85 @@ angularApp.service('PreferencesService', function() {
     }
 });
 
-angularApp.factory('BookMarkFactory', function() {
-  return { 
-    all: function() {
-		var projectString = window.sessionStorage['BookMark'];
-		if( projectString != null && projectString != "" && projectString != "undefined" ) {	
-			return angular.fromJson(projectString);
+angularApp.service('FavoriteService', function() {
+	var myObj = this;
+
+	this.allBookMark = function() { return allItems(true); }
+	this.allEventJoined = function() { return allItems(false); }
+
+	this.addBookMark = function(bookMark) { addItem(bookMark, true); }
+	this.addEventJoined = function(bookMark) { addItem(bookMark, false); }
+
+	this.deleteBookMark = function(bookMark) { deleteItem(bookMark, true); }
+	this.deleteEventJoined = function(bookMark) { deleteItem(bookMark, false);  }
+
+	this.existBookMark = function(bookMark) { return existItem(bookMark, true); }	//bookMark is a JavaScript object
+	this.existEventJoined = function(bookMark) { return existItem(bookMark, false); }	//bookMark is a JavaScript object
+
+	function getBookMarkStored() { return window.sessionStorage['BookMark']; }
+	function setBookMarkStored(jsonObject) { window.sessionStorage['BookMark'] = jsonObject; }
+	function getEventJoinedStored() { return window.sessionStorage['EventJoined']; }
+	function setEventJoinedStored(jsonObject) { window.sessionStorage['EventJoined'] = jsonObject; }
+
+	// isBookMark : true for bookmark (heart), false pour eventJoined
+
+	function allItems(isBookMark) {
+		var favoriteString = (isBookMark) ? getBookMarkStored() : getEventJoinedStored(); 
+
+		if( favoriteString != null && favoriteString != "" && favoriteString != "undefined" ) {	
+			return angular.fromJson(favoriteString);
 		}
 		return new Array();
-    },
-    add: function(bookMark) { //bookMark is a JavaScript object
-    	var bookMarkArray = this.all();
-    	bookMarkArray.push(bookMark);
-    	window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
-	},
-	delete: function(bookMark) {
-		var bookMarkArray = this.all();
+	};
+
+	function addItem(bookMark, isBookMark) { //bookMark is a JavaScript object
+		var favoriteArray = (isBookMark) ? myObj.allBookMark() : myObj.allEventJoined();
+
+		favoriteArray.push(bookMark);
+		if (isBookMark) setBookMarkStored(angular.toJson(favoriteArray)); 
+			else setEventJoinedStored(angular.toJson(favoriteArray));
+	};
+
+	function deleteItem(bookMark, isBookMark) {
+		var favoriteArray = (isBookMark) ? myObj.allBookMark() : myObj.allEventJoined();
 
 		// Look for element's index and remove element from array
-		bookMarkArray.forEach( function(element, index, array) {
-    		
-    		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
-    			bookMarkArray.splice(index, 1);
-    			window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
-    			return;
-    		}
+		favoriteArray.forEach( function(element, index, array) {
+			
+			if ( angular.toJson(bookMark) == angular.toJson(element) ) {
+				favoriteArray.splice(index, 1);
+
+
+				if (isBookMark) setBookMarkStored(angular.toJson(favoriteArray)); 
+					else setEventJoinedStored(angular.toJson(favoriteArray));
+				return;
+			}
 
 		});
-    },
-    exist: function(bookMark) {	//bookMark is a JavaScript object
-    	var bookMarkArray = this.all();
-    	var exist = false;
+	};
 
-    	bookMarkArray.forEach( function(element, index, array) {
-    		
-    		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
-    			exist = true;
-    			return;
-    		}
+	function existItem(bookMark, isBookMark) {	//bookMark is a JavaScript object
+		if (bookMark == null || bookMark == "undefined") {
+			return false;
+		}
+
+		var favoriteArray = (isBookMark) ? myObj.allBookMark() : myObj.allEventJoined();
+		var exist = false;
+		if (favoriteArray == null || favoriteArray == "undefined") {
+			return false;
+		}
+
+		favoriteArray.forEach( function(element, index, array) {
+			
+			if ( angular.toJson(bookMark) == angular.toJson(element) ) {
+				exist = true;
+				return;
+			}
 
 		});
 
 		return exist;
-    }
-  }
+	}
 });
 
 angularApp.service('UserService', function() {
@@ -291,27 +331,29 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	};
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, BookMarkFactory){
+angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 	var angularScope = $scope;
 	angularScope.itemSelected = null;
-	angularScope.itemInFavorite = false;
+	angularScope.itemInBookMark = false;
+	angularScope.itemInEventJoined = false;
 
-	/***	Reload itemInFavorite when view loading (fix bug on itemInFavorite value when going back to home) 	***/
+	/***	Reload itemInBookMark when view loading (fix bug on itemInBookMark value when going back to home) 	***/
 	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
 		if ( angularScope.itemSelected != null ) {
-			angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
+			angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
+			angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
 		}
 	});
 
-	angularScope.changeBookMark = function(eventObj) {
-		if ( angularScope.itemInFavorite == false ) {
-			BookMarkFactory.add(eventObj);
+	angularScope.changeBookMarkStatus = function(eventObj) {
+		if ( angularScope.itemInBookMark == false ) {
+			FavoriteService.addBookMark(eventObj);
 
-			angularScope.itemInFavorite = true;
+			angularScope.itemInBookMark = true;
 		} else {
-			BookMarkFactory.delete(eventObj);
+			FavoriteService.deleteBookMark(eventObj);
 
-			angularScope.itemInFavorite = false;
+			angularScope.itemInBookMark = false;
 		}
 	};
 
@@ -351,8 +393,9 @@ angularApp.controller("HomeCtrl", function($scope,$http, BookMarkFactory){
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
 			mapTypeControl: false,
-			mapTypeId: google.maps.MapTypeId.SATELLITE,
-			disableDefaultUI: true
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			disableDefaultUI: true,
+			styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]}]
 		};
 
 		var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
@@ -396,7 +439,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, BookMarkFactory){
 			      angularScope.$apply(function() {
 			      	angularScope.itemSelected = itemSelected;
 
-			      	angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
+			      	angularScope.itemInBookMark = FavoriteService.existBookMark(itemSelected);
+			      	angularScope.itemInEventJoined = FavoriteService.existEventJoined(itemSelected);
 			      });
 				}
 			})(itemSelected));
@@ -440,7 +484,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, BookMarkFactory){
 	google.maps.event.addDomListener(window, "load", loadData);
 });
 
-angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
+angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams, FavoriteService){
 	var angularScope = $scope;
 	var eventId = $stateParams.eventId;
 
@@ -450,6 +494,8 @@ angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
 
 			if ( element.hasOwnProperty("id") && element.id == eventId ) {
 				angularScope.itemSelected = array[index];
+				angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
+				angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
 				return;
 			}
 
@@ -458,9 +504,21 @@ angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
 	} else {
 		console.log("Error: no eventId parameter!");
 	}
+
+	angularScope.changeBookMarkStatus = function(eventObj) {
+		if ( angularScope.itemInBookMark == false ) {
+			FavoriteService.addBookMark(eventObj);
+
+			angularScope.itemInBookMark = true;
+		} else {
+			FavoriteService.deleteBookMark(eventObj);
+
+			angularScope.itemInBookMark = false;
+		}
+	};
 });
 
-angularApp.controller("detailEventCtrl", function($scope, UserService) {
+angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteService) {
 	var angularScope = $scope;
 	angularScope.showLoginView = false;
 	angularScope.participationPending = false;
@@ -484,9 +542,7 @@ angularApp.controller("detailEventCtrl", function($scope, UserService) {
 	}
 
 	angularScope.goBack = function() {
-      angularScope.$apply(function() {
-      	angularScope.showLoginView = false;
-      });
+      angularScope.showLoginView = false;
 	}
 
 	function connectionSucceeded(response) {
@@ -509,31 +565,42 @@ angularApp.controller("detailEventCtrl", function($scope, UserService) {
 		}
 
 		// Not working, is supposed to hide the connection panel
-		angularScope.goBack();
+		angularScope.$apply(function() {
+			angularScope.showLoginView = false;
+		});
 	}
 
 	function joiningEvent() {
-		//TODO Register people to the event
-		console.log("participating to an event .....");
+		// If event already joined, abort
+		if ( FavoriteService.existEventJoined(angularScope.itemSelected) ) {
+			return;
+		} 
 
+		FavoriteService.addEventJoined(angularScope.itemSelected);
+
+		angularScope.$apply(function() {
+			angularScope.$parent.$parent.itemInEventJoined = true;
+		});
+
+		//TODO Register people to the event, send request to DB
 
 
 
 	}
 });
 
-angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMarkFactory){
+angularApp.controller("FavoriteCtrl", function($scope, $window, $state, FavoriteService){
 	var angularScope = $scope;
-	angularScope.items = BookMarkFactory.all();
+	angularScope.itemsBookMark = FavoriteService.allBookMark();
+	angularScope.itemsEventJoined = FavoriteService.allEventJoined();
 	angularScope.itemSelected = null;
-	angularScope.itemInFavorite = true; 
 
-	angularScope.changeBookMark = function(eventObj) {
+	angularScope.changeBookMarkStatus = function(eventObj) {
 		// In this controller, items always are in favorite
-		if ( angularScope.itemInFavorite == false ) {
+		if ( angularScope.itemInBookMark == false ) {
 			// Nothing to do, cannot add event to favorite from here
 		} else {
-			BookMarkFactory.delete(eventObj);
+			FavoriteService.deleteBookMark(eventObj);
 
 			if (navigator.notification) {
 				navigator.notification.alert( "Favoris supprimé.", null, '', 'Ok' );
@@ -543,7 +610,7 @@ angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMark
 			}
 			
 			// Switch to next favorite if exists, otherwise refresh page
-			var favoriteList = BookMarkFactory.all();
+			var favoriteList = FavoriteService.allBookMark();
 
 			if ( favoriteList.length != 0 ) {
 				angularScope.itemSelected = favoriteList[0];
@@ -553,13 +620,16 @@ angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMark
 		}
 	};
 
-	angularScope.masterToDetailMode = function($index) {
+	angularScope.masterToDetailMode = function(isBookMark, $index) {
 		$('#view').addClass('mode-detail');
 
 		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
 		$(".master-item-favorite:nth-child(" + childNumber + ")").addClass('master-item-favorite-selected').siblings().removeClass('master-item-favorite-selected');
 	
-		angularScope.itemSelected = BookMarkFactory.all()[$index];
+		angularScope.itemSelected = (isBookMark) ? FavoriteService.allBookMark()[$index] : FavoriteService.allEventJoined()[$index];
+
+		angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected); 
+		angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected); 
 	};
 
 	angularScope.detailModeToMaster = function() {
@@ -569,30 +639,31 @@ angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMark
 	/* For test : open automaticaly first event (we know it exists because data.json is hard-coded)*/
 	if(window.matchMedia("(min-width: 768px)").matches)
 	{
-		angularScope.masterToDetailMode(0);
+		angularScope.masterToDetailMode(true, 0);
 	}
 });
 
-angularApp.controller("ListCtrl", function($scope, BookMarkFactory){
+angularApp.controller("ListCtrl", function($scope, FavoriteService){
 	var angularScope = $scope;
 	angularScope.items = evenementsData;
 	angularScope.itemSelected = evenementsData[0];
-	angularScope.itemInFavorite = false;
+	angularScope.itemInBookMark = false;
+	angularScope.itemInEventJoined = false;
 
-	angularScope.changeBookMark = function(eventObj) {
-		if ( angularScope.itemInFavorite == false ) {
-			BookMarkFactory.add(eventObj);
+	angularScope.changeBookMarkStatus = function(eventObj) {
+		if ( angularScope.itemInBookMark == false ) {
+			FavoriteService.addBookMark(eventObj);
 
-			angularScope.itemInFavorite = true;
+			angularScope.itemInBookMark = true;
 		} else {
-			BookMarkFactory.delete(eventObj);
+			FavoriteService.deleteBookMark(eventObj);
 
-			angularScope.itemInFavorite = false;
+			angularScope.itemInBookMark = false;
 		}
 	};
 
 	angularScope.masterToDetailMode = function($index) {
-		angularScope.itemInFavorite = false;
+		angularScope.itemInBookMark = false;
 
 		$('#viewList').addClass('mode-detail');
 
@@ -600,12 +671,13 @@ angularApp.controller("ListCtrl", function($scope, BookMarkFactory){
 		$(".master-item-list:nth-child(" + childNumber + ")").addClass('master-item-list-selected').siblings().removeClass('master-item-list-selected');
 	
 		angularScope.itemSelected = evenementsData[$index];
+		angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
 
 		// Check if the new event selected is already inside favorite list
-		if ( BookMarkFactory.exist(angularScope.itemSelected) ) {
-			angularScope.itemInFavorite = true;
+		if ( FavoriteService.existBookMark(angularScope.itemSelected) ) {
+			angularScope.itemInBookMark = true;
 		} else {
-			angularScope.itemInFavorite = false;
+			angularScope.itemInBookMark = false;
 		}
 	};
 

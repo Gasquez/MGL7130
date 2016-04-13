@@ -136,30 +136,52 @@
 
   <script type="text/ng-template" id="favorite.html">
     <ion-view>
+
       <ion-nav-buttons side="left">
         <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
         <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
         <button class="borderB {{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
       </ion-nav-buttons>
+
       <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">   
+
         <div class="master">
           <div class="scrollable-wrapper">
+
             <ion-list>
-              <ion-item class="master-item-favorite item-text-wrap" ng-repeat="item in items" ng-click="masterToDetailMode($index)">
+              <div class="item item-divider"> 
+                Enregistrés
+              </div>
+
+              <ion-item class="master-item-bookMark item-text-wrap" ng-repeat="item in itemsBookMark" ng-click="masterToDetailMode(true, $index)">
+                <div class="master-button icon ion-chevron-right"></div>
+                <div class="master-title">{{item.titre}}</div>
+                <div class="master-desc">{{item.descriptifShort}}</div>
+              </ion-item>
+
+              <div class="item item-divider"> 
+                Participés
+              </div>
+
+              <ion-item class="master-item-eventJoined item-text-wrap" ng-repeat="item in itemsEventJoined" ng-click="masterToDetailMode(false, $index)">
                 <div class="master-button icon ion-chevron-right"></div>
                 <div class="master-title">{{item.titre}}</div>
                 <div class="master-desc">{{item.descriptifShort}}</div>
               </ion-item>
             </ion-list>
+
           </div>
         </div>
+
         <div class="detail">
           <div class="scrollable-wrapper">
             <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="detailModeToMaster()"></div>
             <div ng-include src="'./detailEvent.html'"></div>
           </div>
         </div>
+
       </ion-content>
+
     </ion-view>
   </script>
 

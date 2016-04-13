@@ -389,3 +389,7 @@
 .borderB {
 	border-bottom: 1px solid orange !important;
 }
+
+.orangeColor {
+	color: orange !important;
+}
