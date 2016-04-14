@@ -529,7 +529,7 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 			angularScope.showLoginView = true;
 			angularScope.participationPending = true;
 		} else {
-			joiningEvent();
+			joiningEvent(false);
 		}
 	}
 
@@ -561,7 +561,7 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 		});
 
 		if (angularScope.participationPending == true) {
-			joiningEvent();
+			joiningEvent(true);
 		}
 
 		// Not working, is supposed to hide the connection panel
@@ -570,7 +570,7 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 		});
 	}
 
-	function joiningEvent() {
+	function joiningEvent(isAsynchronous) {	//isAsynchronous notice if the function is a callback or not, usefull for using $apply or not (error if using in a non-asynchronous mode).
 		// If event already joined, abort
 		if ( FavoriteService.existEventJoined(angularScope.itemSelected) ) {
 			return;
@@ -578,9 +578,13 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 
 		FavoriteService.addEventJoined(angularScope.itemSelected);
 
-		angularScope.$apply(function() {
+		if (isAsynchronous) {
+			angularScope.$apply(function() {
+				angularScope.$parent.$parent.itemInEventJoined = true;
+			});
+		} else {
 			angularScope.$parent.$parent.itemInEventJoined = true;
-		});
+		}
 
 		//TODO Register people to the event, send request to DB
 
