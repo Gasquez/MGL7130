@@ -4,11 +4,6 @@ var angularApp = angular.module('MenuNav', ['ionic']);
 var userLogged = false;
 var evenementsData = new Array();
 
-/* JUST FOR TEST */
-window.sessionStorage['EventJoined'] = [];
-window.sessionStorage['BookMark'] = [];
-/* JUST FOR TEST */
-
 angularApp.service('PreferencesService', function() {
     this.all =  function() {
 		if(window.localStorage.getItem('Preferences') == null){
@@ -109,10 +104,10 @@ angularApp.service('FavoriteService', function() {
 	this.existBookMark = function(bookMark) { return existItem(bookMark, true); }	//bookMark is a JavaScript object
 	this.existEventJoined = function(bookMark) { return existItem(bookMark, false); }	//bookMark is a JavaScript object
 
-	function getBookMarkStored() { return window.sessionStorage['BookMark']; }
-	function setBookMarkStored(jsonObject) { window.sessionStorage['BookMark'] = jsonObject; }
-	function getEventJoinedStored() { return window.sessionStorage['EventJoined']; }
-	function setEventJoinedStored(jsonObject) { window.sessionStorage['EventJoined'] = jsonObject; }
+	function getBookMarkStored() { return window.localStorage['BookMark']; }
+	function setBookMarkStored(jsonObject) { window.localStorage['BookMark'] = jsonObject; }
+	function getEventJoinedStored() { return window.localStorage['EventJoined']; }
+	function setEventJoinedStored(jsonObject) { window.localStorage['EventJoined'] = jsonObject; }
 
 	// isBookMark : true for bookmark (heart), false pour eventJoined
 
@@ -176,7 +171,7 @@ angularApp.service('FavoriteService', function() {
 });
 
 angularApp.service('UserService', function() {
-	var profilStored = sessionStorage.getItem("facebook");
+	var profilStored = null;
 
 	this.getUser = function() {
 		if ( profilStored == null ) {
@@ -227,6 +222,10 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 
 angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 	var angularScope = $scope;
+	angularScope.userNameFB = UserService.getUser().name;
+	angularScope.userPictureFB= UserService.getUser().picture;
+
+	angularScope.logged = userLogged;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
@@ -263,10 +262,15 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 		angularScope.logged = userLogged;
 	});
 
+
 	angularScope.logOut = function() {
 		facebookConnectPlugin.logout(function() {
+
 			userLogged = false;
-			window.location.reload();
+			angularScope.$apply(function() {
+				angularScope.logged = userLogged;
+			});
+
 		}, function(msg){
 			console.log(msg);
 		});
@@ -484,7 +488,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 	google.maps.event.addDomListener(window, "load", loadData);
 });
 
-angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams, FavoriteService){
+angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams, $ionicHistory, FavoriteService){
 	var angularScope = $scope;
 	var eventId = $stateParams.eventId;
 
@@ -553,6 +557,12 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 			// Fetch the picture
 			facebookConnectPlugin.api("/me/picture?redirect=false", ["public_profile"], function(ret){
 				UserService.setUser(data.name, ret.data.url);
+
+				angularScope.$apply(function() {
+					angularScope.$parent.$parent.$parent.userNameFB = UserService.getUser().name;
+					angularScope.$parent.$parent.$parent.userPictureFB= UserService.getUser().picture;
+				});
+
 			}, function(msg){		
 				console.log(msg);
 			});
@@ -564,9 +574,9 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 			joiningEvent(true);
 		}
 
-		// Not working, is supposed to hide the connection panel
 		angularScope.$apply(function() {
 			angularScope.showLoginView = false;
+			angularScope.$parent.$parent.$parent.logged = true;
 		});
 	}
 

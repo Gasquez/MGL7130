@@ -25,9 +25,11 @@
     
         <!-- Navigation button -->
         <ion-nav-buttons side="left">
+
           <button class="borderB {{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
           <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
           <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
       
@@ -35,6 +37,7 @@
           <img ng-show="logged" class="valign userProfil-img" src="{{userPictureFB}}" ng-click="logOut()" />
           <span ng-show="logged" class="valign userProfil-text">{{userNameFB}}</span>
           <button class="valign {{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
+
         </ion-nav-buttons>
         <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
           <!-- Google Map -->
@@ -57,10 +60,13 @@
 
     <script type="text/ng-template" id="homeEvent.html">
       <ion-view>
-        <ion-nav-buttons side="left">
-          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
-          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
-          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        <ion-nav-buttons side="right">
+      
+          <!--  button-icon icon icon-right ion-arrow-right-c -->
+          <img ng-show="logged" class="valign userProfil-img" src="{{userPictureFB}}" ng-click="logOut()" />
+          <span ng-show="logged" class="valign userProfil-text">{{userNameFB}}</span>
+          <button class="valign {{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
+          
         </ion-nav-buttons>
         <ion-content id="view" ng-controller="HomeEventCtrl" scroll="false" data-tap-disabled="true">     
           <div class="scrollable-wrapper">
@@ -138,10 +144,20 @@
     <ion-view>
 
       <ion-nav-buttons side="left">
+
         <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
         <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
         <button class="borderB {{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+
       </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+      
+          <!--  button-icon icon icon-right ion-arrow-right-c -->
+          <img ng-show="logged" class="valign userProfil-img" src="{{userPictureFB}}" ng-click="logOut()" />
+          <span ng-show="logged" class="valign userProfil-text">{{userNameFB}}</span>
+          <button class="valign {{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
+          
+        </ion-nav-buttons>
 
       <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">   
 
@@ -188,10 +204,20 @@
   <script type="text/ng-template" id="list.html">
      <ion-view>
       <ion-nav-buttons side="left">
+
         <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
         <button class="borderB {{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
         <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+
       </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+      
+          <!--  button-icon icon icon-right ion-arrow-right-c -->
+          <img ng-show="logged" class="valign userProfil-img" src="{{userPictureFB}}" ng-click="logOut()" />
+          <span ng-show="logged" class="valign userProfil-text">{{userNameFB}}</span>
+          <button class="valign {{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
+          
+        </ion-nav-buttons>
       <ion-content id="viewList" ng-controller="ListCtrl" scroll="false" data-tap-disabled="true">
         <div class="master">
           <div class="scrollable-wrapper">
