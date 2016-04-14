@@ -457,6 +457,9 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 
 	angularScope.$parent.$on('$ionicView.afterEnter', function() {
 		applyFilter();
+		if(markerCluster != null){
+			markerCluster.redraw();
+		}
 	});
 
 	angularScope.changeBookMark = function(eventObj) {
