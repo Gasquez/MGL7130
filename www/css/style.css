@@ -13,8 +13,8 @@
 	width: 100%;
 	float:left;
 	overflow: hidden;
-
 }
+
 .scroll {
 	height: 100%;
 }
@@ -31,6 +31,7 @@
 	width: 70%;
 	height: 100%;
 }
+
 .detail p {
 	margin-bottom: 5px;
 }
@@ -84,6 +85,15 @@
   white-space: nowrap;
 }
 
+.labels.active {
+    background: cyan;
+    color: black;
+}
+
+.labels.hover {
+    background-color: white;
+    color: red;
+}
 
 #description_event_content{
 	height: 30%;
@@ -110,8 +120,6 @@
 	height: 100%;
 }
 
-
-
 .master-item-favorite-selected {
 	color: orange;
 }
@@ -129,18 +137,6 @@
 #button_details{
 	text-align: center;
 }
-
-.labels {
-  color: blue;
-  background-color: red;
-  font-family: "Lucida Grande", "Arial", sans-serif;
-  font-weight : bold;
-  font-size: 9px;
-  text-align: center;
-  width: 25px;
-  white-space: nowrap;
-}
-
 
 #description_event_content{
 	height: 30%;
@@ -213,7 +209,7 @@
 
 
 /* Paysage */ 
-@media (min-width: 768px){
+@media screen and (min-width: 768px){
 
 	#listeventList{
 		float: left;
@@ -281,11 +277,15 @@
 	margin-left: 20%;
 }
 .volunteer-details {
-	float: left;
-	margin-left: 20%;
+	float: right;
+	margin-right: 20%;
 }
 
 .volunteer-favorite {
+	float: left;
+	margin-left: 20%;
+}
+.volunteer-favorite-details {
 	float: right;
 	margin-right: 20%;
 }
@@ -312,4 +312,80 @@
 		top: 0;
 		left: 0;
 	}
+}
+
+/* Login page */
+
+#page-login {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: #EEEEEE;
+	z-index: 999;
+}
+
+#container-login {
+    position: relative;
+    top: 40%;
+    text-align: center;
+}
+
+.elt-login {
+	background-color: rgb(74, 110, 169);
+    display: inline-block;
+    border-radius: 3%;
+}	
+
+.elt-login img {
+	vertical-align: middle;
+}
+
+.elt-login span {
+	color: white;
+	vertical-align: middle;
+}
+
+#facebook-login {
+}
+
+.img-facebook-square {
+	width: 40px;
+	height: 40px;
+}
+
+#back-login {
+	text-align: center;
+	margin-top: 10%;
+}
+
+/* Center Text on the top-right corner */
+
+.right-buttons {
+	display: inline-block !important;
+}
+
+.userProfil-text {
+	display: inline-block !important;
+}
+
+@media screen and (max-width: 768px){
+	.userProfil-text {
+		display: none !important;
+	}
+}
+
+.userProfil-img {
+	width: 35px;
+	display: inline-block !important;
+}
+
+.valign {
+	vertical-align: middle !important;
+}
+
+/* Mark the active navbav button */
+.borderB {
+	border-bottom: 1px solid orange !important;
 }

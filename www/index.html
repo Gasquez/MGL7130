@@ -5,7 +5,6 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height">
     <title>Simplyk</title>
 
-
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
 
@@ -37,68 +36,72 @@
     </ion-side-menu>    
   </ion-side-menus>
 
-  <!-- Page 1 -->
+    <!-- Page 1 -->
+    <script type="text/ng-template" id="home.html">
+      <ion-view>
+    
+        <!-- Navigation button -->
+        <ion-nav-buttons side="left">
+          <button class="borderB {{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+      
+          <!--  button-icon icon icon-right ion-arrow-right-c -->
+          <img ng-show="logged" class="valign userProfil-img" src="{{userPictureFB}}" ng-click="logOut()" />
+          <span ng-show="logged" class="valign userProfil-text">{{userNameFB}}</span>
+          <button class="valign {{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
+        </ion-nav-buttons>
+        <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
+          <!-- Google Map -->
+          <div id="map_content">
+            <div id="map_canvas"></div>
+          </div>
+   
+          <!-- Landscape mode, event description -->
+          <div class="paysage scrollable-wrapper" id="description_event">
+            <div ng-include src="'./detailEvent.html'"></div>
+          </div>
 
-  <script type="text/ng-template" id="home.html">
-    <ion-view>
-      <!-- Navigation button -->
+          <!-- Portrait mode, event description -->
+          <div class="portrait" id="description_event_wrapper"
+            <div ng-include src="'./detailShortEvent.html'"></div>
+          </div>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script type="text/ng-template" id="homeEvent.html">
+      <ion-view>
+        <ion-nav-buttons side="left">
+          <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+          <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        </ion-nav-buttons>
+        <ion-content id="view" ng-controller="HomeEventCtrl" scroll="false" data-tap-disabled="true">     
+          <div class="scrollable-wrapper">
+            <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="goBack()"></div>
+            <div ng-include src="'./detailEvent.html'"></div>
+          </div>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script type="text/ng-template" id="filter.html">
+     <ion-view>
       <ion-nav-buttons side="left">
-        <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
-        <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
-        <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        <button class="button button-icon" ng-click="goBack()">Retour</button>
       </ion-nav-buttons>
-      <ion-nav-buttons side="right">
-        <!--  button-icon icon icon-right ion-arrow-right-c -->
-        <button class="{{navigation.pageHeaderRight.icon}}" ui-sref="{{navigation.pageHeaderRight.directionState}}"></button>
-      </ion-nav-buttons>
-
-      <ion-content ng-controller="HomeCtrl" scroll="false" data-tap-disabled="true" id="wrapper">
-        <!-- Google Map -->
-        <div id="map_content">
-          <div id="map_canvas"></div>
-        </div>
-        <!-- Landscape mode, event description -->
-        <div class="paysage scrollable-wrapper" id="description_event">
-          <div ng-include src="'./detailEvent.html'"></div>
-        </div>
-        <!-- Portrait mode, event description -->
-        <div class="portrait" id="description_event_wrapper">
-          <div ng-include src="'./detailShortEvent.html'"></div>
-        </div>
-      </ion-content>
-    </ion-view>
-  </script>
-
-  <script type="text/ng-template" id="homeEvent.html">
-    <ion-view>
-      <ion-nav-buttons side="left">
-        <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
-        <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
-        <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
-      </ion-nav-buttons>
-      <ion-content id="view" ng-controller="HomeEventCtrl" scroll="false" data-tap-disabled="true">    
-        <div class="scrollable-wrapper">
-          <div class="detail-backButton button button-icon icon ion-ios-undo-outline" ng-click="goBack()"></div>
-          <div ng-include src="'./detailEvent.html'"></div>
-        </div>
-      </ion-content>
-    </ion-view>
-  </script>
-
-  <script type="text/ng-template" id="filter.html">
-    <ion-nav-buttons side="left">
-      <button class="button button-icon" ng-click="goBack()">back</button>
-    </ion-nav-buttons>
-    <ion-content scroll="false" data-tap-disabled="true"></ion-content>
-    <ion-content ng-controller="FilterCtrl">
-		  <div class="list">
-        <div class="item item-divider"> 
-          Distance
-        </div>
-        <ion-radio ng-repeat="item in distance"
+      <ion-content scroll="false" data-tap-disabled="true"></ion-content>
+      <ion-content ng-controller="FilterCtrl">
+  		  <div class="list">
+          <div class="item item-divider"> 
+            Distance
+          </div>
+          <ion-radio ng-repeat="item in distance"
                    ng-value="item.value"
                    ng-change="changePreferences('distance',item)"
-
                    ng-model="data.distance"
                    name="distance-button">
           {{ item.text }}
@@ -119,7 +122,6 @@
         <ion-radio ng-repeat="item in populationCible"
                    ng-value="item.value"
                    ng-change="changePreferences('populationCible',item)"
-
                    ng-model="data.populationCible"          
                    name="populationCible-button">
           {{ item.text }}
@@ -133,17 +135,18 @@
                    ng-change="changePreferences('periodicity',item)"
                    name="periodicity-button">
           {{ item.text }}
-        </ion-radio>
-	    </div>
-   </ion-content>
-  </script>
+          </ion-radio> 
+  	    </div>
+	    </ion-content>
+     </ion-view>
+    </script>
 
   <script type="text/ng-template" id="favorite.html">
     <ion-view>
       <ion-nav-buttons side="left">
         <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
         <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
-        <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
+        <button class="borderB {{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
       </ion-nav-buttons>
       <ion-content id="view" ng-controller="FavoriteCtrl" scroll="false" data-tap-disabled="true">   
         <div class="master">
@@ -171,7 +174,7 @@
      <ion-view>
       <ion-nav-buttons side="left">
         <button class="{{navigation.pageHeaderLeft1.icon}}" ui-sref="{{navigation.pageHeaderLeft1.directionState}}"></button>
-        <button class="{{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
+        <button class="borderB {{navigation.pageHeaderLeft2.icon}}" ui-sref="{{navigation.pageHeaderLeft2.directionState}}"></button>
         <button class="{{navigation.pageHeaderLeft3.icon}}" ui-sref="{{navigation.pageHeaderLeft3.directionState}}"></button>
       </ion-nav-buttons>
       <ion-content id="viewList" ng-controller="ListCtrl" scroll="false" data-tap-disabled="true">
@@ -211,6 +214,10 @@
 
   <!-- Google JavaScript API -->
   <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
   <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
+
+  <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+  
   </body>
 </html>

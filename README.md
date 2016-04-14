@@ -79,3 +79,24 @@ Référence : http://pointdeveloper.com/how-to-build-ionic-app-with-phonegap-bui
 Ajoutez la balise suivante au fichier config.xml sur répertoire www. Default-568h@2x.png contient le splashscreen.
 
 <gap:splash src="Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+
+##Plugin Notification pour téléphone
+
+Le plugin "org.apache.cordova.dialogs" permet un affichage propre des alert. Il est utilisable sur téléphone mais pas sur navigateur.
+
+```javascript
+if (navigator.notification) {
+  navigator.notification.alert( 'alert text', callBack on exit, 'title', 'button text' );
+}
+else {
+  alert( 'alert text' );
+}
+```
+
+Source : https://mindfiremobile.wordpress.com/2013/10/30/using-phonegap-notification-api-to-display-customized-alert/
+
+## Facebook
+
+Register and configure an app.
+
+Source : http://www.lafermeduweb.net/tutorial/creer-une-nouvelle-application-facebook-p80.html
