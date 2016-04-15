@@ -1,7 +1,7 @@
 angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
 
-var App = angular.module('App', []);
+var userLogged = false;
 var evenementsData = new Array();
 
 angularApp.service('PreferencesService', function() {
@@ -93,120 +93,62 @@ angularApp.factory('BookMarkFactory', function() {
   return { 
     all: function() {
 		var projectString = window.sessionStorage['BookMark'];
-		if(projectString) {
+		if( projectString != null && projectString != "" && projectString != "undefined" ) {	
 			return angular.fromJson(projectString);
 		}
-		/* Hard-codé pour utilisation sans la fonctionnalité d'ajout de favori */
-		//return [];
-		return [
-			{
-				"titre": "Old help cause for student 1",
-				"id": 100002,
-				"cibles": ["jeune"],
-				"latitude": "45.514887",
-				"longitude": "-73.559727",
-				"organisme": "UdeM",
-				"siege": "adresse du siege",
-				"emplacement": ["UQAM", "2100 St-Urb"],
-				"jours": ["mardi"],
-				"date": ["20-02"],
-				"heureDeFin": "18h00",
-				"heureDeDebut": "20h00",
-				"duree": "2h00",
-				"dateDebut": "12368522587",
-				"dateDeFin": "123685146545",
-				"langues": ["france", "anglais"],
-				"causes": ["Old Help"],
-				"activities": ["aide,", "accueil"],
-				"avantages": ["contact avec les gens,", "plaisir de sortir"],
-				"periodicity": "bi-hebdomadaire",
-				"contacts": {
-					"tel": "123456789",
-					"mail": "contact@udem.ca",
-					"site": "udem.ca"
-				},
-				"handicape": "oui",
-				"access": ["Metro University of Montreal", "bus numero 42"],
-				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
-				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
-			},
-			{
-				"titre": "Old help cause for student 2",
-				"id": 100003,
-				"cibles": ["jeune"],
-				"latitude": "45.503452",
-				"longitude": "-73.621021",
-				"organisme": "UdeM",
-				"siege": "adresse du siege",
-				"emplacement": ["UQAM", "2100 St-Urb"],
-				"jours": ["lundi"],
-				"date": ["19-02"],
-				"heureDeFin": "18h00",
-				"heureDeDebut": "20h00",
-				"duree": "2h00",
-				"dateDebut": "12368522587",
-				"dateDeFin": "123685146545",
-				"langues": ["france", "anglais"],
-				"causes": ["Old Help"],
-				"activities": ["aide", "accueil"],
-				"avantages": ["contact avec les gens", "plaisir de sortir"],
-				"periodicity": "bi-hebdomadaire",
-				"contacts": {
-					"tel": "123456789",
-					"mail": "contact@udem.ca",
-					"site": "udem.ca"
-				},
-				"handicape": "non",
-				"access": ["Metro University of Montreal", "bus numero 42"],
-				"descriptifShort": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
-				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
-			},	
-			{
-				"titre": "Old help cause for student",
-				"id": 100006,
-				"cibles": ["jeune"],
-				"latitude": "45.490764",
-				"longitude": "-73.581272",
-				"organisme": "CLSC Lasalle",
-				"siege": "adresse du siege",
-				"emplacement": "at the place",
-				"jours": ["vendredi"],
-				"date": ["23-02"],
-				"heureDeFin": "18h00",
-				"heureDeDebut":"20h00",
-				"duree":"2h00",
-				"dateDeBut":"12368522587",
-				"dateDeFin":"123685146545",
-				"langues": ["french","english"],
-				"causes": ["Old Help"],
-				"activities": ["aide","accueil"],
-				"avantages": ["contact avec les gens","plaisir de sortir"],
-				"periodicity": "bi-hebdomadaire",
-				"contacts": {
-					"tel":"123456789",
-					"mail":"contact@clsc.ca",
-					"site":"clsc.ca"
-				},
-				"handicape":true,
-				"access": ["Metro Atwarer","bus numero 46"],
-				"descriptifShort":"Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses",
-				"descriptifLong": "Un evenement pour aider les personnes handicapées à faire les papiers ainsi que leurs courses bla blabla blablablanlanlealgzrigjoegibeghbqhegbehr"
-			}
-		];
+		return new Array();
     },
-    add: function(bookMark) {
+    add: function(bookMark) { //bookMark is a JavaScript object
     	var bookMarkArray = this.all();
     	bookMarkArray.push(bookMark);
     	window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
 	},
-	/* delete non testé */
-	delete: function(index) {
+	delete: function(bookMark) {
 		var bookMarkArray = this.all();
-		var newBookMarkArray = bookMarkArray.splice(index, 1);
-		window.sessionStorage['BookMark'] = angular.toJson(newBookMarkArray);
-		return newBookMarkArray;
+
+		// Look for element's index and remove element from array
+		bookMarkArray.forEach( function(element, index, array) {
+    		
+    		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
+    			bookMarkArray.splice(index, 1);
+    			window.sessionStorage['BookMark'] = angular.toJson(bookMarkArray);
+    			return;
+    		}
+
+		});
+    },
+    exist: function(bookMark) {	//bookMark is a JavaScript object
+    	var bookMarkArray = this.all();
+    	var exist = false;
+
+    	bookMarkArray.forEach( function(element, index, array) {
+    		
+    		if ( angular.toJson(bookMark) == angular.toJson(element) ) {
+    			exist = true;
+    			return;
+    		}
+
+		});
+
+		return exist;
     }
   }
+});
+
+angularApp.service('UserService', function() {
+	var profilStored = sessionStorage.getItem("facebook");
+
+	this.getUser = function() {
+		if ( profilStored == null ) {
+	    	return {name: "unknow", picture: ""};
+		} else {
+			return profilStored;
+		}
+	};
+
+	this.setUser = function(name, picture) {
+	    profilStored = {name: name, picture: picture};
+	};
 });
 
 angularApp.config(function($stateProvider, $urlRouterProvider) {
@@ -223,7 +165,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	})
 
 	.state('homeEvent', {
-		url: '/homeEventlter',
+		url: '/homeEvent/:eventId',
 		templateUrl: 'homeEvent.html',
 		controller: 'AppCtrl'
 	})
@@ -243,8 +185,8 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/home');
 })
 
-angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHistory){
-	angularScope = $scope;
+angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHistory, UserService){
+	var angularScope = $scope;
 
 	angularScope.navigation = {
 		pageHeaderLeft1: {
@@ -272,18 +214,33 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate,$ionicHis
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
-	//Close nav bar every time you load the view
+
 	angularScope.$on('$ionicView.beforeEnter', function() {
+		// Update user profil info
+		angularScope.userNameFB = UserService.getUser().name;
+		angularScope.userPictureFB= UserService.getUser().picture;
+
+		angularScope.logged = userLogged;
+
+		//Close nav bar every time you enter the view
 		if(window.matchMedia("(min-width: 768px)").matches)
 		{
 			$ionicNavBarDelegate.showBar(false);
 		}
 	});
+
+	angularScope.logOut = function() {
+		facebookConnectPlugin.logout(function() {
+			userLogged = false;
+			window.location.reload();
+		}, function(msg){
+			console.log(msg);
+		});
+	};
 });
 
 angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	var angularScope = $scope;
-
 
 	angularScope.distance = [
 	    { text: "rayon 1 km", value: "1km" },
@@ -340,8 +297,30 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	};
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, BookMarkFactory){
 	var angularScope = $scope;
+	angularScope.itemSelected = null;
+	angularScope.itemInFavorite = false;
+
+	/***	Reload itemInFavorite when view loading (fix bug on itemInFavorite value when going back to home) 	***/
+	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
+		if ( angularScope.itemSelected != null ) {
+			angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
+		}
+	});
+
+	angularScope.changeBookMark = function(eventObj) {
+		if ( angularScope.itemInFavorite == false ) {
+			BookMarkFactory.add(eventObj);
+
+			angularScope.itemInFavorite = true;
+		} else {
+			BookMarkFactory.delete(eventObj);
+
+			angularScope.itemInFavorite = false;
+		}
+	};
+
 	function loadData(){
 		$http.get('data.json')
 	    .then(function(res){
@@ -377,9 +356,9 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			disableDefaultUI: true,
-			MapTypeControlStyle: false
+			mapTypeControl: false,
+			mapTypeId: google.maps.MapTypeId.SATELLITE,
+			disableDefaultUI: true
 		};
 
 		var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
@@ -446,12 +425,14 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			});
 			getDefaultLabelClass ()
 
-			// Add click action on each marcker
+			// Add click action on each marcker, change color marker on click
 			google.maps.event.addListener(marker, 'click', (function(itemSelected, marker,i) {
 			  	return function() {
 			        // Display event informations
 			        angularScope.$apply(function() {
 			          angularScope.itemSelected = itemSelected;
+
+			      	angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
 			        });
 			        //reset default icon
 			        for (var j = 0; j < markers.length; j++) {
@@ -506,7 +487,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		        }   
 		    })(marker,i));
 
-		    markers.push(marker);		
+		    markers.push(marker);
 		}
 
 		var markerCluster = new MarkerClusterer(map, markers, mcOptions);
@@ -516,19 +497,19 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  }, null, {enableHighAccuracy:true});
-		WidthChange(window.matchMedia("(min-width: 768px)"));
+		handleNavBarVisibility(window.matchMedia("(min-width: 768px)"));
 
 	};
 
 	// media query event handler
 	if (matchMedia) {
 	  var mq = window.matchMedia("(min-width: 768px)");
-	  mq.addListener(WidthChange);
-	  WidthChange(mq);
+	  mq.addListener(handleNavBarVisibility);
+	  handleNavBarVisibility(mq);
 	}
 
 	// change in fonction of width
-	function WidthChange(mq) {
+	function handleNavBarVisibility(mq) {
 
 	  if (mq.matches) {
 	  	// if screen >= 768px, hidde nav bar
@@ -540,18 +521,118 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 
 	};
 	google.maps.event.addDomListener(window, "load", loadData);
-
 });
 
-angularApp.controller("HomeEventCtrl", function($scope){
-	angularScope.itemSelected = evenementsData[1];
-});
-
-angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
+angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
 	var angularScope = $scope;
-	
+	var eventId = $stateParams.eventId;
+
+	if ( $stateParams.hasOwnProperty("eventId") && eventId.trim() != "" ) {
+
+		evenementsData.forEach( function(element, index, array) {
+
+			if ( element.hasOwnProperty("id") && element.id == eventId ) {
+				angularScope.itemSelected = array[index];
+				return;
+			}
+
+		});
+
+	} else {
+		console.log("Error: no eventId parameter!");
+	}
+});
+
+angularApp.controller("detailEventCtrl", function($scope, UserService) {
+	var angularScope = $scope;
+	angularScope.showLoginView = false;
+	angularScope.participationPending = false;
+
+	angularScope.participateToEvent = function() {
+		// if not logged
+		if (userLogged == false) {
+			angularScope.showLoginView = true;
+			angularScope.participationPending = true;
+		} else {
+			joiningEvent();
+		}
+	}
+
+	angularScope.connectWithFB = function() {
+		// Connect with FB, participate to an event on success if participationPending is true
+
+		facebookConnectPlugin.login(["public_profile"], connectionSucceeded, function(msg){
+			console.log(msg);
+		});
+	}
+
+	angularScope.goBack = function() {
+		angularScope.showLoginView = false;
+	}
+
+	function connectionSucceeded(response) {
+		userLogged = true;
+
+		// Fetch the name
+		facebookConnectPlugin.api("/me", ["public_profile"], function(data){
+			// Fetch the picture
+			facebookConnectPlugin.api("/me/picture?redirect=false", ["public_profile"], function(ret){
+				UserService.setUser(data.name, ret.data.url);
+			}, function(msg){		
+				console.log(msg);
+			});
+		}, function(msg){		
+			console.log(msg);
+		});
+
+		if (angularScope.participationPending == true) {
+			joiningEvent();
+		}
+
+		// Not working, is supposed to hide the connection panel
+		angularScope.goBack();
+	}
+
+	function joiningEvent() {
+		//TODO Register people to the event
+		console.log("participating to an event .....");
+
+
+
+
+	}
+});
+
+angularApp.controller("FavoriteCtrl", function($scope, $window, $state, BookMarkFactory){
+	var angularScope = $scope;
 	angularScope.items = BookMarkFactory.all();
 	angularScope.itemSelected = null;
+	angularScope.itemInFavorite = true; 
+
+	angularScope.changeBookMark = function(eventObj) {
+		// In this controller, items always are in favorite
+		if ( angularScope.itemInFavorite == false ) {
+			// Nothing to do, cannot add event to favorite from here
+		} else {
+			BookMarkFactory.delete(eventObj);
+
+			if (navigator.notification) {
+				navigator.notification.alert( "Favoris supprimé.", null, '', 'Ok' );
+			}
+			else {
+				alert( "Favoris supprimé." );
+			}
+			
+			// Switch to next favorite if exists, otherwise refresh page
+			var favoriteList = BookMarkFactory.all();
+
+			if ( favoriteList.length != 0 ) {
+				angularScope.itemSelected = favoriteList[0];
+			} else {
+				$state.go("home");
+			}
+		}
+	};
 
 	angularScope.masterToDetailMode = function($index) {
 		$('#view').addClass('mode-detail');
@@ -573,19 +654,40 @@ angularApp.controller("FavoriteCtrl", function($scope, BookMarkFactory){
 	}
 });
 
-angularApp.controller("ListCtrl", function($scope){
+angularApp.controller("ListCtrl", function($scope, BookMarkFactory){
 	var angularScope = $scope;
-	
 	angularScope.items = evenementsData;
 	angularScope.itemSelected = evenementsData[0];
+	angularScope.itemInFavorite = false;
+
+	angularScope.changeBookMark = function(eventObj) {
+		if ( angularScope.itemInFavorite == false ) {
+			BookMarkFactory.add(eventObj);
+
+			angularScope.itemInFavorite = true;
+		} else {
+			BookMarkFactory.delete(eventObj);
+
+			angularScope.itemInFavorite = false;
+		}
+	};
 
 	angularScope.masterToDetailMode = function($index) {
+		angularScope.itemInFavorite = false;
+
 		$('#viewList').addClass('mode-detail');
 
 		var childNumber = $index + 1; //In angular, $index starts at 0 but starts at 1 with :nth-child 
 		$(".master-item-list:nth-child(" + childNumber + ")").addClass('master-item-list-selected').siblings().removeClass('master-item-list-selected');
 	
 		angularScope.itemSelected = evenementsData[$index];
+
+		// Check if the new event selected is already inside favorite list
+		if ( BookMarkFactory.exist(angularScope.itemSelected) ) {
+			angularScope.itemInFavorite = true;
+		} else {
+			angularScope.itemInFavorite = false;
+		}
 	};
 
 	angularScope.detailModeToMaster = function() {
@@ -607,8 +709,17 @@ var app = {
 	bindEvents: function() {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
-	onDeviceReady: function($http) {
+	onDeviceReady: function() {
 		// L'API Cordova est prête
+		console.log("onDeviceReady");
+
+		//Initialize the JS SDK if in browser mode
+		if (window.cordova.platformId == "browser") {
+			facebookConnectPlugin.browserInit('101844923550027', 'v2.5', function(){
+			});			
+		} else {
+			// Nothing to do
+		}
 	}
 };
 app.initialize();
