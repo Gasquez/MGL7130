@@ -424,26 +424,15 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 	    	marker.set('labelClass', 'labels');			
 	    }
 
-	    // Function for getting new highlight labelClass on click
-	    function getClickHighlightLabelClass () {
-	    	marker.set('labelClass', 'labels active');
-	    }
-
-	    // Function for getting new highlight labelClass on mouseover
-	    function getHoverHighlightLabelClass () {
-	    	marker.set('labelClass', 'labels hover');
-	    }
-
 		angularScope.itemSelected = evenementsData[0];
 		// Loop through the array of evenements and place each one on the map 
 		for(i = 0; i < evenementsData.length; i += 1) {
 
 			//Loading information events from bdd
 			var itemSelected = evenementsData[i];
-			var lab = itemSelected.date[0];
+			var lab = itemSelected.dateAffichage[0]+itemSelected.dateAffichage[1]+itemSelected.dateAffichage[2]+itemSelected.dateAffichage[3]+itemSelected.dateAffichage[4];
 			var Lat = itemSelected.latitude;
 			var Lgn = itemSelected.longitude;
-
 			var marker = new MarkerWithLabel({
 				position: new google.maps.LatLng(Lat,Lgn),
 				map: map,
@@ -455,7 +444,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 			    isClicked: false,
 				icon: getDefaultIcon()				
 			});
-
 			getDefaultLabelClass ()
 
 			// Add click action on each marcker
@@ -504,9 +492,9 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate){
 		        return function() {
 		        	if (this.isClicked){
 		        	    //reset default labelclass
-			            for (var t = 0; t < markers.length; t++) {
-			                markers[t].set('labelClass', 'labels');
-			      	        markers[t].setIcon(getDefaultIcon ());
+			            for (var k = 0; k < markers.length; k++) {
+			                markers[k].set('labelClass', 'labels');
+			      	        markers[k].setIcon(getDefaultIcon ());
 			            }
 			            //get highlightlabelclass
 	                    marker.set('labelClass', 'labels active');
