@@ -82,7 +82,7 @@ angularApp.service('PreferencesService', function() {
 			});
 			return returnValue;
 		}
-	};
+	},
 
     this.clear = function(){
     	localStorage.clear();
@@ -167,6 +167,175 @@ angularApp.service('FavoriteService', function() {
 		});
 
 		return exist;
+	}
+});
+
+angularApp.service('CheckEvenementService', function(MathsService) {
+	this.checkPeriodicity = function(periodicity, evenement){
+		if(periodicity != "none"){
+			if(evenement.periodicity == periodicity){
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.checkTime = function(temps, evenement){
+		if(temps != "none"){
+			var valueOfEvenementTime = "none";
+			var valueOfTemps = "none";
+			var valueOfEvenementTimeDayOrHours = "none";
+
+			//Evenement time traitment
+			if(evenement.duree.indexOf("h") != -1){
+				valueOfEvenementTime = evenement.duree.split("h");
+				valueOfEvenementTimeDayOrHours = "h";
+			} else {
+				valueOfEvenementTime = evenement.duree.split("j");
+				valueOfEvenementTimeDayOrHours = "j";
+			}
+			//Filter time traitment
+			if(temps == "++"){
+				//Case time fitler is more than one days
+				if(valueOfEvenementTimeDayOrHours != "h" && valueOfEvenementTime[0] > 1){
+					return true;
+				}
+			} else if(temps.indexOf("h") != -1){
+				//Case time filter in hours
+				valueOfTemps = temps.split("h");
+				if(valueOfEvenementTimeDayOrHours == "h"){
+					if(valueOfEvenementTime[0] < valueOfTemps[0]){
+						return true;
+					} else if (valueOfEvenementTime[0] == valueOfTemps[0]){
+						if(valueOfEvenementTime[1] <= valueOfTemps[1]){
+							return true;
+						}
+					}
+				}
+			} else {
+				//Case time filter in days
+				if(valueOfEvenementTimeDayOrHours == "h"){
+					return true;
+				} else {
+					valueOfTemps = temps.split("j");
+					if(valueOfEvenementTime[0] < valueOfTemps[0]){
+						return true;
+					} else if (valueOfEvenementTime[0] == valueOfTemps[0]){
+						if(valueOfEvenementTime[1] <= valueOfTemps[1]){
+							return true;
+						}
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.checkPopulationCible = function(populationCible, evenement){
+		if(populationCible != "none"){
+			if(evenement.cibles == populationCible){
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.chekDistance = function(distance, evenement, myPosition){
+		if(distance != "none"){
+			var distanceUserAndParameters = MathsService.distanceBetweenUserAndParameters(evenement.latitude,evenement.longitude,myPosition);
+			if(distance == "++"){
+				if(distanceUserAndParameters > 30){
+					return true;
+				}
+			} else if(distanceUserAndParameters <= distance){
+				return true;
+			};
+		} else {
+			return true;
+		}
+		return false;
+	},
+	this.checkEvenement = function(periodicity, temps, populationCible, distance, evenement, myPosition){
+		return this.checkTime(temps, evenement) 
+				&& this.checkPeriodicity(periodicity, evenement) 
+				&& this.checkPopulationCible(populationCible, evenement) 
+				&& this.chekDistance(distance, evenement, myPosition);
+	}
+});
+
+angularApp.service('FilterMarkersService', function(PreferencesService, CheckEvenementService){
+	this.filterMarkers = function(markers, markerCluster, map, myPosition){
+		var preferences = PreferencesService.all();
+		var periodicity = "none";
+		var temps = "none";
+		var populationCible = "none";
+		var distance = "none";
+		var returnValue = "none";
+
+		if(preferences == null || preferences.length == 0){
+			//set visiblity for each markers
+			markers.forEach(function(element, index, array) {
+			    markers[index].setMap(map);
+			});
+
+			markerCluster.clearMarkers();
+			markerCluster.addMarkers(markers,true);
+			return returnValue;
+		} else {//filter to apply
+			markers.forEach(function(element, index, array) {
+			    markers[index].setMap(null);
+			});
+			for(i = 0; i < preferences.length ; i++){//catch preference
+				if(preferences[i][0] == "periodicity"){
+					periodicity = preferences[i][1].value;
+				} else if (preferences[i][0] == "temps"){
+					temps = preferences[i][1].value;
+				} else if (preferences[i][0] == "populationCible"){
+					populationCible = preferences[i][1].value;
+				} else if (preferences[i][0] == "distance"){
+					distance = preferences[i][1].value;
+				}
+			}
+
+			markerCluster.clearMarkers();
+			//apply preference on filter
+			for(indexMarker = 0; indexMarker < evenementsData.length; indexMarker ++) {
+				if(CheckEvenementService.checkEvenement(periodicity, temps, populationCible, distance, evenementsData[indexMarker],myPosition)){
+					markers[indexMarker].setMap(map);
+					markerCluster.addMarker(markers[indexMarker],true);
+
+					if(returnValue == "none"){
+						returnValue = indexMarker;
+					}
+				}
+			}
+			return returnValue;
+		}
+	}
+});
+
+angularApp.service('MathsService', function() {
+	// Calculate distance (in km) between two points specified by latitude/longitude with Haversine formula source : http://www.developpez.net/forums/d272814/php/langage/fonctions/traduire-fonction-js-php-distance-km-entre-longitudes-latitudes/
+	this.distanceBetweenUserAndParameters = function(p2lat, p2long, MyPosition) {
+		if(MyPosition != null){
+			var p1lat = MyPosition.coords.latitude;
+			var p1long = MyPosition.coords.longitude;
+		} else{ // Default Montreal value
+			var p1lat = 45.501689;
+			var p1long = -73.567256;
+		}
+
+		var R = 6371; // earth's mean radius in km
+		var dLat  = p2lat - p1lat;
+		var dLong = p2long - p1long;
+
+		var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(p1lat) * Math.cos(p2lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		var d = R * c;
+		return d;
 	}
 });
 
@@ -277,97 +446,13 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 	};
 });
 
-angularApp.controller("FilterCtrl", function($scope, PreferencesService){
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, BookMarkFactory, FilterMarkersService){
 	var angularScope = $scope;
+	var map = null;
+	var markers = new Array(); 
+	var myPosition = null;
+	var markerCluster = null;
 
-	angularScope.distance = [
-	    { text: "rayon 1 km", value: "1km" },
-	    { text: "rayon 5 km", value: "5km" },
-	    { text: "rayon 10 km", value: "10km" },
-	    { text: "rayon > 10 km", value: "10km++" },
-	    { text: "None", value: "none"}
-	];
-
-	angularScope.temps = [
-	    { text: "< 1 heure", value: "1hre" },
-	    { text: "< 3 heures", value: "3hres" },
-	    { text: "< 1 jour", value: "1jr" },
-	    { text: ">= 1 jour", value: "1jr++" },
-	    { text: "None", value: "none"}
-	];
-
-	angularScope.populationCible = [
-		{ text: "Jeune", value: "jeun" },
-	    { text: "Vielle", value: "viel" },
-	    { text: "Handicapee", value: "handi" },
-	    { text: "None", value: "none"}
-	];
-
-  	angularScope.periodicity = [
-	    { text: "Jounaliere", value: "jour" },
-	    { text: "Quotidienne", value: "quot" },
-	    { text: "Mensuelle", value: "mens" },
-	    { text: "None", value: "none"}
-	];
-
-	angularScope.lieu = [
-		    { text: "Postal code", value: "pcode" },
-		    { text: "City", value: "city" },
-		    { text: "State", value: "state" },
-		    { text: "Pays", value: "pays" },
-		    { text: "None", value: "none"}
-		];
-
-    angularScope.data = {
-	    distance: PreferencesService.getPreferences('distance'),
-	    temps: PreferencesService.getPreferences('temps'),
-	    populationCible: PreferencesService.getPreferences('populationCible'),
-	    periodicity: PreferencesService.getPreferences('periodicity'),
-	    lieu: PreferencesService.getPreferences('lieu')
- 	};
-
-	angularScope.changePreferences = function(category,item) {
-		if (item.text == "None"){
-			PreferencesService.delete(category);
-		} else {
-			PreferencesService.add(category,item);
-		}
-	};
-});
-
-angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
-	var angularScope = $scope;
-	angularScope.itemSelected = null;
-	angularScope.itemInBookMark = false;
-	angularScope.itemInEventJoined = false;
-
-	/***	Reload itemInBookMark when view loading (fix bug on itemInBookMark value when going back to home) 	***/
-	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
-		if ( angularScope.itemSelected != null ) {
-			angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
-			angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
-		}
-	});
-
-	angularScope.changeBookMarkStatus = function(eventObj) {
-		if ( angularScope.itemInBookMark == false ) {
-			FavoriteService.addBookMark(eventObj);
-
-			angularScope.itemInBookMark = true;
-		} else {
-			FavoriteService.deleteBookMark(eventObj);
-
-			angularScope.itemInBookMark = false;
-		}
-	};
-
-	function loadData(){
-		$http.get('data.json')
-	    .then(function(res){
-	    	evenementsData = res.data;
-	    	initialize();
-	    });
-	}
 
 	var styles = [{
         url: 'img/people35.png',
@@ -390,21 +475,105 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
         anchor: [32, 0],
         textColor: '#ffffff',
         textSize: 12
-      }];
+     }];
+	var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
+
+
+
+<<<<<<< HEAD
+    angularScope.data = {
+	    distance: PreferencesService.getPreferences('distance'),
+	    temps: PreferencesService.getPreferences('temps'),
+	    populationCible: PreferencesService.getPreferences('populationCible'),
+	    periodicity: PreferencesService.getPreferences('periodicity'),
+	    lieu: PreferencesService.getPreferences('lieu')
+ 	};
+
+	angularScope.changePreferences = function(category,item) {
+		if (item.text == "None"){
+			PreferencesService.delete(category);
+		} else {
+			PreferencesService.add(category,item);
+		}
+	};
+});
+
+angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
+	var angularScope = $scope;
+=======
+	function setPosition(NewPosition){
+		myPosition = NewPosition;
+	}
+>>>>>>> Gasquez
+	angularScope.itemSelected = null;
+	angularScope.itemInBookMark = false;
+	angularScope.itemInEventJoined = false;
+
+	/***	Reload itemInBookMark when view loading (fix bug on itemInBookMark value when going back to home) 	***/
+	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
+		if ( angularScope.itemSelected != null ) {
+			angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
+			angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
+		}
+	});
+
+<<<<<<< HEAD
+	angularScope.changeBookMarkStatus = function(eventObj) {
+		if ( angularScope.itemInBookMark == false ) {
+			FavoriteService.addBookMark(eventObj);
+=======
+	angularScope.$parent.$on('$ionicView.afterEnter', function() {
+		applyFilter();
+		if(markerCluster != null){
+			markerCluster.redraw();
+		}
+	});
+
+	angularScope.changeBookMark = function(eventObj) {
+		if ( angularScope.itemInFavorite == false ) {
+			BookMarkFactory.add(eventObj);
+>>>>>>> Gasquez
+
+			angularScope.itemInBookMark = true;
+		} else {
+			FavoriteService.deleteBookMark(eventObj);
+
+			angularScope.itemInBookMark = false;
+		}
+	};
+
+	function loadData(){
+		$http.get('data.json')
+	    .then(function(res){
+	    	evenementsData = res.data;
+	    	initialize();
+	    });
+	}
 
 	function initialize() {
+
 		var mapOptions = {
 			zoom: 10,
 			center: new google.maps.LatLng(45.514887, -73.559727),
 			mapTypeControl: false,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			disableDefaultUI: true,
+<<<<<<< HEAD
 			styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]}]
+=======
+			styles: [
+			    {/*Style for remove Point Of Interest of google map*/
+			      "featureType": "poi",
+			      "elementType": "labels",
+			      "stylers": [
+			        { "visibility": "off" }
+			      ]
+			    }
+		  	]
+>>>>>>> Gasquez
 		};
 
-		var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
-		var markers = [];
-		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+		map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 		// Function for getting new default icon
 	    function getDefaultIcon () {
@@ -455,7 +624,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 			var Lgn = itemSelected.longitude;
 			var marker = new MarkerWithLabel({
 				position: new google.maps.LatLng(Lat,Lgn),
-				map: map,
 				labelContent: lab,
 				labelAnchor: new google.maps.Point(13, 10),
 			    labelClass: "lalels", // the CSS class for the label
@@ -464,6 +632,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 			    isClicked: false,
 				icon: getDefaultIcon()				
 			});
+<<<<<<< HEAD
 			getDefaultLabelClass ()
 
 			// Add click action on each marcker, change color marker on click
@@ -487,6 +656,26 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 	                marker.set('labelClass', 'labels active');
 				}
 			})(itemSelected, marker, i));
+=======
+			markers.push(marker);
+			// Add click action on each marcker
+			google.maps.event.addListener(markers[i], 'click', (function(evenementsData,i) {
+			  	return function() {
+			      // Display event informations
+			      angularScope.$apply(function() {
+			      	angularScope.itemSelected = evenementsData[i];
+
+			      	angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
+			      });
+				}
+			})(evenementsData,i));
+
+			// change color marker on click
+			google.maps.event.addListener(marker, 'click', function(e) {
+				this.isClicked = true;
+				this.set('labelClass', 'labels active');     	       
+		    });
+>>>>>>> Gasquez
 
 			// deselect marker color
 		    google.maps.event.addListener(marker, 'dblclick', function(e) {
@@ -495,6 +684,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 		        this.isClicked = false;
 		    });
 
+<<<<<<< HEAD
 		    // change color marker on mouseover
 		    google.maps.event.addListener(marker, 'mouseover', (function(marker,i) {
 		    	return function() {
@@ -529,17 +719,65 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 		    })(marker,i));
 
 		    markers.push(marker);
+=======
+		    // change or reset color marker on mouseout
+		    google.maps.event.addListener(marker, 'mouseout', function(e) {
+		        if (this.isClicked){
+		            this.set('labelClass', 'labels active');
+		        } else {
+		            this.set('labelClass', 'labels');
+		        }
+		    });
+>>>>>>> Gasquez
 		}
 
-		var markerCluster = new MarkerClusterer(map, markers, mcOptions);
+	    markerCluster = new MarkerClusterer(map, markers, mcOptions);
 
 		if (navigator.geolocation)
 		  var watchId = navigator.geolocation.watchPosition(function(position){
 		  	//Move map to position
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		  	setPosition(position);
 		  }, null, {enableHighAccuracy:true});
+<<<<<<< HEAD
 	};
 
+=======
+		handleNavBarVisibility(window.matchMedia("(min-width: 768px)"));
+	};
+
+	// media query event handler
+	if (matchMedia) {
+	  var mq = window.matchMedia("(min-width: 768px)");
+	  mq.addListener(handleNavBarVisibility);
+	  handleNavBarVisibility(mq);
+	}
+
+	// change in fonction of width
+	function handleNavBarVisibility(mq) {
+
+	  if (mq.matches) {
+	  	// if screen >= 768px, hidde nav bar
+	  	 $ionicNavBarDelegate.showBar(false);
+	  } else {
+	  	// if screen < 768px, show nav bar
+	  	$ionicNavBarDelegate.showBar(true);
+	  }
+
+	};
+
+	function applyFilter(){
+		if(markers.length == 0){
+			return;
+		}
+		var valueOfFirstMarker = FilterMarkersService.filterMarkers(markers, markerCluster, map, myPosition);
+		google.maps.event.trigger(map,'resize');
+		if(valueOfFirstMarker != "none"){
+			angularScope.itemSelected =  evenementsData[valueOfFirstMarker];
+		}
+	}
+
+>>>>>>> Gasquez
 	google.maps.event.addDomListener(window, "load", loadData);
 });
 
@@ -559,7 +797,6 @@ angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams, $i
 			}
 
 		});
-
 	} else {
 		console.log("Error: no eventId parameter!");
 	}
@@ -761,6 +998,58 @@ angularApp.controller("ListCtrl", function($scope, FavoriteService){
 	}
 
 });
+
+angularApp.controller("FilterCtrl", function($scope, PreferencesService){
+	var angularScope = $scope;
+
+
+	angularScope.distance = [
+	    { text: "rayon 1 km", value: "1" },
+	    { text: "rayon 5 km", value: "5" },
+	    { text: "rayon 10 km", value: "10" },
+	    { text: "rayon 30 km", value: "30" },
+	    { text: "rayon > 30 km", value: "++" },
+	    { text: "Aucun", value: "none"}
+	];
+
+	angularScope.temps = [
+	    { text: "< 1 heure", value: "1h00" },
+	    { text: "< 3 heures", value: "3h00" },
+	    { text: "< 1 jour", value: "1j00" },
+	    { text: "> 1 jour", value: "++" },
+	    { text: "Aucun", value: "none"}
+	];
+
+	angularScope.populationCible = [
+		{ text: "Jeune", value: "jeune" },
+	    { text: "Vieille", value: "vieille" },
+	    { text: "Handicapée", value: "handicapee" },
+	    { text: "Aucun", value: "none"}
+	];
+
+  	angularScope.periodicity = [
+	    { text: "Jounalière", value: "journalieres" },
+	    { text: "Quotidienne", value: "quotidienne" },
+	    { text: "Mensuelle", value: "mensuelle" },
+	    { text: "Aucun", value: "none"}
+	];
+
+    angularScope.data = {
+	    distance: PreferencesService.getPreferences('distance'),
+	    temps: PreferencesService.getPreferences('temps'),
+	    populationCible: PreferencesService.getPreferences('populationCible'),
+	    periodicity: PreferencesService.getPreferences('periodicity'),
+ 	};
+
+	angularScope.changePreferences = function(category,item) {
+		if (item.text == "None"){
+			PreferencesService.delete(category);
+		} else {
+			PreferencesService.add(category,item);
+		}
+	};
+});
+
 
 var app = {
 	initialize: function() {
