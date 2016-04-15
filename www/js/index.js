@@ -1,4 +1,3 @@
-angular.module('starter', ['ionic', 'ngCordova']);
 var angularApp = angular.module('MenuNav', ['ionic']);
 
 var userLogged = false;
@@ -387,7 +386,7 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 	$urlRouterProvider.otherwise('/home');
-})
+});
 
 angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 	var angularScope = $scope;
@@ -423,15 +422,6 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 		$ionicHistory.goBack();
 	};
 
-	angularScope.$on('$ionicView.beforeEnter', function() {
-		// Update user profil info
-		angularScope.userNameFB = UserService.getUser().name;
-		angularScope.userPictureFB= UserService.getUser().picture;
-
-		angularScope.logged = userLogged;
-	});
-
-
 	angularScope.logOut = function() {
 		facebookConnectPlugin.logout(function() {
 
@@ -444,15 +434,26 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 			console.log(msg);
 		});
 	};
+
+	angularScope.$on('$ionicView.beforeEnter', function() {
+		// Update user profil info
+		angularScope.userNameFB = UserService.getUser().name;
+		angularScope.userPictureFB= UserService.getUser().picture;
+
+		angularScope.logged = userLogged;
+	});
 });
 
-angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, BookMarkFactory, FilterMarkersService){
+angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, FavoriteService, FilterMarkersService){
 	var angularScope = $scope;
+	angularScope.itemSelected = null;
+	angularScope.itemInBookMark = false;
+	angularScope.itemInEventJoined = false;
+
 	var map = null;
 	var markers = new Array(); 
 	var myPosition = null;
 	var markerCluster = null;
-
 
 	var styles = [{
         url: 'img/people35.png',
@@ -478,62 +479,13 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
      }];
 	var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
 
-
-
-<<<<<<< HEAD
-    angularScope.data = {
-	    distance: PreferencesService.getPreferences('distance'),
-	    temps: PreferencesService.getPreferences('temps'),
-	    populationCible: PreferencesService.getPreferences('populationCible'),
-	    periodicity: PreferencesService.getPreferences('periodicity'),
-	    lieu: PreferencesService.getPreferences('lieu')
- 	};
-
-	angularScope.changePreferences = function(category,item) {
-		if (item.text == "None"){
-			PreferencesService.delete(category);
-		} else {
-			PreferencesService.add(category,item);
-		}
-	};
-});
-
-angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
-	var angularScope = $scope;
-=======
 	function setPosition(NewPosition){
 		myPosition = NewPosition;
 	}
->>>>>>> Gasquez
-	angularScope.itemSelected = null;
-	angularScope.itemInBookMark = false;
-	angularScope.itemInEventJoined = false;
 
-	/***	Reload itemInBookMark when view loading (fix bug on itemInBookMark value when going back to home) 	***/
-	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
-		if ( angularScope.itemSelected != null ) {
-			angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
-			angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
-		}
-	});
-
-<<<<<<< HEAD
 	angularScope.changeBookMarkStatus = function(eventObj) {
 		if ( angularScope.itemInBookMark == false ) {
 			FavoriteService.addBookMark(eventObj);
-=======
-	angularScope.$parent.$on('$ionicView.afterEnter', function() {
-		applyFilter();
-		if(markerCluster != null){
-			markerCluster.redraw();
-		}
-	});
-
-	angularScope.changeBookMark = function(eventObj) {
-		if ( angularScope.itemInFavorite == false ) {
-			BookMarkFactory.add(eventObj);
->>>>>>> Gasquez
-
 			angularScope.itemInBookMark = true;
 		} else {
 			FavoriteService.deleteBookMark(eventObj);
@@ -558,9 +510,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 			mapTypeControl: false,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			disableDefaultUI: true,
-<<<<<<< HEAD
-			styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]}]
-=======
 			styles: [
 			    {/*Style for remove Point Of Interest of google map*/
 			      "featureType": "poi",
@@ -570,7 +519,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 			      ]
 			    }
 		  	]
->>>>>>> Gasquez
 		};
 
 		map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
@@ -624,6 +572,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 			var Lgn = itemSelected.longitude;
 			var marker = new MarkerWithLabel({
 				position: new google.maps.LatLng(Lat,Lgn),
+				map: map,
 				labelContent: lab,
 				labelAnchor: new google.maps.Point(13, 10),
 			    labelClass: "lalels", // the CSS class for the label
@@ -632,11 +581,10 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 			    isClicked: false,
 				icon: getDefaultIcon()				
 			});
-<<<<<<< HEAD
 			getDefaultLabelClass ()
 
 			// Add click action on each marcker, change color marker on click
-			google.maps.event.addListener(marker, 'click', (function(itemSelected, marker,i) {
+			google.maps.event.addListener(marker, 'click', (function(itemSelected, marker, i) {
 			  	return function() {
 			        // Display event informations
 			        angularScope.$apply(function() {
@@ -644,38 +592,20 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 						angularScope.itemInBookMark = FavoriteService.existBookMark(itemSelected);
 						angularScope.itemInEventJoined = FavoriteService.existEventJoined(itemSelected);
 			        });
+
 			        //reset default icon
 			        for (var j = 0; j < markers.length; j++) {
 			          markers[j].setIcon(getDefaultIcon ());
 			          markers[j].set('labelClass','labels');
 			      	  markers[j].isClicked = false;
 			        }
+
 			        //get highlighticon
 			        marker.isClicked = true;
 	                marker.setIcon(getClickHighlightIcon ());
 	                marker.set('labelClass', 'labels active');
 				}
 			})(itemSelected, marker, i));
-=======
-			markers.push(marker);
-			// Add click action on each marcker
-			google.maps.event.addListener(markers[i], 'click', (function(evenementsData,i) {
-			  	return function() {
-			      // Display event informations
-			      angularScope.$apply(function() {
-			      	angularScope.itemSelected = evenementsData[i];
-
-			      	angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
-			      });
-				}
-			})(evenementsData,i));
-
-			// change color marker on click
-			google.maps.event.addListener(marker, 'click', function(e) {
-				this.isClicked = true;
-				this.set('labelClass', 'labels active');     	       
-		    });
->>>>>>> Gasquez
 
 			// deselect marker color
 		    google.maps.event.addListener(marker, 'dblclick', function(e) {
@@ -684,7 +614,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 		        this.isClicked = false;
 		    });
 
-<<<<<<< HEAD
 		    // change color marker on mouseover
 		    google.maps.event.addListener(marker, 'mouseover', (function(marker,i) {
 		    	return function() {
@@ -719,16 +648,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 		    })(marker,i));
 
 		    markers.push(marker);
-=======
-		    // change or reset color marker on mouseout
-		    google.maps.event.addListener(marker, 'mouseout', function(e) {
-		        if (this.isClicked){
-		            this.set('labelClass', 'labels active');
-		        } else {
-		            this.set('labelClass', 'labels');
-		        }
-		    });
->>>>>>> Gasquez
 		}
 
 	    markerCluster = new MarkerClusterer(map, markers, mcOptions);
@@ -739,31 +658,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  	setPosition(position);
 		  }, null, {enableHighAccuracy:true});
-<<<<<<< HEAD
-	};
-
-=======
-		handleNavBarVisibility(window.matchMedia("(min-width: 768px)"));
-	};
-
-	// media query event handler
-	if (matchMedia) {
-	  var mq = window.matchMedia("(min-width: 768px)");
-	  mq.addListener(handleNavBarVisibility);
-	  handleNavBarVisibility(mq);
-	}
-
-	// change in fonction of width
-	function handleNavBarVisibility(mq) {
-
-	  if (mq.matches) {
-	  	// if screen >= 768px, hidde nav bar
-	  	 $ionicNavBarDelegate.showBar(false);
-	  } else {
-	  	// if screen < 768px, show nav bar
-	  	$ionicNavBarDelegate.showBar(true);
-	  }
-
 	};
 
 	function applyFilter(){
@@ -777,8 +671,22 @@ angularApp.controller("HomeCtrl", function($scope,$http, FavoriteService){
 		}
 	}
 
->>>>>>> Gasquez
 	google.maps.event.addDomListener(window, "load", loadData);
+
+	/***	Reload itemInBookMark when view loading (fix bug on itemInBookMark value when going back to home) 	***/
+	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
+		if ( angularScope.itemSelected != null ) {
+			angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
+			angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
+		}
+	});
+
+	angularScope.$parent.$on('$ionicView.afterEnter', function() {
+		applyFilter();
+		if(markerCluster != null){
+			markerCluster.redraw();
+		}
+	});
 });
 
 angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams, $ionicHistory, FavoriteService){
@@ -1001,7 +909,6 @@ angularApp.controller("ListCtrl", function($scope, FavoriteService){
 
 angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	var angularScope = $scope;
-
 
 	angularScope.distance = [
 	    { text: "rayon 1 km", value: "1" },
