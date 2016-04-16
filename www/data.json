@@ -36,7 +36,7 @@
 	},	{
 		"titre": "Aide à nettoyer le vieux ports",
 		"id": 100002,
-		"cibles": ["jeune","agée"],
+		"cibles": ["jeune","vielle"],
 		"latitude": "45.503452",
 		"longitude": "-73.621021",
 		"organisme": "Vieux ports",
@@ -57,7 +57,7 @@
 		"causes": ["Vieux ports"],
 		"activities": ["aide","nettoyage"],
 		"avantages": ["contact avec les gens","green action"],
-		"periodicity": "trimestrielle",
+		"periodicity": "quotidienne",
 		"contacts": {
 			"tel":"123456598",
 			"mail":"contact@vieuxports.ca",
@@ -69,8 +69,8 @@
 		"descriptifLong": "Tous ensemble pour nettoyer le vieux ports de Montréal et qu'il reste beau jusqu'au la fin de temps. etc etc etc etc. Merci à tous !"
 	},	{
 		"titre": "Expo New Arts",
-		"id": 100003,
-		"cibles": ["jeune"],
+		"id": 100006,
+		"cibles": ["jeune,handicapee"],
 		"latitude": "45.490764",
 		"longitude": "-73.581272",
 		"organisme": "Arts & co Montréal",
