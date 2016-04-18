@@ -303,6 +303,10 @@
     color:black;
 }
 
+.icon{
+	color:orange;
+}
+
 .scrollable-wrapper {
 	height: 100%;
 	overflow-y: scroll;
@@ -400,5 +404,5 @@
 }
 
 .orangeColor {
-	color: orange !important;
+	color: green !important;
 }

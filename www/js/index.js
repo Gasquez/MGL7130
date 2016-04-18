@@ -978,19 +978,20 @@ var app = {
 	bindEvents: function() {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
-	onDeviceReady: function($cordovaNetwork) {
-		 var success = function(status) {
-		 	console.log("Clear :" +status);
-            alert('Message: ' + status);
+	onDeviceReady: function() {
+		// L'API Cordova est prête
+		console.log("onDeviceReady");
+
+		var success = function(status) {
+            console.log('Message: ' + status);
         }
 
         var error = function(status) {
-            alert('Error: ' + status);
+            console.log('Error: ' + status);
         }
 
         window.cache.clear( success, error );
-		// L'API Cordova est prête
-		console.log("onDeviceReady");
+
 		if(typeof(google) !== 'undefined') {
 			//Here online mode
 			$( '#wrapper_offline' ).css( "display", "none" );
@@ -999,8 +1000,6 @@ var app = {
 			$( '#map_content' ).css( "display", "none" );
 			$( '#description_event_wrapper' ).css( "display", "none" );
 			$( '#description_event' ).css( "display", "none" );
-	//		$( '#buttonTwo' ).setAttribute("ng-disabled", "true");
-	//		$( '#buttonThree' ).setAttribute("ng-disabled", "true");
 		}
 
 		//Initialize the JS SDK if in browser mode
