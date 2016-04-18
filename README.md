@@ -97,6 +97,10 @@ Source : https://mindfiremobile.wordpress.com/2013/10/30/using-phonegap-notifica
 
 ## Facebook
 
+Install the plugin:
+
+https://github.com/jeduan/cordova-plugin-facebook4
+
 Register and configure an app.
 
 Source : http://www.lafermeduweb.net/tutorial/creer-une-nouvelle-application-facebook-p80.html
