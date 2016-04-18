@@ -494,13 +494,72 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		}
 	};
 
-	function loadData(){
-		$http.get('data.json')
-	    .then(function(res){
-	    	evenementsData = res.data;
-	    	initialize();
-	    });
-	}
+	//Read data from dynamodb
+	angularScope.function loadDataFromServer(callback) {
+		if (typeof(AWS) === 'undefined') {
+			return;
+		}
+        var db = new AWS.DynamoDB();
+        db.scan({
+            TableName: 'evenements'
+        }, function(err, data) {
+        	if (err) {
+		        console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+		    } else {
+	            var items = [];
+	            for (var i = 0; i < data.Items.length; i++) {
+	                var src = data.Items[i];
+	                var item = {
+	                    titre: src.titre.S,
+	                    id: src.id.N,
+						cibles: src.cibles.L,
+						latitude: src.latitude.S,
+						longitude: src.longitude.S,
+						organisme: src.organisme.S,
+						siege: src.siege.S,
+						ville: src.ville.S,
+						state: src.state.S,
+						Pays: src.pays.S,
+						pcode: src.pcode.S,
+						emplacement: src.emplacement.L,
+						jours: src.jours.L,
+						dateAffichage: src.dateAffichage.S,
+						heureDeDebut: src.heureDeDebut.S,
+						heureDeFin: src.heureDeFin.S,
+						duree: src.duree.S,
+						dateDeDebut: src.dateDeDebut.S,
+						dateDeFin: src.dateDeFin.S,
+						langues: src.langues.S,
+						causes: src.causes.L,
+						activities: src.activities.L,
+						avantages: src.avantages.L,
+						periodicity: src.periodicity.S,
+						contacts: {
+							tel: src.tel.S,
+							mail: src.mail.S,
+							site: src.site.S
+						},
+						handicape: src.handicape.BOOL,
+						access: src.access.S,
+						descriptifShort: src.descriptifShort.S,
+						descriptifLong: src.descriptifLong.S
+	                };
+	                items.push(item);
+	            }
+	            callback(items);
+	        }
+        });
+        evenementsData = JSON.stringify(items);
+        initialize();
+    };
+
+	//function loadData(){
+	//	$http.get('data.json')
+	//    .then(function(res){
+	//    	evenementsData = res.data;
+	//    	initialize();
+	//    });
+	//}
 
 	function initialize() {
 
