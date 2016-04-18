@@ -356,7 +356,6 @@ angularApp.config(function($stateProvider, $urlRouterProvider) {
 
 angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHistory, UserService){
 	var angularScope = $scope;
-
 	angularScope.navigation = {
 		pageHeaderLeft1: {
 			icon: "button button-icon icon ion-android-globe",
@@ -380,17 +379,24 @@ angularApp.controller("AppCtrl", function($scope, $ionicNavBarDelegate, $ionicHi
 		}
 	};
 	
+	if(typeof(google) !== 'undefined'){
+		angularScope.disabled = false;
+	} else {
+		angularScope.disabled = true;
+	}
+
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
 
 	angularScope.$on('$ionicView.beforeEnter', function() {
-		// Update user profil info
-		angularScope.userNameFB = UserService.getUser().name;
-		angularScope.userPictureFB= UserService.getUser().picture;
+		if(typeof(google) !== 'undefined') {
+			// Update user profil info
+			angularScope.userNameFB = UserService.getUser().name;
+			angularScope.userPictureFB= UserService.getUser().picture;
 
-		angularScope.logged = userLogged;
-
+			angularScope.logged = userLogged;
+		}
 		//Close nav bar every time you enter the view
 		if(window.matchMedia("(min-width: 768px)").matches)
 		{
@@ -414,7 +420,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 	var markers = new Array(); 
 	var myPosition = null;
 	var markerCluster = null;
-
 
 	var styles = [{
         url: 'img/people35.png',
@@ -440,27 +445,15 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
      }];
 	var mcOptions = {gridSize: 100, maxZoom: 16, styles: styles};
 
-
-
 	function setPosition(NewPosition){
 		myPosition = NewPosition;
 	}
-	angularScope.itemSelected = null;
-	angularScope.itemInFavorite = false;
 
-	/***	Reload itemInFavorite when view loading (fix bug on itemInFavorite value when going back to home) 	***/
-	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
-		if ( angularScope.itemSelected != null ) {
-			angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
-		}
-	});
+	if(typeof(google) !== 'undefined') {
+		angularScope.itemSelected = null;
+		angularScope.itemInFavorite = false;
+	}
 
-	angularScope.$parent.$on('$ionicView.afterEnter', function() {
-		applyFilter();
-		if(markerCluster != null){
-			markerCluster.redraw();
-		}
-	});
 
 	angularScope.changeBookMark = function(eventObj) {
 		if ( angularScope.itemInFavorite == false ) {
@@ -475,11 +468,18 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 	};
 
 	function loadData(){
-		$http.get('data.json')
-	    .then(function(res){
-	    	evenementsData = res.data;
-	    	initialize();
-	    });
+		if(typeof(google) !== 'undefined') {
+			$http.get('data.json')
+		    .then(function(res){
+		    	evenementsData = res.data;
+		    	initialize();
+		    });
+		} else {
+			//Here offline mode
+			handleNavBarVisibility(window.matchMedia("(min-width: 768px)"));
+
+
+		}
 	}
 
 	function initialize() {
@@ -610,8 +610,21 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, B
 			angularScope.itemSelected =  evenementsData[valueOfFirstMarker];
 		}
 	}
-
-	google.maps.event.addDomListener(window, "load", loadData);
+	if(typeof(google) !== "undefined"){
+		google.maps.event.addDomListener(window, "load", loadData);
+		/***	Reload itemInFavorite when view loading (fix bug on itemInFavorite value when going back to home) 	***/
+		angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
+			if ( angularScope.itemSelected != null ) {
+				angularScope.itemInFavorite = BookMarkFactory.exist(angularScope.itemSelected);
+			}
+		});
+	    angularScope.$parent.$on('$ionicView.afterEnter', function() {
+			applyFilter();
+			if(markerCluster != null){
+				markerCluster.redraw();
+			}
+		});
+	}
 });
 
 angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams){
@@ -843,7 +856,6 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	};
 });
 
-
 var app = {
 	initialize: function() {
 		this.bindEvents();
@@ -851,9 +863,30 @@ var app = {
 	bindEvents: function() {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 	},
-	onDeviceReady: function() {
+	onDeviceReady: function($cordovaNetwork) {
+		 var success = function(status) {
+		 	console.log("Clear :" +status);
+            alert('Message: ' + status);
+        }
+
+        var error = function(status) {
+            alert('Error: ' + status);
+        }
+
+        window.cache.clear( success, error );
 		// L'API Cordova est prête
 		console.log("onDeviceReady");
+		if(typeof(google) !== 'undefined') {
+			//Here online mode
+			$( '#wrapper_offline' ).css( "display", "none" );
+		} else {
+			//Here offline mode
+			$( '#map_content' ).css( "display", "none" );
+			$( '#description_event_wrapper' ).css( "display", "none" );
+			$( '#description_event' ).css( "display", "none" );
+	//		$( '#buttonTwo' ).setAttribute("ng-disabled", "true");
+	//		$( '#buttonThree' ).setAttribute("ng-disabled", "true");
+		}
 
 		//Initialize the JS SDK if in browser mode
 		if (window.cordova.platformId == "browser") {

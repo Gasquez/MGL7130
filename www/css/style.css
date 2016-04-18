@@ -294,6 +294,11 @@
 	text-align: justify;
 }
 
+.larger{
+    font-size: 300%;
+    color:black;
+}
+
 .scrollable-wrapper {
 	height: 100%;
 	overflow-y: scroll;
