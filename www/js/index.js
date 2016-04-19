@@ -418,9 +418,25 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 		}
 	};
 	
+	if(typeof(google) !== 'undefined'){
+		angularScope.disabled = false;
+	} else {
+		angularScope.disabled = true;
+	}
+
 	angularScope.goBack = function(){
 		$ionicHistory.goBack();
 	};
+
+	angularScope.$on('$ionicView.beforeEnter', function() {
+		if(typeof(google) !== 'undefined') {
+			// Update user profil info
+			angularScope.userNameFB = UserService.getUser().name;
+			angularScope.userPictureFB= UserService.getUser().picture;
+
+			angularScope.logged = userLogged;
+		}
+	});
 
 	angularScope.logOut = function() {
 		facebookConnectPlugin.logout(function() {
@@ -434,21 +450,10 @@ angularApp.controller("AppCtrl", function($scope, $ionicHistory, UserService){
 			console.log(msg);
 		});
 	};
-
-	angularScope.$on('$ionicView.beforeEnter', function() {
-		// Update user profil info
-		angularScope.userNameFB = UserService.getUser().name;
-		angularScope.userPictureFB= UserService.getUser().picture;
-
-		angularScope.logged = userLogged;
-	});
 });
 
 angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, FavoriteService, FilterMarkersService){
 	var angularScope = $scope;
-	angularScope.itemSelected = null;
-	angularScope.itemInBookMark = false;
-	angularScope.itemInEventJoined = false;
 
 	var map = null;
 	var markers = new Array(); 
@@ -483,6 +488,12 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		myPosition = NewPosition;
 	}
 
+	if(typeof(google) !== 'undefined') {
+		angularScope.itemSelected = null;
+		angularScope.itemInBookMark = false;
+		angularScope.itemInEventJoined = false;
+	}
+
 	angularScope.changeBookMarkStatus = function(eventObj) {
 		if ( angularScope.itemInBookMark == false ) {
 			FavoriteService.addBookMark(eventObj);
@@ -499,7 +510,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		if (typeof(AWS) === 'undefined') {
 			return;
 		}
-        var db = new AWS.DynamoDB.DocumentClient();
+		
+        var db = new AWS.DynamoDB.DocumentClient({region: 'us-west-2'});
 		var items = [];
         db.scan({
             TableName: 'evenements'
@@ -515,7 +527,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		        initialize();
 	        }
         });
-
     };
 
     /* loadData function can be use to load data localy, without AWS */
@@ -695,23 +706,22 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 			angularScope.itemSelected =  evenementsData[valueOfFirstMarker];
 		}
 	}
+	if(typeof(google) !== "undefined"){
+		google.maps.event.addDomListener(window, "load", loadDataFromServer);
 
-	google.maps.event.addDomListener(window, "load", loadDataFromServer);
-
-	/***	Reload itemInBookMark when view loading (fix bug on itemInBookMark value when going back to home) 	***/
-	angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
-		if ( angularScope.itemSelected != null ) {
-			angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
-			angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);
-		}
-	});
-
-	angularScope.$parent.$on('$ionicView.afterEnter', function() {
-		applyFilter();
-		if(markerCluster != null){
-			markerCluster.redraw();
-		}
-	});
+		/***	Reload itemInFavorite when view loading (fix bug on itemInFavorite value when going back to home) 	***/
+		angularScope.$parent.$on("$ionicView.beforeEnter", function(event) {	// $ionicView.enter can only be catched by parent controller
+			if ( angularScope.itemSelected != null ) {
+				angularScope.itemInBookMark = FavoriteService.existBookMark(angularScope.itemSelected);
+				angularScope.itemInEventJoined = FavoriteService.existEventJoined(angularScope.itemSelected);			}
+		});
+	    angularScope.$parent.$on('$ionicView.afterEnter', function() {
+			applyFilter();
+			if(markerCluster != null){
+				markerCluster.redraw();
+			}
+		});
+	}
 });
 
 angularApp.controller("HomeEventCtrl", function($scope, $state, $stateParams, $ionicHistory, FavoriteService){
@@ -820,11 +830,6 @@ angularApp.controller("detailEventCtrl", function($scope, UserService, FavoriteS
 		} else {
 			angularScope.$parent.$parent.itemInEventJoined = true;
 		}
-
-		//TODO Register people to the event, send request to DB
-
-
-
 	}
 });
 
@@ -982,7 +987,6 @@ angularApp.controller("FilterCtrl", function($scope, PreferencesService){
 	};
 });
 
-
 var app = {
 	initialize: function() {
 		this.bindEvents();
@@ -993,6 +997,26 @@ var app = {
 	onDeviceReady: function() {
 		// L'API Cordova est prête
 		console.log("onDeviceReady");
+
+		var success = function(status) {
+            console.log('Message: ' + status);
+        }
+
+        var error = function(status) {
+            console.log('Error: ' + status);
+        }
+
+        window.cache.clear( success, error );
+
+		if(typeof(google) !== 'undefined') {
+			//Here online mode
+			$( '#wrapper_offline' ).css( "display", "none" );
+		} else {
+			//Here offline mode
+			$( '#map_content' ).css( "display", "none" );
+			$( '#description_event_wrapper' ).css( "display", "none" );
+			$( '#description_event' ).css( "display", "none" );
+		}
 
 		//Initialize the JS SDK if in browser mode
 		if (window.cordova.platformId == "browser") {
