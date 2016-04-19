@@ -499,7 +499,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		if (typeof(AWS) === 'undefined') {
 			return;
 		}
-        var db = new AWS.DynamoDB();
+        var db = new AWS.DynamoDB.DocumentClient();
 		var items = [];
         db.scan({
             TableName: 'evenements'
@@ -509,11 +509,8 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		    } else {
 	            for (var i = 0; i < data.Items.length; i++) {
 	                var item = data.Items[i];
-	                console.log("debug d'un item:")
-	                console.log("item: "+item + "titre :"+item.titre);
 	                items.push(item);
 	            }
-	            console.log("items: "+items);
 		        evenementsData = items;
 		        initialize();
 	        }
@@ -521,6 +518,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 
     };
 
+    /* loadData function can be use to load data localy, without AWS */
 	//function loadData(){
 	//	$http.get('data.json')
 	//    .then(function(res){
