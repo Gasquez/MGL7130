@@ -529,15 +529,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
         });
     };
 
-    /* loadData function can be use to load data localy, without AWS */
-	//function loadData(){
-	//	$http.get('data.json')
-	//    .then(function(res){
-	//    	evenementsData = res.data;
-	//    	initialize();
-	//    });
-	//}
-
 	function initialize() {
 
 		var mapOptions = {
