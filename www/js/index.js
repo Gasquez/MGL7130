@@ -511,13 +511,13 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 			return;
 		}
 		
-        var db = new AWS.DynamoDB.DocumentClient({region: 'us-west-2'});
+        var db = new AWS.DynamoDB.DocumentClient({dynamoDbCrc32: false});
 		var items = [];
         db.scan({
             TableName: 'evenements'
         }, function(err, data) {
         	if (err) {
-		        console.log(error, "Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+		        console.log(JSON.stringify(err, null, 2));
 		    } else {
 	            for (var i = 0; i < data.Items.length; i++) {
 	                var item = data.Items[i];
@@ -597,7 +597,6 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 	    	marker.set('labelClass', 'labels');			
 	    }
 
-		angularScope.itemSelected = evenementsData[0];
 		// Loop through the array of evenements and place each one on the map 
 		for(i = 0; i < evenementsData.length; i += 1) {
 
@@ -606,6 +605,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 			var lab = itemSelected.dateAffichage[0]+itemSelected.dateAffichage[1]+itemSelected.dateAffichage[2]+itemSelected.dateAffichage[3]+itemSelected.dateAffichage[4];
 			var Lat = itemSelected.latitude;
 			var Lgn = itemSelected.longitude;
+
 			var marker = new MarkerWithLabel({
 				position: new google.maps.LatLng(Lat,Lgn),
 				map: map,
@@ -617,7 +617,7 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 			    isClicked: false,
 				icon: getDefaultIcon()				
 			});
-			getDefaultLabelClass ()
+			getDefaultLabelClass();
 
 			// Add click action on each marcker, change color marker on click
 			google.maps.event.addListener(marker, 'click', (function(itemSelected, marker, i) {
@@ -694,6 +694,10 @@ angularApp.controller("HomeCtrl", function($scope,$http, $ionicNavBarDelegate, F
 		  	map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		  	setPosition(position);
 		  }, null, {enableHighAccuracy:true});
+
+		angularScope.$apply(function() {
+			angularScope.itemSelected = evenementsData[0];
+		});
 	};
 
 	function applyFilter(){
