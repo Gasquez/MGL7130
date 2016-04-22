@@ -22,6 +22,8 @@ Une erreur s'affiche, supprimer les fichiers qui créeront des doublons.
 
 $ git checkout master
 
+Installer les plugin Facebook et Cache (détails plus bas).
+
 L'environnement ionic est prêt et le lien avec GitHub est établi.
 
 ## Configuration du live reload
@@ -63,7 +65,6 @@ $ ionic upload
 
 Utilisez l'application mobile Ionic View pour visualier l'application Ionic.
 
-
 ## Déploiement sur téléphone par PhoneGap
 
 Identifiez-vous sur https://build.phonegap.com/ avec votre Adobe ID.
@@ -73,12 +74,6 @@ Avant de zipper, déplacer les dossiers .git (si vous utilisez un outil de diff,
 Faites un zip du repertoire www au complet et envoyez le sur le site phonegap. Lancez la compilation, scanner le QR code et c'est prêt.
 
 Référence : http://pointdeveloper.com/how-to-build-ionic-app-with-phonegap-build/
-
-## Splashscreen sur iPhone 5
-
-Ajoutez la balise suivante au fichier config.xml sur répertoire www. Default-568h@2x.png contient le splashscreen.
-
-<gap:splash src="Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
 
 ##Plugin Notification pour téléphone
 
@@ -95,12 +90,22 @@ else {
 
 Source : https://mindfiremobile.wordpress.com/2013/10/30/using-phonegap-notification-api-to-display-customized-alert/
 
-## Facebook
+##Plugin Facebook
 
-Install the plugin:
+Installer le plugin :
 
 https://github.com/jeduan/cordova-plugin-facebook4
 
-Register and configure an app.
+Enregistrer et configurer l'app Facebook :
 
 Source : http://www.lafermeduweb.net/tutorial/creer-une-nouvelle-application-facebook-p80.html
+
+## Plugin Splashscreen
+
+Installer le plugin cordova-plugin-splashscreen.
+
+##Plugin Facebook
+
+Télécharger le zip : https://github.com/moderna/cordova-plugin-cache
+
+Installer le plugin en utilisant le chemin relative du fichier zip.
